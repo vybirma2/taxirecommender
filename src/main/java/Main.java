@@ -1,6 +1,7 @@
 import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
+import utils.GraphLoader;
 
 import java.io.File;
 import java.util.Collection;

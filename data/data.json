@@ -1,0 +1,4529 @@
+[
+   {
+      "IsRecentlyVerified":false,
+      "ID":146584,
+      "UUID":"35B13937-DF9D-4AA0-BB2A-E591D9E24C19",
+      "DataProviderID":1,
+      "OperatorID":115,
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":146936,
+         "Title":"Husova",
+         "AddressLine1":"Husova",
+         "Town":"Vysoké Mýto",
+         "StateOrProvince":"Northeast",
+         "Postcode":"56601",
+         "CountryID":64,
+         "Latitude":49.9426599,
+         "Longitude":16.1645248,
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":203812,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":203813,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":203814,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":203815,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "CurrentTypeID":30,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":3,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2020-01-12T09:51:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2020-01-11T15:35:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":146076,
+      "UUID":"22D87B69-07E2-425F-9B25-E154AEA6E2E6",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"52492",
+      "UsageTypeID":4,
+      "UsageCost":"CZK 6.31/kWh; ostatní tarify pro starší vozy",
+      "AddressInfo":{
+         "ID":146428,
+         "Title":"Brno Supercharger",
+         "AddressLine1":"U Dálnice 777",
+         "Town":"Brno",
+         "Postcode":"664 42",
+         "CountryID":64,
+         "Latitude":49.138365,
+         "Longitude":16.63069,
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":202964,
+            "ConnectionTypeID":27,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":120.0,
+            "CurrentTypeID":30,
+            "Quantity":4
+         }
+      ],
+      "NumberOfPoints":4,
+      "GeneralComments":"Charging4 Superchargers, available 24/7, up to 120kW",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2020-01-02T17:36:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-12-30T21:34:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":134876,
+      "UUID":"6C9010AB-2E0B-4472-B5EC-B1D588C2EE65",
+      "DataProviderID":1,
+      "OperatorID":45,
+      "UsageTypeID":1,
+      "UsageCost":"Free",
+      "AddressInfo":{
+         "ID":135222,
+         "Title":"Parkoviště Českobratrské náměstí MB",
+         "AddressLine1":"Českobratrské nám. 123/4, 293 01 Mladá Boleslav",
+         "Town":"Mladá Boleslav",
+         "Postcode":"29301",
+         "CountryID":64,
+         "Latitude":50.414407,
+         "Longitude":14.905729,
+         "ContactTelephone1":"+420 800 399 993",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":188788,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":8,
+            "Voltage":240,
+            "PowerKW":3.5,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"Nabíjecí stanice je umístěná na městském parkovišti. Provozována je společností ŠKO-ENERGO s. r. o.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-12-02T09:42:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-11-28T08:19:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":134754,
+      "UUID":"C34145D1-7D89-48B9-81E6-FD73D24FB231",
+      "DataProviderID":1,
+      "OperatorID":192,
+      "UsageTypeID":4,
+      "UsageCost":"free",
+      "AddressInfo":{
+         "ID":135100,
+         "Title":"Černovická",
+         "AddressLine1":"Černovická",
+         "AddressLine2":"Chomutov I",
+         "Town":"okres Chomutov",
+         "StateOrProvince":"okres Chomutov",
+         "Postcode":"43003",
+         "CountryID":64,
+         "Latitude":50.45665030461603,
+         "Longitude":13.393801630519874,
+         "AccessComments":"Na parkovišti obchodního domu.\r\nOn the Shoping mall parking.",
+         "RelatedURL":"https://www.eon.cz/drive",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":188544,
+            "ConnectionTypeID":32,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":125,
+            "Voltage":400,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":188545,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":125,
+            "Voltage":400,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":188546,
+            "ConnectionTypeID":1036,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":63,
+            "Voltage":400,
+            "PowerKW":43.0,
+            "CurrentTypeID":10,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"Acess at the https://www.eon.cz/drive web page or by E-On card.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-11-19T21:39:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-11-19T20:32:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":133965,
+      "UUID":"B4AE0FE9-B28B-4B99-A307-6EC9D02032FE",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"52257",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":134311,
+         "Title":"MG Restaurace",
+         "AddressLine1":"Bezdecin 136",
+         "Town":"Mlada Boleslav",
+         "Postcode":"29301",
+         "CountryID":64,
+         "Latitude":50.397157,
+         "Longitude":14.901055,
+         "ContactTelephone1":"+420 3816 79955",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":187460,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":9.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 9kW.Available for customers. Please see front desk.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-10-31T06:35:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-10-31T06:35:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":133070,
+      "UUID":"01EDBBA3-69D1-4592-93E9-D999CFFCBA1F",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"52062",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":133416,
+         "Title":"Zájezdní Hostinec U Jiskru",
+         "AddressLine1":"Kbelnice 23",
+         "Town":"Prestovice",
+         "Postcode":"38601",
+         "CountryID":64,
+         "Latitude":50.069805,
+         "Longitude":14.461984,
+         "ContactTelephone1":"+42 3863 21277",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":186351,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 22kW.Available to the public. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-10-12T05:50:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-10-12T05:50:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":132041,
+      "UUID":"0FD9C1F1-8F01-40A2-A8BC-2309CD6FDCC5",
+      "DataProviderID":1,
+      "OperatorID":105,
+      "UsageTypeID":6,
+      "UsageCost":"0 - platí se pouze za parkování 60 kč/hod/0 - charging is free of charge - parking fee is 60 CZK per hour",
+      "AddressInfo":{
+         "ID":132387,
+         "Title":"AeroParking - PC Comfort",
+         "AddressLine1":"K letišti 1019/6",
+         "AddressLine2":"Praha 6",
+         "Town":"Praha",
+         "Postcode":"161 00",
+         "CountryID":64,
+         "Latitude":50.1082834549997,
+         "Longitude":14.2707046331373,
+         "ContactTelephone1":"+420267972070",
+         "ContactEmail":"parking@prg.aero",
+         "AccessComments":"Nabíjecí standard: CCS (50kW DC), CHAdeMO (50kW DC), Typ 2 (22kW AC)\r\nK dispozici: 0-24 hod\r\nCena nabíjení: zákazník nabíjí zdarma – platí pouze parking v ceně 60 Kč/hod. (platba je možná v hotovosti i kartou na přepážce Aeroparkingu nebo v automatech/ charging is free of charge – parking fee is 60 CZK per hour (cash or card)\r\nPoznámka: Vjezd je přes autopůjčovnu – nabíjecí stanice je v přízemí/ Please proceed through Car Rental Return – charging station is on the ground level\r\n\r\n",
+         "RelatedURL":"https://www.aeroparking.cz/",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":184759,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":184760,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":184761,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":2,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-09-18T16:29:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-09-18T08:37:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":131437,
+      "UUID":"F3AF2DD5-B681-431E-985E-A1552E70489B",
+      "DataProviderID":1,
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":131783,
+         "Title":"Olomouc eGUTS",
+         "AddressLine1":"Legionářská",
+         "Town":"Olomouc",
+         "StateOrProvince":"okres Olomouc",
+         "Postcode":"779 00",
+         "CountryID":64,
+         "Latitude":49.5984898631608,
+         "Longitude":17.2463893747076,
+         "ContactEmail":"eguts@cdv.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":183995,
+            "ConnectionTypeID":25,
+            "StatusTypeID":150,
+            "LevelID":2,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "StatusTypeID":150,
+      "DateLastStatusUpdate":"2019-09-26T09:02:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-09-06T08:01:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":131064,
+      "UUID":"4BBACA37-A01D-48AD-9861-809BAF8C3C2E",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"51491",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":131410,
+         "Title":"Boutique Hotel Tanzberg",
+         "AddressLine1":"Husova 8/331",
+         "Town":"Mikulov",
+         "Postcode":"692 01",
+         "CountryID":64,
+         "Latitude":48.808348,
+         "Longitude":16.635639,
+         "ContactTelephone1":"+420 519 510 692",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":183559,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 17kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-08-28T20:06:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-08-28T20:06:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":131048,
+      "UUID":"54976CDB-EB2F-4378-8AE9-37BC66230F6A",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"51493",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":131394,
+         "Title":"Pivovar Podlesi",
+         "AddressLine1":"Podlesi 139",
+         "Town":"Pribram",
+         "Postcode":"261 01",
+         "CountryID":64,
+         "Latitude":49.689742,
+         "Longitude":13.981832,
+         "ContactTelephone1":"+42 3265 3194 9",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":183543,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 11kW.Available for customers. Please see front desk.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-08-28T20:03:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-08-28T20:03:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":131026,
+      "UUID":"4E91CCD7-A5D9-4789-B58E-882E3548B07F",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"51495",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":131372,
+         "Title":"Hotel U Svateho Huberta",
+         "AddressLine1":"Horni Naves 15",
+         "Town":"Lounovice",
+         "Postcode":"251 62",
+         "CountryID":64,
+         "Latitude":49.981165,
+         "Longitude":14.762465,
+         "ContactTelephone1":"+42 0731 9207 31",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":183521,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 17kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-08-28T19:59:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-08-28T19:59:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":131021,
+      "UUID":"CCC6CD83-ED11-4560-93C2-6843EC378594",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"51492",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":131367,
+         "Title":"Long Story Short - Hostel & Café",
+         "AddressLine1":"Kozeluzsk· 945/31",
+         "Town":"Olomouc",
+         "Postcode":"779 00",
+         "CountryID":64,
+         "Latitude":49.59769,
+         "Longitude":17.258521000000002,
+         "ContactTelephone1":"+420 588 008 278",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":183516,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 22kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-08-28T19:58:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-08-28T19:58:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":130977,
+      "UUID":"2E010570-9686-4773-BE54-01FF36CCF27F",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"51494",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":131323,
+         "Title":"Restaurace Zas A Znova",
+         "AddressLine1":"Hlavni 813",
+         "Town":"Sulice ñ Hlubocinka",
+         "Postcode":"251 68",
+         "CountryID":64,
+         "Latitude":49.937756,
+         "Longitude":14.553195,
+         "ContactTelephone1":"+420 323 631 764",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":183472,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 11kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-08-28T19:51:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-08-28T19:51:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":130973,
+      "UUID":"678053A9-284C-4D4E-8B5B-BCD05D4BF003",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"51563",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":131319,
+         "Title":"Pivovar Volt - Restaurace & Penzion",
+         "AddressLine1":"Palackeho 2302/28",
+         "Town":"Jablonec nad Nisou",
+         "Postcode":"466 01",
+         "CountryID":64,
+         "Latitude":50.731823,
+         "Longitude":15.169715,
+         "ContactTelephone1":"+420 77 888 5904",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":183468,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":9.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 9kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-08-28T19:50:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-08-28T19:50:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":130598,
+      "UUID":"443C4DEC-872D-46EE-9337-D4E2B3AEF45D",
+      "DataProviderID":1,
+      "OperatorID":192,
+      "UsageTypeID":1,
+      "UsageCost":"bezplatně",
+      "AddressInfo":{
+         "ID":130944,
+         "Title":"Besední",
+         "AddressLine1":"Besední",
+         "AddressLine2":"Město Brno",
+         "Town":"Brno",
+         "StateOrProvince":"okres Brno-město",
+         "Postcode":"602 00",
+         "CountryID":64,
+         "Latitude":49.1954724,
+         "Longitude":16.6050464,
+         "ContactTelephone1":"+420 542 122 111",
+         "ContactTelephone2":"+420 542 122 213",
+         "ContactEmail":"marketing@hotelinternational.cz",
+         "AccessComments":"The hotel has the main entrance from Husova Street. However, the hotel's garage, where charging stations are located, can be reached from Besední Street, which lies below the hotel. The stations themselves are in the garages on the wall to the right of the exit.\r\n\r\nTWO (2) stations 32A - 230V/400V right next to the exit, several (more than 15) Schuko outlets along the walls. Paid parking, CZK 60/hour. For Hotel guests 450,- CZK per 1 night stay. Charging is free.",
+         "RelatedURL":"https://www.hotelinternational.cz/",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":182830,
+            "ConnectionTypeID":17,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"The hotel has the main entrance from Husova Street. However, the hotel's garage, where charging stations are located, can be reached from Besední Street, which lies below the hotel. The stations themselves are in the garages on the wall to the right of the exit.\r\n\r\nTWO (2) stations 32A - 230V/400V right next to the exit, several (more than 15) Schuko outlets along the walls. Paid parking, CZK 60/hour. For Hotel guests 450,- CZK per 1 night stay. Charging is free.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-08-11T15:03:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-08-07T10:03:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":130437,
+      "UUID":"CD9DFE77-C64E-45D5-AF58-040DB11646EF",
+      "DataProviderID":1,
+      "OperatorID":192,
+      "UsageTypeID":1,
+      "UsageCost":"bezplatně",
+      "AddressInfo":{
+         "ID":130783,
+         "Title":"Best Western Premier Hotel International Brno",
+         "AddressLine1":"Besední",
+         "AddressLine2":"Město Brno",
+         "Town":"Brno",
+         "StateOrProvince":"okres Brno-město",
+         "Postcode":"602 00",
+         "CountryID":64,
+         "Latitude":49.1954724,
+         "Longitude":16.6050464,
+         "ContactTelephone1":"+420 542 122 111",
+         "ContactTelephone2":"+420 542 122 213",
+         "ContactEmail":"marketing@hotelinternational.cz",
+         "AccessComments":"The hotel has the main entrance from Husova Street. However, the hotel's garage, where charging stations are located, can be reached from Besední Street, which lies below the hotel. The stations themselves are in the garages on the wall to the right of the exit.\r\n\r\nTWO (2) stations 32A - 230V/400V right next to the exit, several (more than 15) Schuko outlets along the walls. Paid parking, CZK 60/hour. For Hotel guests 450,- CZK per 1 night stay. Charging is free.",
+         "RelatedURL":"https://www.hotelinternational.cz/",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":182607,
+            "ConnectionTypeID":17,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"The hotel has the main entrance from Husova Street. However, the hotel's garage, where charging stations are located, can be reached from Besední Street, which lies below the hotel. The stations themselves are in the garages on the wall to the right of the exit.\r\n\r\nTWO (2) stations 32A - 230V/400V right next to the exit, several (more than 15) Schuko outlets along the walls. Paid parking, CZK 60/hour. For Hotel guests 450,- CZK per 1 night stay. Charging is free.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-08-11T20:19:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-08-05T11:34:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":130394,
+      "UUID":"AB41940A-F65F-45B5-B46B-912FB52B1B81",
+      "DataProviderID":1,
+      "OperatorID":3250,
+      "UsageTypeID":1,
+      "UsageCost":"8 CZK/kWh (2019)",
+      "AddressInfo":{
+         "ID":130740,
+         "Title":"RPSnet SPŠ Tábor",
+         "AddressLine1":"Mostecká 1912/19",
+         "Town":"Tábor",
+         "Postcode":"390 02",
+         "CountryID":64,
+         "Latitude":49.4092612247582,
+         "Longitude":14.6733496617585,
+         "ContactTelephone1":"+420 774 705 095",
+         "ContactEmail":"info@rpsnet.cz",
+         "AccessComments":"nearly end of street (by railroad) ",
+         "RelatedURL":"https://www.rpsnet.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":182559,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":182560,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":182561,
+            "ConnectionTypeID":1036,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"One charging station with three cables (connectors CHAdeMO,CCS, Mennekes), paid option - credit card or EVmapa (credit based, call enabled billing system).",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-08-05T08:01:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-08-04T10:11:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":130393,
+      "UUID":"C6F06B3F-3572-47B1-85BB-E68222915B2C",
+      "DataProviderID":1,
+      "OperatorID":192,
+      "UsageTypeID":1,
+      "UsageCost":"bezplatně, cena je zahrnuta v parkování",
+      "AddressInfo":{
+         "ID":130739,
+         "Title":"Best Western Premier Hotel International Brno, Hotel Garage,  Besední ulice",
+         "AddressLine1":"Besední",
+         "AddressLine2":"Město Brno",
+         "Town":"Brno",
+         "StateOrProvince":"okres Brno-město",
+         "Postcode":"602 00",
+         "CountryID":64,
+         "Latitude":49.1955255489139,
+         "Longitude":16.6053108845797,
+         "ContactTelephone1":"+420 542 122 111",
+         "ContactTelephone2":"+420 542 122 213",
+         "ContactEmail":"marketing@hotelinternational.cz",
+         "AccessComments":"Hotel má hlavní vchod z Husovy ulice. K hotelové garáži, kde se nacházejí nabíjecí stanice, se však dostanete z Besední ulice, která leží pod hotelem. Samotné stanice jsou v garážích na zdi vpravo od výjezdu.\r\n\r\nDVĚ (2) stanice 32A - 230V / 400V, 15 vývodů Schuko podél zdí u jednotlivých parkovacích míst. Placené parkování, 60 Kč / hod. Pro hotelové hosty 450, - Kč za 1 noc. Nabíjení je zdarma.",
+         "RelatedURL":"https://www.hotelinternational.cz/",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":182558,
+            "ConnectionTypeID":17,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"Nabíjecí stanice jsou umístěny přímo pod hotelem v jeho garážích. Příjezd je velmi snadný, z hlavní ulice Husova kolem Besedního domu na ulici Besední, kde je viditelně umístěna na hotelu značka \"kryté parkování\". Stanice jsou instalovány napravo od výjezdu z garáží.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-08-11T20:19:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-08-04T07:43:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":129946,
+      "UUID":"2B131A3A-5A1B-44AD-BA09-60E745CA4C9D",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"51248",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":130292,
+         "Title":"Hotel A Pivovar Kleis",
+         "AddressLine1":"Pivovarska 405",
+         "Town":"Cvikov",
+         "Postcode":"47154",
+         "CountryID":64,
+         "Latitude":50.776917,
+         "Longitude":14.642514,
+         "ContactTelephone1":"+42 730 1800 90",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":181936,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 11kW.Available to the public. Please see front desk.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-07-30T09:25:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-07-30T09:25:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":129840,
+      "UUID":"231BE982-956D-42F1-922B-5B23A773313A",
+      "DataProviderID":1,
+      "OperatorID":1,
+      "UsageTypeID":1,
+      "UsageCost":"nothing",
+      "AddressInfo":{
+         "ID":130186,
+         "Title":"Charging station only",
+         "AddressLine1":"Sedlice82",
+         "Town":"Rozmital pod Tremsinem",
+         "StateOrProvince":"Czech Republic",
+         "Postcode":"26242",
+         "CountryID":64,
+         "Latitude":49.6275965376723,
+         "Longitude":13.8734945708356,
+         "ContactTelephone1":"+420736666522",
+         "ContactTelephone2":"+420603208447",
+         "ContactEmail":"pepamatejka@gmail.com",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":181783,
+            "ConnectionTypeID":1036,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":440,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"Just ring a bell and have a coffee during charging. You are always welcome.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-07-30T10:32:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-07-28T15:31:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":129309,
+      "UUID":"D04C7226-BC19-4C00-ABF1-6DCEDEC250C9",
+      "DataProviderID":1,
+      "OperatorID":1,
+      "UsageTypeID":0,
+      "AddressInfo":{
+         "ID":129655,
+         "Title":"Amenity Hotel Lipno Lake",
+         "AddressLine1":"Lipno nad Vltavou 163",
+         "Town":"Lipno nad Vltavou",
+         "StateOrProvince":"South-Bohemia",
+         "CountryID":64,
+         "Latitude":48.6374772337228,
+         "Longitude":14.2067303323041,
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":180978,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-07-17T10:15:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-07-16T21:45:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":128394,
+      "UUID":"88BFCAE9-7415-419E-A8DC-217FC85F323F",
+      "DataProviderID":1,
+      "OperatorID":115,
+      "UsageTypeID":5,
+      "UsageCost":"9.0 CZK/1 min",
+      "AddressInfo":{
+         "ID":128740,
+         "Title":"Autodrom Most 2",
+         "AddressLine1":"Tvrzova 5",
+         "Town":"Most",
+         "Postcode":"435 02",
+         "CountryID":64,
+         "Latitude":50.518837,
+         "Longitude":13.604357,
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":179749,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "Quantity":1
+         },
+         {
+            "ID":179750,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":125,
+            "Voltage":400,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":179751,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":125,
+            "Voltage":400,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":2,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-06-24T12:32:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-06-24T00:09:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":128303,
+      "UUID":"3AB95FE1-2BBA-47D2-94D4-A6170AE43D6B",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"50729",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":128649,
+         "Title":"Restaurace Farm Table",
+         "AddressLine1":"U Kovarny 24",
+         "Town":"Klecany",
+         "StateOrProvince":"0",
+         "Postcode":"25067",
+         "CountryID":64,
+         "Latitude":50.175839,
+         "Longitude":14.40994,
+         "ContactTelephone1":"+42 7730 44411",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":179592,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":14.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 14kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-06-21T06:09:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-06-21T06:09:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":128126,
+      "UUID":"6588C95C-0ADD-46FB-BE3E-6357F7CFE2D4",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"47486",
+      "UsageTypeID":6,
+      "AddressInfo":{
+         "ID":128472,
+         "Title":"Na Fare - Gesthouse & Restaurant",
+         "AddressLine1":"Dubenec 1",
+         "Town":"Dubenec u Dvora Kralove",
+         "Postcode":"544 55",
+         "CountryID":64,
+         "Latitude":50.371982,
+         "Longitude":15.810346,
+         "ContactTelephone1":"+42 0603 257405",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":179297,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":14.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 14kW.Available for patrons only. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-06-15T06:23:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-06-15T06:23:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":128125,
+      "UUID":"6908597B-8C38-4E1D-A1DD-787EC4DB0B70",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46179",
+      "UsageTypeID":6,
+      "AddressInfo":{
+         "ID":128471,
+         "Title":"Wellness Hotel Babylon",
+         "AddressLine1":"Nitranska 1",
+         "Town":"Liberec",
+         "Postcode":"460 12",
+         "CountryID":64,
+         "Latitude":50.758842,
+         "Longitude":15.051705,
+         "ContactTelephone1":"+42 0485 249593",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":179296,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":14.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 14kW.Available for patrons only. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-06-15T06:23:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-06-15T06:23:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":127839,
+      "UUID":"C16997E3-CF3D-4F09-A0FE-8FC668A3DC65",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"40182",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":128185,
+         "Title":"Besidka Hotel",
+         "AddressLine1":"Horni Namesti 552",
+         "Town":"Slavonice",
+         "Postcode":"378 81",
+         "CountryID":64,
+         "Latitude":48.997482,
+         "Longitude":15.352849,
+         "ContactTelephone1":"+42 0606 212070",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":178954,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 17kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-06-12T05:59:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-06-12T05:59:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":127563,
+      "UUID":"74CC285B-6666-405E-9C5C-1D0B375CD14B",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"50463",
+      "UsageTypeID":7,
+      "AddressInfo":{
+         "ID":127909,
+         "Title":"Hotel Obzor",
+         "AddressLine1":"Pec Pod Snezkou 221",
+         "Town":"Pec pod Snežkou",
+         "Postcode":"54221",
+         "CountryID":64,
+         "Latitude":50.68653,
+         "Longitude":15.719129,
+         "ContactTelephone1":" +42 0702 075349",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":178568,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 11kW.Available by reservation only. Please call ahead.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-06-05T11:43:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-06-05T11:43:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":127260,
+      "UUID":"E00DCEF6-2B6E-4B74-92B5-9469FF8AF0EB",
+      "DataProviderID":1,
+      "OperatorID":221,
+      "UsageTypeID":1,
+      "UsageCost":"6 CZK/kwh",
+      "AddressInfo":{
+         "ID":127606,
+         "Title":"Leskovec nad Moravicí - kulturní dům",
+         "AddressLine1":" Leskovec nad Moravicí 220",
+         "Town":"Leskovec nad Moravicí",
+         "StateOrProvince":"okres Bruntál",
+         "Postcode":"79368",
+         "CountryID":64,
+         "Latitude":49.908969,
+         "Longitude":17.578648,
+         "ContactTelephone1":"+420 605 530 288",
+         "ContactEmail":"LUKYsystem@seznam.cz",
+         "AccessComments":"Dobré místo pro parkování a nabíjení nedaleko přehrady Slezská Harta.",
+         "RelatedURL":"https://www.evmapa.cz/leskovec-nad-moravici-kulturni-dum",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":178197,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"Wallbox LUKY 22kW nezamykací zásuvka.\r\nNabíjení podle spotřebovaných kWh bez časového omezení.\r\nWifi u nabíječky zdarma.\r\nManuál - CZ, ENG, D, PL.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-06-03T05:44:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-06-03T05:44:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":125493,
+      "UUID":"4F6C4B2D-BE63-4617-9704-2E3584896FE4",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"49873",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":125839,
+         "Title":"Golf Club Molitorov",
+         "AddressLine1":"Molitorov 37",
+         "Town":"Kourim",
+         "Postcode":"28161",
+         "CountryID":64,
+         "Latitude":49.99697,
+         "Longitude":14.958765,
+         "ContactTelephone1":" +42 0776 600001",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":175852,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":14.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 14kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-04-19T05:58:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-04-19T05:58:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":118105,
+      "UUID":"6F932AA9-97DD-42D8-8645-C94A6692121B",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"48996",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":118451,
+         "Title":"Museum Bozeny Nemcove",
+         "AddressLine1":"Maloskalicka 68",
+         "Town":"Ceska Skalice",
+         "Postcode":"552 03",
+         "CountryID":64,
+         "Latitude":50.395629,
+         "Longitude":16.036209,
+         "ContactTelephone1":" +42 0491 451285",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":167124,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 22kW.Available to the public. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-03-14T23:34:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-03-14T23:34:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":117964,
+      "UUID":"6D9586B6-1F30-43DD-86C9-D620ECA94E38",
+      "DataProviderID":1,
+      "OperatorID":45,
+      "UsageTypeID":6,
+      "AddressInfo":{
+         "ID":118310,
+         "Title":"Wellness Hotel Lužan",
+         "AddressLine1":"Lužické náměstí 212",
+         "Town":"Rumburk",
+         "StateOrProvince":"okres Děčín",
+         "Postcode":"40801",
+         "CountryID":64,
+         "Latitude":50.9510450955315,
+         "Longitude":14.5583894593103,
+         "ContactTelephone1":"+420602111777",
+         "ContactEmail":"info@hotelluzan.cz",
+         "RelatedURL":"http://www.hotelluzan.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":166975,
+            "ConnectionTypeID":17,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"For electric car owners, we offer the option to charge the vehicle via our 16-pole (red) 3-phase socket. You need an adapter that the hotel does not provide.\r\nWe recommend that you contact the hotel reception in advance at +420 602 111 777 or send an e-mail to info@hotelluzan.cz. ",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-03-14T09:50:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-03-14T04:48:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":117755,
+      "UUID":"93362F1F-6573-4145-976B-290A1EA370ED",
+      "DataProviderID":1,
+      "OperatorID":3340,
+      "UsageTypeID":4,
+      "UsageCost":"7.50 Kč/kWh",
+      "AddressInfo":{
+         "ID":118101,
+         "Title":"VEOLIA OC Bucharova 50+22kW",
+         "AddressLine1":"Bucharova",
+         "AddressLine2":"Stodůlky",
+         "Town":"Praha",
+         "StateOrProvince":"okres Hlavní město Praha",
+         "Postcode":"15500",
+         "CountryID":64,
+         "Latitude":50.0554208703551,
+         "Longitude":14.3422332587664,
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":166606,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":166607,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":166608,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"You need polyfazer app",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-09-27T14:56:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-02-27T19:31:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":116814,
+      "UUID":"D6203A80-5C9D-49D9-8551-842D6F4A3C1E",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"48785",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":117160,
+         "Title":"Hotel Kristian",
+         "AddressLine1":"Kubova Hut 26",
+         "Town":"Vimperk",
+         "Postcode":"385 01",
+         "CountryID":64,
+         "Latitude":48.983143,
+         "Longitude":13.771995,
+         "ContactTelephone1":" +42 0380 423099",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":165372,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 17kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-02-12T11:37:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-02-12T11:37:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":114876,
+      "UUID":"1108D17E-3E47-4A9D-8102-A1A4DF7BF884",
+      "DataProviderID":1,
+      "OperatorID":115,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":115222,
+         "Title":"Mc Donald's - Černý Most",
+         "AddressLine1":"Chlumecká 765/6",
+         "Town":"Praha - Černý Mostr",
+         "CountryID":64,
+         "Latitude":50.10965707811832,
+         "Longitude":14.583849850515573,
+         "AccessComments":"CZ: Placená, je potřebná smlouva pro získání RFID karty od ČEZu (paušální platba) . \r\nEN: Paid, contract needed to get an RFID card from ČEZ (flat payment).",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":161644,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":120,
+            "Voltage":500,
+            "PowerKW":50.0,
+            "Quantity":1
+         },
+         {
+            "ID":161645,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":120,
+            "Voltage":500,
+            "PowerKW":50.0,
+            "Quantity":1
+         },
+         {
+            "ID":161646,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-18T14:14:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-18T10:26:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":114681,
+      "UUID":"62E13AE6-EDDA-49D0-B3FC-3CC3922DF42E",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"48191",
+      "UsageTypeID":6,
+      "AddressInfo":{
+         "ID":115027,
+         "Title":"Zamek Ratmerice - Hotel & Resort",
+         "AddressLine1":"Ratmerice 1",
+         "Town":"Ratmerice",
+         "Postcode":"257 03",
+         "CountryID":64,
+         "Latitude":49.644403,
+         "Longitude":14.758502,
+         "ContactTelephone1":"+42 0312 600100",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":161401,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 17kW.Available for patrons only. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-13T06:45:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-13T06:45:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":114663,
+      "UUID":"04DE278C-F07D-4568-B069-090DDC597913",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"48192",
+      "UsageTypeID":6,
+      "AddressInfo":{
+         "ID":115009,
+         "Title":"Kavarna & Cajovna - Sonnentor",
+         "AddressLine1":"Prihon 943",
+         "Town":"Cejkovice",
+         "Postcode":"696 15",
+         "CountryID":64,
+         "Latitude":48.90231,
+         "Longitude":16.946975,
+         "ContactTelephone1":"+42 0518 362687",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":161383,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 11kW.Available for patrons only. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-13T06:39:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-13T06:39:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":114593,
+      "UUID":"A75EE46F-A237-4236-81EF-FBCD7A97FC20",
+      "DataProviderID":1,
+      "OperatorID":190,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":114939,
+         "Title":"PRE IKEA Černý Most",
+         "AddressLine1":"Chlumecká 664/10",
+         "Town":"Praha",
+         "Postcode":"19800",
+         "CountryID":64,
+         "Latitude":50.1045207578567,
+         "Longitude":14.5874063374724,
+         "AccessComments":"V podzemních garážích 30 m od vchodu\r\nIn the underground garage 30 metres from IKEA Entrance",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":161294,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":125,
+            "Voltage":400,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":161295,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":120,
+            "Voltage":400,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":161296,
+            "ConnectionTypeID":1036,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":63,
+            "Voltage":400,
+            "PowerKW":43.0,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-03-07T11:21:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-10T15:32:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":114522,
+      "UUID":"88B93EA6-3E4A-487B-A709-C878CAD10C3E",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"43371",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":114868,
+         "Title":"Babyhouse",
+         "AddressLine1":"Dolni Lomna 96",
+         "Town":"Dolni Lomna",
+         "Postcode":"73991",
+         "CountryID":64,
+         "Latitude":49.561064,
+         "Longitude":18.739657,
+         "ContactTelephone1":"+42 0702 201060",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":161203,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 11kW.Available to the public. Please call ahead.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-09T10:36:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-09T10:36:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":114165,
+      "UUID":"580CADB1-CE6C-4679-B97D-F52070215A46",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"47967",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":114511,
+         "Title":"Hotel Koruna",
+         "AddressLine1":"Prazska 10",
+         "Town":"Chlumec nad Cidlinou",
+         "Postcode":"50351",
+         "CountryID":64,
+         "Latitude":50.157151,
+         "Longitude":15.453618,
+         "ContactTelephone1":" +42 0774 746745",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160735,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":14.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 14kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-03T08:05:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-03T08:05:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":114100,
+      "UUID":"A03575F1-B003-4795-BF56-13E01E6835BE",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46717",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":114446,
+         "Title":"Restaurace Steakgrill",
+         "AddressLine1":"Racineves 189",
+         "Town":"Roudnice nad Labem",
+         "Postcode":"41301",
+         "CountryID":64,
+         "Latitude":50.389698,
+         "Longitude":14.225148,
+         "ContactTelephone1":" +42 0777 330050",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160670,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 11kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-03T07:52:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-03T07:52:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":114096,
+      "UUID":"091B537B-2DF2-4721-B1AA-99EBF0E43F47",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"47356",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":114442,
+         "Title":"Rajska Zahrada - Wellness Hotel & Restaurant",
+         "AddressLine1":"Komenskeho 70",
+         "Town":"Nove Mesto nad Metuji",
+         "Postcode":"549 01",
+         "CountryID":64,
+         "Latitude":50.346617,
+         "Longitude":16.150842,
+         "ContactTelephone1":" +42 0773 777773",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160666,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 11kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-03T07:51:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-03T07:51:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":114071,
+      "UUID":"06779A5B-8266-4615-BCDB-53EC95176CDE",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46873",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":114417,
+         "Title":"Golf Resort Bitozeves",
+         "AddressLine1":"Bitozeves 12",
+         "Town":"Louny",
+         "Postcode":"440 01",
+         "CountryID":64,
+         "Latitude":50.374557,
+         "Longitude":13.645392,
+         "ContactTelephone1":"+42 0725 923022",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160641,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 11kW.Available to the public. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-03T06:46:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-03T06:46:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":114020,
+      "UUID":"9C98693D-3937-4EFD-83B0-653AF46A4A71",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"47981",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":114366,
+         "Title":"Spa Hotel Vita",
+         "AddressLine1":"Skuherskeho 4",
+         "Town":"Ceske Budejovice",
+         "Postcode":"37001",
+         "CountryID":64,
+         "Latitude":48.980857,
+         "Longitude":14.472795,
+         "ContactTelephone1":" +420 3872 01009",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160590,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 22kW.Available for customers. Please call ahead.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-03T06:35:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-03T06:35:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113960,
+      "UUID":"962A1094-241A-468C-BB00-BB4D0A4CE470",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"47487",
+      "UsageTypeID":6,
+      "AddressInfo":{
+         "ID":114306,
+         "Title":"Stara Hospoda - Penzion & Restaurace",
+         "AddressLine1":"Doubice 172",
+         "Town":"Varnsdorf",
+         "Postcode":"407 47",
+         "CountryID":64,
+         "Latitude":50.889017,
+         "Longitude":14.457453,
+         "ContactTelephone1":"+42 0412 381432",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160530,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":14.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 14kW.Available for patrons only. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-02T22:04:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-02T22:04:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113947,
+      "UUID":"260AA0CB-EEEB-4A7D-9CA6-4C101DE879E5",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"47980",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":114293,
+         "Title":"Hotel Kasperk",
+         "AddressLine1":"Namesti 3",
+         "Town":"34192 Kasper",
+         "StateOrProvince":"Kasperske Hory",
+         "Postcode":"34192",
+         "CountryID":64,
+         "Latitude":49.144213,
+         "Longitude":13.555013,
+         "ContactTelephone1":" +42 0376 324113",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160517,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":14.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 14kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-02T22:02:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-02T22:02:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113933,
+      "UUID":"8FD62614-2946-4D90-B75D-A2CE9E52471A",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46899",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":114279,
+         "Title":"Hotel Baltaci Atrium",
+         "AddressLine1":"Lesetin Ii/651",
+         "Town":"Zlin",
+         "Postcode":"76001",
+         "CountryID":64,
+         "Latitude":49.228538,
+         "Longitude":17.673764,
+         "ContactTelephone1":"+42 0577 004100",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160503,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":14.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 14kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-02T22:00:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-02T22:00:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113812,
+      "UUID":"9D9EDDCD-B65A-4A7F-9D92-1811DEC7542E",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"47484",
+      "UsageTypeID":6,
+      "AddressInfo":{
+         "ID":114158,
+         "Title":"Pracharna - Hotel & Restaurant",
+         "AddressLine1":"Krelovska 91",
+         "Town":"Olomouc",
+         "Postcode":"779 00",
+         "CountryID":64,
+         "Latitude":49.607805,
+         "Longitude":17.216171,
+         "ContactTelephone1":"+42 0585 411271",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160382,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":6.0,
+            "CurrentTypeID":10,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 6kW.Available for patrons only. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-02T21:39:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-02T21:39:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113796,
+      "UUID":"504A2537-3A3E-4FBE-9745-E4E12E128232",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46720",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":114142,
+         "Title":"Hotel Pod Zamkem",
+         "AddressLine1":"Hornomestska",
+         "Town":"Velke Mezirici",
+         "Postcode":"59401",
+         "CountryID":64,
+         "Latitude":49.355686,
+         "Longitude":16.011453,
+         "ContactTelephone1":" +42 0777 702109",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160366,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 17kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-02T21:36:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-02T21:36:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113771,
+      "UUID":"FF4F1DAD-03B4-4949-9F6C-30954DA40981",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"47962",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":114117,
+         "Title":"Vila Elis",
+         "AddressLine1":"Tyrsova 319/28",
+         "Town":"Jesenik",
+         "Postcode":"79001",
+         "CountryID":64,
+         "Latitude":50.227714,
+         "Longitude":17.195742,
+         "ContactTelephone1":" +42 0727 899731",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160341,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 17kW.Available for customers. Please call ahead.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-02T21:32:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-02T21:32:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113747,
+      "UUID":"F93E6917-4FFA-471F-B547-CD2A3E43E5D4",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46898",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":114093,
+         "Title":"Maximus Resort",
+         "AddressLine1":"Hrazni 327/4a",
+         "Town":"Brno",
+         "Postcode":"63500",
+         "CountryID":64,
+         "Latitude":49.243578,
+         "Longitude":16.51584,
+         "ContactTelephone1":"+42 0546 221035",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160317,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 17kW.Available to the public. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-02T21:28:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-02T21:28:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113733,
+      "UUID":"6F263A9F-4722-4917-B64A-0A4BB7D578DE",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46897",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":114079,
+         "Title":"Ristorante Pizzeria Hemerkuv Statek",
+         "AddressLine1":"Ouvalova 390/5",
+         "Town":"Slany",
+         "Postcode":"27401",
+         "CountryID":64,
+         "Latitude":50.227905,
+         "Longitude":14.089723,
+         "ContactTelephone1":"+42 0577 004100",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160303,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 17kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-02T21:26:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-02T21:26:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113732,
+      "UUID":"49C27F91-EC12-4866-9E2F-32CE7D93742A",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"47964",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":114078,
+         "Title":"Hotel Slunny Dvur",
+         "AddressLine1":"Priessnitzova 458/8",
+         "Town":"Jesenik",
+         "Postcode":"79003",
+         "CountryID":64,
+         "Latitude":50.238201,
+         "Longitude":17.187623,
+         "ContactTelephone1":" +42 0588 886602",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":160302,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 11kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-02T21:26:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2019-01-02T21:26:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113519,
+      "UUID":"72C5FD65-A15F-47B3-A0E8-37B505947F27",
+      "DataProviderID":1,
+      "OperatorID":115,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":113865,
+         "Title":"Benzina Hradec nad Svitavou",
+         "AddressLine1":"Bezina",
+         "AddressLine2":"Hradec nad Svitavou",
+         "Town":"Hradec nad Svitavou",
+         "StateOrProvince":"okres Svitavy",
+         "Postcode":"56901",
+         "CountryID":64,
+         "Latitude":49.7148,
+         "Longitude":16.4859,
+         "RelatedURL":"http://www.elektromobilita.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":159949,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":159950,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":1,
+            "PowerKW":50.0,
+            "CurrentTypeID":30
+         },
+         {
+            "ID":159951,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-12-17T14:45:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-12-17T14:45:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113518,
+      "UUID":"2F0CF041-D4F6-4D44-ABF5-4E217C6E5449",
+      "DataProviderID":1,
+      "OperatorID":115,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":113864,
+         "Title":"Kaufland Teplice",
+         "AddressLine1":"Čs. dobrovolců",
+         "Town":"Teplice",
+         "StateOrProvince":"okres Teplice",
+         "Postcode":"41503",
+         "CountryID":64,
+         "Latitude":50.638863,
+         "Longitude":13.819584,
+         "RelatedURL":"http://www.elektromobilita.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":159946,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":159947,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":159948,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-12-17T14:41:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-12-17T14:41:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113517,
+      "UUID":"87E480EB-872A-4F48-BB29-86D79C4835A6",
+      "DataProviderID":1,
+      "OperatorID":115,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":113863,
+         "Title":"Litoměřice Krajská",
+         "AddressLine1":"Krajská 66/7",
+         "Town":"Litoměřice",
+         "StateOrProvince":"okres Litoměřice",
+         "Postcode":"41201",
+         "CountryID":64,
+         "Latitude":50.5357,
+         "Longitude":14.1292,
+         "RelatedURL":"http://www.elektromobilita.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":159943,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":159944,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":159945,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-12-17T14:50:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-12-17T14:37:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113516,
+      "UUID":"D1C7EC33-7E5F-4D45-BE53-E4366ED4EB3E",
+      "DataProviderID":1,
+      "OperatorID":115,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":113862,
+         "Title":"Benzina Ostrava Rudná",
+         "AddressLine1":"Rudná",
+         "AddressLine2":"Ostrava-Zábřeh",
+         "Town":"Ostrava",
+         "StateOrProvince":"okres Ostrava-město",
+         "Postcode":"706 02",
+         "CountryID":64,
+         "Latitude":49.7978,
+         "Longitude":18.2388,
+         "RelatedURL":"http://www.elektromobilita.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":159940,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":159941,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":159942,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-12-17T14:24:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-12-17T14:23:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113504,
+      "UUID":"D5B08349-8900-4EDA-BD61-B76600995200",
+      "DataProviderID":1,
+      "OperatorID":192,
+      "UsageTypeID":1,
+      "UsageCost":"Zdarma / Free",
+      "AddressInfo":{
+         "ID":113850,
+         "Title":"Globus, Zličín",
+         "AddressLine1":"Sárská",
+         "AddressLine2":"133/5",
+         "Town":"Praha",
+         "StateOrProvince":"okres Hlavní město Praha",
+         "Postcode":"15500",
+         "CountryID":64,
+         "Latitude":50.052394024835,
+         "Longitude":14.2957714590434,
+         "AccessComments":"Na parkovišti obchodního domu\r\nOn the Globus shoping center parking",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":159925,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":120,
+            "Voltage":500,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":159926,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":125,
+            "Voltage":500,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":159927,
+            "ConnectionTypeID":1036,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":63,
+            "Voltage":400,
+            "PowerKW":43.0,
+            "CurrentTypeID":10,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"12/2018",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-12-21T20:51:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-12-16T20:01:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113463,
+      "UUID":"89045EE0-3A54-44D8-A9CF-8CCE86D71CDF",
+      "DataProviderID":1,
+      "OperatorID":45,
+      "UsageTypeID":2,
+      "UsageCost":"N/A",
+      "AddressInfo":{
+         "ID":113809,
+         "Title":"inChaNet Poříčany - D11 Exit 25",
+         "AddressLine1":"Tovární",
+         "AddressLine2":"Poříčany",
+         "Town":"Poříčany",
+         "StateOrProvince":"okres Kolín",
+         "Postcode":"28914",
+         "CountryID":64,
+         "Latitude":50.1168307713273,
+         "Longitude":14.9371484288002,
+         "ContactTelephone1":"+420776333155",
+         "AccessComments":"D11 Exit 25 (direction Č. Brod)\r\nV areálu firmy BENEŠ a LÁT, a.s.\r\nIn the industrial zone BENES a LAT, a. s. near Police station",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":159858,
+            "ConnectionTypeID":1036,
+            "StatusTypeID":0,
+            "LevelID":3,
+            "Voltage":400,
+            "Quantity":1
+         },
+         {
+            "ID":159859,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":120,
+            "Voltage":500,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":2
+         },
+         {
+            "ID":161925,
+            "ConnectionTypeID":33,
+            "LevelID":3,
+            "Quantity":1
+         },
+         {
+            "ID":161926,
+            "ConnectionTypeID":2,
+            "LevelID":3,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":5,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-01-28T15:42:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-12-13T13:04:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113397,
+      "UUID":"7E44694B-141D-4434-A62C-7D7A58A2D2A0",
+      "DataProviderID":1,
+      "OperatorID":221,
+      "UsageTypeID":1,
+      "UsageCost":"zdarma",
+      "AddressInfo":{
+         "ID":113743,
+         "Title":"Skipark Červená Voda",
+         "AddressLine1":"Skipark Červená Voda parkoviště č. 4",
+         "Town":"Červená Voda",
+         "StateOrProvince":"okres Ústí nad Orlicí",
+         "Postcode":"56161",
+         "CountryID":64,
+         "Latitude":50.006339,
+         "Longitude":16.734251,
+         "AccessComments":"Operátor EVmapa.cz",
+         "RelatedURL":"https://www.evmapa.cz/skipark-cervena-voda",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":159726,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-12-09T20:35:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-12-09T20:34:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":113395,
+      "UUID":"80BEFC85-F527-4B0B-8FD4-36FB2B3B6F0C",
+      "DataProviderID":1,
+      "OperatorID":221,
+      "UsageTypeID":1,
+      "UsageCost":"zdarma",
+      "AddressInfo":{
+         "ID":113741,
+         "Title":"Vavřínovy Lázně restaurace",
+         "AddressLine1":"Bezděkov 232",
+         "Town":"Česká Třebová",
+         "StateOrProvince":"okres Ústí nad Orlicí",
+         "Postcode":"56002",
+         "CountryID":64,
+         "Latitude":49.900733,
+         "Longitude":16.453507,
+         "ContactTelephone1":"+420 775 656 680",
+         "RelatedURL":"https://www.evmapa.cz/vavrinovy-lazne-restaurace",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":159724,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-12-16T14:14:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-12-09T20:20:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":112775,
+      "UUID":"AF95B810-F59C-4EB3-B8A1-0982C1CF09F6",
+      "DataProviderID":1,
+      "OperatorID":45,
+      "UsageTypeID":1,
+      "UsageCost":"Free",
+      "AddressInfo":{
+         "ID":113121,
+         "Title":"LIDL Brněnská HK",
+         "AddressLine1":"Brněnská 1870/33a",
+         "AddressLine2":"Nový Hradec Králové",
+         "Town":"Hradec Králové",
+         "StateOrProvince":"okres Hradec Králové",
+         "Postcode":"50004",
+         "CountryID":64,
+         "Latitude":50.190102,
+         "Longitude":15.8507258,
+         "RelatedURL":"http://www.lidl.cz/",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":158804,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":158805,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":158806,
+            "ConnectionTypeID":1036,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":64,
+            "Voltage":400,
+            "PowerKW":43.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":2,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-03-30T16:44:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-11-13T14:47:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":112732,
+      "UUID":"02CC98B6-84BB-4EB7-A73C-014CF2786B73",
+      "DataProviderID":1,
+      "OperatorID":45,
+      "UsageTypeID":6,
+      "AddressInfo":{
+         "ID":113078,
+         "Title":"Schrothovy léčebné lázně",
+         "AddressLine1":"Dolní Lipová 382",
+         "Town":"Lipová-lázně",
+         "StateOrProvince":"okres Jeseník",
+         "Postcode":"79061",
+         "CountryID":64,
+         "Latitude":50.22663,
+         "Longitude":17.145261,
+         "ContactTelephone1":"+420 777 457 111",
+         "ContactEmail":"recepce@lazne-lipova.cz",
+         "RelatedURL":"http://www.lazne-lipova.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":158734,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1x Tesla Destination Charger + 1x jiná BEV",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-11-13T09:27:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-11-13T09:24:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":112728,
+      "UUID":"3739A2A4-318A-4437-B8A1-9D20B61F88F8",
+      "DataProviderID":1,
+      "OperatorID":221,
+      "UsageTypeID":1,
+      "UsageCost":"4.1Kč/kWh",
+      "AddressInfo":{
+         "ID":113074,
+         "Title":"Ramzová - Bonera",
+         "AddressLine1":"Ramzová 75",
+         "Town":"Ramzová",
+         "StateOrProvince":"okres Jeseník",
+         "Postcode":"78825",
+         "CountryID":64,
+         "Latitude":50.191609,
+         "Longitude":17.069489,
+         "ContactTelephone1":"+420 605 279 435",
+         "ContactEmail":"bonera@bonera.cz",
+         "AccessComments":"Nabíječka je na \"Chatě u lanové dráhy\" (dřevák).\r\n\r\nZde je nástupní stanice lanovky na Čerňavu a Šerák s krásnou vyhlídkou (panoramata) po okolí. Také je zde nejvýše položená železniční zastávka na Moravě. Hned za touto zastávkou je Chata Ramzovské sedlo - celoročně provozovaná restaurace s penzionem a i wellnes.",
+         "RelatedURL":"https://www.evmapa.cz/ramzova-bonera",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":158729,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"Wallbox LUKY 22kW nezamykací zásuvka. Nabíjení podle spotřebovaných kWh bez časového omezení.\r\nWi-fi u nabíječky zdarma. ",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-11-13T08:59:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-11-13T08:42:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":112727,
+      "UUID":"1D7935A5-0D56-4A2C-839B-9462F94C22E2",
+      "DataProviderID":1,
+      "OperatorID":221,
+      "UsageTypeID":1,
+      "UsageCost":"4.4Kč/kWh",
+      "AddressInfo":{
+         "ID":113073,
+         "Title":"Karlovice - Pension Schaumannův Dvůr",
+         "AddressLine1":"Karlovice 231",
+         "Town":"Karlovice",
+         "StateOrProvince":"okres Bruntál",
+         "Postcode":"79323",
+         "CountryID":64,
+         "Latitude":50.10031,
+         "Longitude":17.453019,
+         "ContactTelephone1":"+420603356242",
+         "ContactEmail":"sd@pensionsd.cz",
+         "AccessComments":"Nabíjecí stanice je umístěna uvnitř areálu na dolním parkovišti, jak je na fotce bílá dodávka.\r\nVjezd hlavní bránou, pokud je zavřená, tak volejte na výše uvedené telefonní číslo pro otevření.\r\nBěhem hlavní sezony od 1.5 do 30.9 je otevřena stále.",
+         "RelatedURL":"https://www.evmapa.cz/karlovice-pension-schaumannuv-dvur",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":158728,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"Wallbox LUKY 22kW zamykací zásuvka.\r\nNabíjení podle spotřebovaných kWh bez časového omezení. \r\nWi-fi u nabíječky zdarma.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-11-13T08:36:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-11-13T08:06:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":112726,
+      "UUID":"DFD02E41-2907-4F62-80A6-A709C89AC39D",
+      "DataProviderID":1,
+      "OperatorID":221,
+      "UsageTypeID":1,
+      "UsageCost":"3.5Kč/kWh",
+      "AddressInfo":{
+         "ID":113072,
+         "Title":"Rýmařov - garáže Technických služeb",
+         "AddressLine1":"Palackého 16",
+         "Town":"Rýmařov",
+         "StateOrProvince":"okres Bruntál",
+         "Postcode":"79501",
+         "CountryID":64,
+         "Latitude":49.936379,
+         "Longitude":17.269153,
+         "ContactTelephone1":"+420605530288",
+         "ContactEmail":"LUKYsystem@seznam.cz",
+         "RelatedURL":"https://www.evmapa.cz/rymarov-u-garazi-technickych-sluzeb",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":158727,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"Wallbox LUKY 22kW zamykací zásuvka. Nabíjení podle spotřebovaných kWh a bez časového omezení.  Wi-fi u nabíječky zdarma.\r\n\r\nBlízkou jsou dva obchody, Rýmařovanka, Jednota a o kousek dál ještě Penny Market, nebo také náměstí města.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-11-13T07:59:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-11-13T07:55:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":112382,
+      "UUID":"D04125DE-7F4F-428E-9A52-06A3BDE5206A",
+      "DataProviderID":1,
+      "OperatorID":45,
+      "UsageTypeID":1,
+      "UsageCost":"free",
+      "AddressInfo":{
+         "ID":112728,
+         "Title":"Hotel SwissHouse",
+         "AddressLine1":"Zeyerova 87",
+         "AddressLine2":"Úšovice",
+         "Town":"okres Cheb",
+         "StateOrProvince":"okres Cheb",
+         "Postcode":"353 01",
+         "CountryID":64,
+         "Latitude":49.96470076835993,
+         "Longitude":12.708550096392173,
+         "ContactTelephone1":"+420 354 602 200",
+         "ContactEmail":"info@swisshouse.cz",
+         "AccessComments":"24/7 on last parking spot left ",
+         "RelatedURL":"http://www.swisshouse.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":158067,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":240,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-28T10:21:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-26T18:57:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":112276,
+      "UUID":"12A12EF0-BEE4-42C6-9627-317DE69C29CC",
+      "DataProviderID":1,
+      "OperatorID":1,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":112622,
+         "Title":"KD Máj Pelhřimov",
+         "AddressLine1":"Krásovy domky",
+         "Town":"Pelhřimov",
+         "StateOrProvince":"okres Pelhřimov",
+         "Postcode":"393 01",
+         "CountryID":64,
+         "Latitude":49.429047,
+         "Longitude":15.218817,
+         "AccessComments":"Dočasně zdarma bez identifikace.\r\nOperátor EVmapa.cz.",
+         "RelatedURL":"https://www.evmapa.cz/pelhrimov",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":157885,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         },
+         {
+            "ID":157886,
+            "ConnectionTypeID":16,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":230,
+            "PowerKW":3.6,
+            "CurrentTypeID":10,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-21T09:16:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-21T09:16:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":109393,
+      "UUID":"9B244BB8-857A-4478-81B2-4DCE8B15C741",
+      "DataProviderID":1,
+      "OperatorID":115,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":109739,
+         "Title":"ČEZ Kaufland Karviná",
+         "AddressLine1":"Leonovova 2015/2",
+         "Town":"Karviná",
+         "Postcode":"73301",
+         "CountryID":64,
+         "Latitude":49.862828,
+         "Longitude":18.5528969,
+         "RelatedURL":"http://www.elektromobilita.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154513,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":154514,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":154515,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-12T06:07:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-12T05:51:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":109308,
+      "UUID":"0C639D54-B416-428C-B955-DBEB8B3D16EB",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"44583",
+      "UsageTypeID":7,
+      "AddressInfo":{
+         "ID":109654,
+         "Title":"Resort Johanka",
+         "AddressLine1":"Johanka 28",
+         "Town":"Kamenice nad Lipou",
+         "Postcode":"39470",
+         "CountryID":64,
+         "Latitude":49.322541,
+         "Longitude":15.1027031,
+         "ContactTelephone1":"+420 7315 21839",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154426,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":10.0,
+            "CurrentTypeID":10,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 10kW.Available by reservation only. Please see front desk.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T14:17:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T14:17:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":109256,
+      "UUID":"9A547601-BFF6-484D-8B07-7F4E881DEB42",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46388",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109602,
+         "Title":"Zamek Valec - Hotel & Restaurant",
+         "AddressLine1":"Valec 1",
+         "Town":"Valec u Hrotovic",
+         "Postcode":"675 53",
+         "CountryID":64,
+         "Latitude":49.147592,
+         "Longitude":16.036102,
+         "ContactTelephone1":"+47 76074750",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154374,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":14.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 14kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T14:06:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T14:06:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":109244,
+      "UUID":"CB5E0158-6181-4059-A76F-4801AD9CFD78",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46386",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109590,
+         "Title":"Zamek Cerveny Hradek - Hotel & Restaurant",
+         "AddressLine1":"Cerveny Hradek 1",
+         "Town":"Jirkov",
+         "Postcode":"431 11",
+         "CountryID":64,
+         "Latitude":50.51255,
+         "Longitude":13.445033,
+         "ContactTelephone1":"+42 0474 684560",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154362,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 17kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T14:03:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T14:03:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":109212,
+      "UUID":"489EF660-088E-452C-B6C6-959AC39D42DA",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46389",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109558,
+         "Title":"Motel Jetel",
+         "AddressLine1":"Pod Dalnici 357",
+         "Town":"Kraluv Dvur",
+         "Postcode":"267 01",
+         "CountryID":64,
+         "Latitude":49.934271,
+         "Longitude":14.02196,
+         "ContactTelephone1":"+42 0725 423678",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154330,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 11kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T13:56:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T13:56:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":109107,
+      "UUID":"A935C821-9F46-44EB-AE1D-8646F6B9B437",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"45865",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109453,
+         "Title":"Wellness Relax Centrum Hotel Kolstejn",
+         "AddressLine1":"Branna 60",
+         "StateOrProvince":"Branna",
+         "Postcode":"788 25",
+         "CountryID":64,
+         "Latitude":50.152461,
+         "Longitude":17.010492,
+         "ContactTelephone1":" +420 5832 86421",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154225,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":14.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 14kW.Available for customers. Please see front desk.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T13:38:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T13:38:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":109055,
+      "UUID":"84FCB29B-8A6D-455F-AF0F-625E120AF16A",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46182",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109401,
+         "Title":"Grund Resort - Golf & Ski",
+         "AddressLine1":"Mlade Buky 445",
+         "Town":"Mlade Buky",
+         "Postcode":"542 23",
+         "CountryID":64,
+         "Latitude":50.600481,
+         "Longitude":15.834201,
+         "ContactTelephone1":"+42 0499 421950",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154173,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 17kW.Available to the public. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T13:28:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T13:28:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":109044,
+      "UUID":"DAEFAC13-8F56-4A8B-BBAC-02084CCCECCC",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"45292",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109390,
+         "Title":"Golf Resort Franzensbad",
+         "AddressLine1":"Hazlov-Ovcin 489",
+         "Town":"Hazlov",
+         "Postcode":"35132",
+         "CountryID":64,
+         "Latitude":50.166001,
+         "Longitude":12.27728,
+         "ContactTelephone1":" +420 3545 95402",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154162,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 22kW.Available for customers. Please see front desk.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T13:26:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T13:26:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108976,
+      "UUID":"5C10BF33-AEC3-4EF4-816D-33E60F5BA357",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"45008",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109322,
+         "Title":"Rodinny Pivovar Zichovec",
+         "AddressLine1":"Zichovec 99",
+         "Town":"Zichovec",
+         "Postcode":"273 74",
+         "CountryID":64,
+         "Latitude":50.272856,
+         "Longitude":13.925748,
+         "ContactTelephone1":" +420 6070 81361",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154094,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 22kW.Available to the public. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T13:14:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T13:14:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108959,
+      "UUID":"EA3945E6-8705-43CD-AEF3-EA6F4CA1D8E3",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46369",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109305,
+         "Title":"Avriopoint Brno",
+         "AddressLine1":"Sochorova 23",
+         "Town":"Brno",
+         "Postcode":"61600",
+         "CountryID":64,
+         "Latitude":49.212834,
+         "Longitude":16.567008,
+         "ContactTelephone1":"+42 0774 663001",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154076,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 22kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T13:11:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T13:11:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108948,
+      "UUID":"32BB0849-9FA8-4F75-9550-F1CEFF369537",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46387",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109294,
+         "Title":"Dvur Perlova Voda",
+         "AddressLine1":"Kostelec Nad Ohri 13",
+         "Town":"Budyne nad Ohri",
+         "Postcode":"413 01",
+         "CountryID":64,
+         "Latitude":50.39488,
+         "Longitude":14.0921,
+         "ContactTelephone1":"+42 0416 81359",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154065,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":14.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 14kW.Available to the public. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T13:09:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T13:09:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108937,
+      "UUID":"40A24D92-B3B7-427A-8F27-33747A48E059",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"45413",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109283,
+         "Title":"Barrio Gotico Cafe",
+         "AddressLine1":"Kurdejov 137",
+         "Town":"Kurdejov",
+         "Postcode":"69301",
+         "CountryID":64,
+         "Latitude":48.957603,
+         "Longitude":16.763609,
+         "ContactTelephone1":" +420 7021 37137",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154054,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 11kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T13:08:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T13:08:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108907,
+      "UUID":"4636AEB9-23C8-41F6-844B-E76BD7E0AB28",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46187",
+      "UsageTypeID":6,
+      "AddressInfo":{
+         "ID":109253,
+         "Title":"Hotel A Restaurant Na Farme",
+         "AddressLine1":"Chotovice 13",
+         "Town":"Zehun",
+         "Postcode":"289 05",
+         "CountryID":64,
+         "Latitude":50.140647,
+         "Longitude":15.326887,
+         "ContactTelephone1":"+42 0606 060856",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154024,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":14.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 14kW.Available for patrons only. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T13:02:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T13:02:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108906,
+      "UUID":"76C75113-3005-47A1-BE22-324295CCB76A",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"45009",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109252,
+         "Title":"Rekreacni A Kongresove Centrum Nove Dvory",
+         "AddressLine1":"Haklovy Dvory 2235",
+         "Town":"Ceske Budejovice",
+         "Postcode":"370 05",
+         "CountryID":64,
+         "Latitude":49.003046,
+         "Longitude":14.403795,
+         "ContactTelephone1":" +420 3855 10155",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154023,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 11kW.Available to the public. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T13:02:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T13:02:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108892,
+      "UUID":"0960F641-ED1C-4124-9A60-EBF553C799F1",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"45289",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109238,
+         "Title":"Sportovni Centrum T-Club",
+         "AddressLine1":"Drazdanska 83B",
+         "Town":"Usti nad Labem",
+         "Postcode":"400 07",
+         "CountryID":64,
+         "Latitude":50.667317,
+         "Longitude":14.068916,
+         "ContactTelephone1":" +420 6026 88956",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154009,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 17kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T13:00:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T13:00:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108890,
+      "UUID":"136EC877-9036-4D17-A6A7-321CF40AE91E",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"45423",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109236,
+         "Title":"Wellness Hotel V Nebi",
+         "AddressLine1":"Wellness Hotel V Nebi",
+         "Postcode":"468 48",
+         "CountryID":64,
+         "Latitude":50.742192,
+         "Longitude":15.353059,
+         "ContactTelephone1":" +420 6086 00740",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":154007,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 11kW.Available to the public. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T12:59:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T12:59:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108860,
+      "UUID":"5584CB19-43BD-4482-BCE0-48FA59E6EFED",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"44596",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109206,
+         "Title":"Restaurace A Penzion Na Stodolci",
+         "AddressLine1":"Dolni Chribska 40",
+         "Town":"Dolni Chribska",
+         "Postcode":"40744",
+         "CountryID":64,
+         "Latitude":50.863848,
+         "Longitude":14.454207,
+         "ContactTelephone1":"+420 4123 81028",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153977,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 22kW.Available to the public. Please see front desk.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T12:53:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T12:53:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108858,
+      "UUID":"D13483F2-47D9-47B0-8C90-D402122E6774",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"45276",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109204,
+         "Title":"Pivovar Kocour Varnsdorf",
+         "AddressLine1":"Rumburska 1920",
+         "Town":"Varnsdorf",
+         "Postcode":"404 47",
+         "CountryID":64,
+         "Latitude":50.919893,
+         "Longitude":14.603383,
+         "ContactTelephone1":" +42 0412 3702 70",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153975,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 17kW.Available to the public. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T12:53:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T12:53:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108830,
+      "UUID":"5D20EA0E-B640-4D53-85DA-8FE64969B88E",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"44768",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109176,
+         "Title":"Resort Svata Katerina",
+         "AddressLine1":"Svata Katerina 327",
+         "Town":"Pocatky",
+         "Postcode":"39464",
+         "CountryID":64,
+         "Latitude":49.270733,
+         "Longitude":15.27535,
+         "ContactTelephone1":" +420 5654 56801",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153947,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 17kW.Available to the public. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T12:48:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T12:48:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108794,
+      "UUID":"00AC579A-B1E9-4D1D-8B61-BBEB8BA25782",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46176",
+      "UsageTypeID":6,
+      "AddressInfo":{
+         "ID":109140,
+         "Title":"Hotel Jelinek",
+         "AddressLine1":"Bedrichov 43",
+         "Town":"Spindleruv Mlyn",
+         "Postcode":"543 51",
+         "CountryID":64,
+         "Latitude":50.725815,
+         "Longitude":15.605649,
+         "ContactTelephone1":"+42 0499 329626",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153909,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 22kW.Available for patrons only. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T12:41:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T12:41:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108775,
+      "UUID":"ADED88A0-A122-405F-998B-0523A131B628",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"45107",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109121,
+         "Title":"Restaurace Babiccina Zahrada",
+         "AddressLine1":"Tovarni 536",
+         "Town":"Pruhonice",
+         "Postcode":"252 43",
+         "CountryID":64,
+         "Latitude":49.996309,
+         "Longitude":14.550277,
+         "ContactTelephone1":" +420 2726 90865",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153890,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "PowerKW":17.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 17kW.Available for customers. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T12:38:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T12:38:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108759,
+      "UUID":"3291270D-86A8-469E-A16A-30ABB15A1832",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"44600",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109105,
+         "Title":"Hotel Savoy",
+         "AddressLine1":"Harrachova 23",
+         "Town":"Spindleruv Mlyn",
+         "Postcode":"54351",
+         "CountryID":64,
+         "Latitude":50.726894,
+         "Longitude":15.605488,
+         "ContactTelephone1":"+420 4837 31111",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153874,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "GeneralComments":"1 Tesla Connector, up to 11kW.Available for customers. Please see front desk.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T12:36:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T12:36:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108755,
+      "UUID":"96C6CC52-0E8A-43DE-9313-95B443A9278B",
+      "DataProviderID":1,
+      "OperatorID":23,
+      "OperatorsReference":"46185",
+      "UsageTypeID":4,
+      "AddressInfo":{
+         "ID":109101,
+         "Title":"Dvur Hoffmeister",
+         "AddressLine1":"Velke Cicovice 4",
+         "Town":"Cicovice",
+         "Postcode":"252 68",
+         "CountryID":64,
+         "Latitude":50.154086,
+         "Longitude":14.241747,
+         "ContactTelephone1":"+42 0604 142438",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153870,
+            "ConnectionTypeID":30,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":16,
+            "Voltage":400,
+            "PowerKW":11.0,
+            "CurrentTypeID":20,
+            "Quantity":2
+         }
+      ],
+      "NumberOfPoints":2,
+      "GeneralComments":"2 Tesla Connectors, up to 11kW.Available to the public. Self park.",
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-11T12:35:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-11T12:35:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108540,
+      "UUID":"50EBC983-F870-4CE3-A7F2-F250CA42A769",
+      "DataProviderID":1,
+      "OperatorID":115,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":108886,
+         "Title":"Autolaros Speed",
+         "AddressLine1":"Krmelínská 9",
+         "Town":"Ostrava",
+         "Postcode":"72000",
+         "CountryID":64,
+         "Latitude":49.7778,
+         "Longitude":18.2706,
+         "RelatedURL":"http://www.elektromobilita.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153570,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153571,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153572,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-04T19:36:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-04T19:31:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108539,
+      "UUID":"EE788E5A-8E21-4C3C-9FCE-713C4F63913E",
+      "DataProviderID":1,
+      "OperatorID":115,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":108885,
+         "Title":"Autolaros Speed",
+         "AddressLine1":"Krmelínská 9",
+         "Town":"Ostrava",
+         "Postcode":"72000",
+         "CountryID":64,
+         "Latitude":49.7778,
+         "Longitude":18.2706,
+         "RelatedURL":"http://www.elektromobilita.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153567,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153568,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153569,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-04T19:26:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-04T19:26:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108536,
+      "UUID":"A44C2D75-37C1-46FB-80EF-DD13DD49A924",
+      "DataProviderID":1,
+      "OperatorID":115,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":108882,
+         "Title":"Autolaros Speed",
+         "AddressLine1":"Krmelínská 9",
+         "Town":"Ostrava",
+         "Postcode":"72000",
+         "CountryID":64,
+         "Latitude":49.7778,
+         "Longitude":18.2706,
+         "RelatedURL":"http://www.elektromobilita.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153558,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153559,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153560,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-04T19:16:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-04T19:16:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108487,
+      "UUID":"87947AE4-7FB2-4A72-BAA9-10DABE04905A",
+      "DataProviderID":1,
+      "OperatorID":192,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":108833,
+         "Title":"EON Velká Bíteš",
+         "AddressLine1":"Kpt. Jaroše 279",
+         "Town":"Velká Bíteš",
+         "Postcode":"595 01",
+         "CountryID":64,
+         "Latitude":49.2790897,
+         "Longitude":16.2269867,
+         "RelatedURL":"http://www.kdenabijet.cz/mapa-stanic/",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153446,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153447,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153448,
+            "ConnectionTypeID":1036,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":63,
+            "Voltage":400,
+            "PowerKW":43.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-12-14T08:49:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-03T07:50:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108486,
+      "UUID":"381E8E5E-75B1-47DA-83FD-0AC560BBDB0E",
+      "DataProviderID":1,
+      "OperatorID":192,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":108832,
+         "Title":"EON Měřín",
+         "AddressLine1":"Náměstí 96",
+         "Town":"Měřín",
+         "Postcode":"594 42",
+         "CountryID":64,
+         "Latitude":49.3938214,
+         "Longitude":15.8833614,
+         "RelatedURL":"http://www.kdenabijet.cz/mapa-stanic/",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153443,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153444,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30
+         },
+         {
+            "ID":153445,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":63,
+            "Voltage":400,
+            "PowerKW":43.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2019-10-04T13:03:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-03T07:43:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108454,
+      "UUID":"CC75A6EE-7FCF-447C-B3B5-D038C549EAE3",
+      "DataProviderID":1,
+      "OperatorID":192,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":108800,
+         "Title":"EON Opava",
+         "AddressLine1":"Těšínská 2830/83",
+         "Town":"Opava",
+         "Postcode":"746 01",
+         "CountryID":64,
+         "Latitude":49.9286842,
+         "Longitude":17.9400283,
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153367,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153368,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153369,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":63,
+            "Voltage":400,
+            "PowerKW":43.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-03T07:28:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-02T13:10:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108446,
+      "UUID":"8D8C6BC3-C89E-44AD-8395-185D638B9FC4",
+      "DataProviderID":1,
+      "OperatorID":192,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":108792,
+         "Title":"EON Trmice",
+         "AddressLine1":"Tyršova 869",
+         "Town":"Trmice",
+         "Postcode":" 40004",
+         "CountryID":64,
+         "Latitude":50.6505511,
+         "Longitude":14.0016197,
+         "AccessComments":"Na parkovišti OC",
+         "RelatedURL":"http://www.kdenabijet.cz/mapa-stanic",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153344,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153345,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153346,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "Amps":63,
+            "Voltage":400,
+            "PowerKW":43.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-10-03T07:38:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-10-02T05:58:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108349,
+      "UUID":"88FE0B9E-D979-42E0-B028-10B6BEBCEC92",
+      "DataProviderID":1,
+      "OperatorID":115,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":108695,
+         "Title":"ČEZ Šternberk",
+         "AddressLine1":"Olomoucká",
+         "Town":"Šternberk",
+         "StateOrProvince":"okres Olomouc",
+         "Postcode":"78501",
+         "CountryID":64,
+         "Latitude":49.712,
+         "Longitude":17.292,
+         "RelatedURL":"http://www.elektromobilita.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153173,
+            "ConnectionTypeID":2,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153174,
+            "ConnectionTypeID":33,
+            "StatusTypeID":50,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153175,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-09-24T12:00:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-09-24T07:06:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108334,
+      "UUID":"632DC2AA-E707-4C51-B087-3627EA3D7A12",
+      "DataProviderID":1,
+      "OperatorID":192,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":108680,
+         "Title":"EON Globus Kostelecká",
+         "AddressLine1":"Kostelecká 823",
+         "AddressLine2":"Čakovice",
+         "Town":"Praha",
+         "StateOrProvince":"okres Hlavní město Praha",
+         "Postcode":"199 00",
+         "CountryID":64,
+         "Latitude":50.15146498,
+         "Longitude":14.50796266,
+         "AccessComments":"přesné umístění ještě není známo",
+         "RelatedURL":"http://www.kdenabijet.cz/mapa-stanic",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153152,
+            "ConnectionTypeID":2,
+            "StatusTypeID":0,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153153,
+            "ConnectionTypeID":33,
+            "StatusTypeID":0,
+            "LevelID":3,
+            "PowerKW":50.0,
+            "CurrentTypeID":30,
+            "Quantity":1
+         },
+         {
+            "ID":153154,
+            "ConnectionTypeID":25,
+            "StatusTypeID":0,
+            "LevelID":3,
+            "Amps":64,
+            "Voltage":400,
+            "PowerKW":43.0,
+            "CurrentTypeID":20,
+            "Quantity":1
+         }
+      ],
+      "NumberOfPoints":1,
+      "StatusTypeID":0,
+      "DateLastStatusUpdate":"2019-11-04T12:54:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-09-22T18:39:00Z",
+      "SubmissionStatusTypeID":200
+   },
+   {
+      "IsRecentlyVerified":false,
+      "ID":108313,
+      "UUID":"69D8A3DD-F872-4A59-909E-EE312E5A22F7",
+      "DataProviderID":1,
+      "OperatorID":115,
+      "UsageTypeID":1,
+      "AddressInfo":{
+         "ID":108659,
+         "Title":"ČEZ Nemocnice Třinec",
+         "AddressLine1":"Kaštanová 347",
+         "AddressLine2":"Dolní Líštná",
+         "Town":"Třinec",
+         "StateOrProvince":"okres Frýdek-Místek",
+         "Postcode":"73994",
+         "CountryID":64,
+         "Latitude":49.67495,
+         "Longitude":18.69245,
+         "RelatedURL":"http://www.elektromobilita.cz",
+         "DistanceUnit":0
+      },
+      "Connections":[
+         {
+            "ID":153120,
+            "ConnectionTypeID":25,
+            "StatusTypeID":50,
+            "LevelID":2,
+            "Amps":32,
+            "Voltage":400,
+            "PowerKW":22.0,
+            "CurrentTypeID":20,
+            "Quantity":4
+         }
+      ],
+      "NumberOfPoints":2,
+      "StatusTypeID":50,
+      "DateLastStatusUpdate":"2018-09-21T12:02:00Z",
+      "DataQualityLevel":1,
+      "DateCreated":"2018-09-21T12:02:00Z",
+      "SubmissionStatusTypeID":200
+   }
+]
