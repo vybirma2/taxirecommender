@@ -9,7 +9,8 @@ import burlap.mdp.core.state.UnknownKeyException;
 import java.util.Arrays;
 import java.util.List;
 
-import static domain.GraphDomain.*;
+import static domain.TaxiRecommenderDomainGenerator.CLASS_TIME;
+import static domain.TaxiRecommenderDomainGenerator.VAR_TIMESTAMP;
 
 public class TimeStamp implements ObjectInstance, MutableState {
 

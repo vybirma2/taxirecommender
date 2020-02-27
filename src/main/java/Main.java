@@ -1,21 +1,32 @@
-import cz.agents.basestructures.Graph;
-import cz.agents.multimodalstructures.edges.RoadEdge;
-import cz.agents.multimodalstructures.nodes.RoadNode;
-import utils.GraphLoader;
+import burlap.behavior.policy.Policy;
+import burlap.behavior.policy.PolicyUtils;
+import burlap.behavior.singleagent.planning.Planner;
+import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
+import burlap.domain.singleagent.graphdefined.GraphStateNode;
+import burlap.mdp.singleagent.SADomain;
+import burlap.statehashing.simple.SimpleHashableStateFactory;
+import domain.TaxiRecommenderDomainGenerator;
 
-import java.io.File;
-import java.util.Collection;
 
 public class Main {
     public static void main(String[] args) {
-        Graph<RoadNode, RoadEdge> graph = GraphLoader.loadGraph(new File("data/graphs/prague_small.fst"));
+        TaxiRecommenderDomainGenerator taxiRecommenderDomainGenerator = new TaxiRecommenderDomainGenerator(
+                "data/graphs/prague_small.fst",
+                "data/chargingstations/prague_charging_stations.json");
+        try {
 
-        Collection<RoadNode> nodes = graph.getAllNodes();
+            SimpleHashableStateFactory hashingFactory = new SimpleHashableStateFactory();
+            SADomain domain = taxiRecommenderDomainGenerator.getDomain();
+            Planner planner = new ValueIteration(domain, 0.99, hashingFactory, 0.001, 100);
+            GraphStateNode initialState = new GraphStateNode();
+            Policy p = planner.planFromState(initialState);
 
 
-        for (RoadNode node : nodes){
-            System.out.println(node.id);
+            PolicyUtils.rollout(p, initialState, domain.getModel()).write("vi");
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        System.out.println();
     }
 }
