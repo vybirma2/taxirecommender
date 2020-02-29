@@ -1,4 +1,4 @@
-package domain;
+package domain.states;
 
 import burlap.mdp.core.oo.state.ObjectInstance;
 import burlap.mdp.core.state.MutableState;
@@ -9,8 +9,8 @@ import burlap.mdp.core.state.UnknownKeyException;
 import java.util.Arrays;
 import java.util.List;
 
-import static domain.TaxiRecommenderDomainGenerator.CLASS_TIME;
-import static domain.TaxiRecommenderDomainGenerator.VAR_TIMESTAMP;
+import static domain.Utils.CLASS_TIME;
+import static domain.Utils.VAR_TIMESTAMP;
 
 public class TimeStamp implements ObjectInstance, MutableState {
 

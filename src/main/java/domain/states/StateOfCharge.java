@@ -1,4 +1,4 @@
-package domain;
+package domain.states;
 
 import burlap.mdp.core.oo.state.ObjectInstance;
 import burlap.mdp.core.state.MutableState;

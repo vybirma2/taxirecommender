@@ -67,7 +67,7 @@ public class ChargingStationUtils {
 
         if (node != null){
             chargingStationRoadNodes.add(node.getId());
-            return new ChargingStation(id, countryId, postCode, title, address, town, longitude, latitude, node);
+            return new ChargingStation(Math.toIntExact(id), Math.toIntExact(countryId), postCode, title, address, town, longitude, latitude, node);
         } else {
             return null;
         }

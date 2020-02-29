@@ -1,6 +1,6 @@
-package domain;
+package domain.actions;
 
-public enum Action {
+public enum ActionTypes {
     TO_NEXT_LOCATION(0, "to_next_location"),
     STAYING_IN_LOCATION(1, "staying_in_location"),
     GOING_TO_CHARGING_STATION(2, "going_to_charging_station"),
@@ -9,7 +9,7 @@ public enum Action {
     private final int value;
     private final String name;
 
-    Action(int value, String name) {
+    ActionTypes(int value, String name) {
         this.value = value;
         this.name = name;
     }

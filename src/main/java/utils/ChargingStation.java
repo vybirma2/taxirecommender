@@ -4,8 +4,8 @@ import cz.agents.multimodalstructures.nodes.RoadNode;
 
 public class ChargingStation {
 
-    private Long id;
-    private Long countryId;
+    private Integer id;
+    private Integer countryId;
 
     private String postCode;
     private String title;
@@ -17,7 +17,7 @@ public class ChargingStation {
 
     private RoadNode roadNode;
 
-    public ChargingStation(Long id, Long countryId, String postCode, String title, String address, String town,
+    public ChargingStation(Integer id, Integer countryId, String postCode, String title, String address, String town,
                            double longitude, double latitude, RoadNode roadNode) {
         this.id = id;
         this.countryId = countryId;
@@ -30,11 +30,11 @@ public class ChargingStation {
         this.roadNode = roadNode;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public Long getCountryId() {
+    public Integer getCountryId() {
         return countryId;
     }
 
