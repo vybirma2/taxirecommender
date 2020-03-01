@@ -91,7 +91,7 @@ public class ChargingStationUtils {
     }
 
 
-    private static double getDistance(double longitude1, double latitude1, double longitude2, double latitude2){
+    public static double getDistance(double longitude1, double latitude1, double longitude2, double latitude2){
         longitude1 = Math.toRadians(longitude1);
         latitude1 = Math.toRadians(latitude1);
         longitude2 = Math.toRadians(longitude2);

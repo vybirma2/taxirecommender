@@ -1,12 +1,15 @@
-package domain.states;
+package domain;
 
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.StateTransitionProb;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
-import domain.Utils;
+import domain.actions.MeasurableAction;
+import domain.states.TaxiGraphState;
 
 import java.util.*;
+
+import static domain.Utils.VAR_NODE;
 
 public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
 
@@ -16,20 +19,22 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
 
 
     @Override
-    public List<StateTransitionProb> stateTransitions(State s, Action a) {
-        int actionId = ((GraphDefinedDomain.GraphActionType.GraphAction)a).aId;
+    public List<StateTransitionProb> stateTransitions(State state, Action action) {
+        int actionId = ((GraphDefinedDomain.GraphActionType.GraphAction)action).aId;
         List<StateTransitionProb> result = new ArrayList();
-        int nodeId = (int)s.get(Utils.VAR_NODE);
+        int nodeId = (int)state.get(VAR_NODE);
         Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>> actionMap = this.transitionDynamics.get(nodeId);
         Set<GraphDefinedDomain.NodeTransitionProbability> transitions = actionMap.get(actionId);
 
-        Iterator var8 = transitions.iterator();
+        for (GraphDefinedDomain.NodeTransitionProbability ntp : transitions) {
+            State ns = state.copy();
 
-        while(var8.hasNext()) {
-            GraphDefinedDomain.NodeTransitionProbability ntp = (GraphDefinedDomain.NodeTransitionProbability)var8.next();
-            State ns = s.copy();
-            ((TaxiGraphState)ns).set(Utils.VAR_NODE, ntp.transitionTo);
-            ((TaxiGraphState)ns).set(Utils.VAR_TIMESTAMP, ntp.transitionTo);
+            ((TaxiGraphState) ns).set(VAR_NODE, ntp.transitionTo);
+            ((TaxiGraphState) ns).set(Utils.VAR_TIMESTAMP, this.getResultTimeStamp(state, action));
+            ((TaxiGraphState) ns).set(Utils.VAR_STATE_OF_CHARGE, this.getResultStateOfCharge(state, action));
+            ((TaxiGraphState) ns).set(Utils.VAR_PREVIOUS_ACTION, actionId);
+            ((TaxiGraphState) ns).set(Utils.VAR_PREVIOUS_NODE, state.get(VAR_NODE));
+
             StateTransitionProb tp = new StateTransitionProb(ns, ntp.probability);
             result.add(tp);
         }
@@ -52,8 +57,15 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
         toNodeId = ntp.transitionTo;
         toState.set("node", toNodeId);
 
-
-
         return toState;
+    }
+
+
+    private double getResultTimeStamp(State state, Action action){
+        return ((MeasurableAction)action).getActionTime((TaxiGraphState) state) + ((TaxiGraphState)state).getTimeStamp();
+    }
+
+    private double getResultStateOfCharge(State state, Action action){
+        return ((MeasurableAction)action).getActionEnergyConsumption((TaxiGraphState)state) + ((TaxiGraphState)state).getStateOfCharge();
     }
 }

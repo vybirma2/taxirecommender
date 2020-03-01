@@ -3,10 +3,11 @@ package domain.actions;
 
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
+import domain.states.TaxiGraphState;
 
 import java.util.Objects;
 
-public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphAction {
+public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction {
 
     private int length;
 
@@ -44,4 +45,15 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
         return Objects.hash(super.hashCode(), getLength());
     }
 
+
+    @Override
+    public double getActionTime(TaxiGraphState state) {
+        return length;
+    }
+
+    // TODO - estimate speed of charging
+    @Override
+    public double getActionEnergyConsumption(TaxiGraphState state) {
+        return length;
+    }
 }

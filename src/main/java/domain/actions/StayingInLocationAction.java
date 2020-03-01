@@ -2,10 +2,11 @@ package domain.actions;
 
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
+import domain.states.TaxiGraphState;
 
 import java.util.Objects;
 
-public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.GraphAction {
+public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction {
 
     private int length;
 
@@ -43,4 +44,13 @@ public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.
         return Objects.hash(super.hashCode(), getLength());
     }
 
+    @Override
+    public double getActionTime(TaxiGraphState state) {
+        return length;
+    }
+
+    @Override
+    public double getActionEnergyConsumption(TaxiGraphState state) {
+        return 0;
+    }
 }

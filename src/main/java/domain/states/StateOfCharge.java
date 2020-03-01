@@ -9,8 +9,8 @@ import burlap.mdp.core.state.UnknownKeyException;
 import java.util.Arrays;
 import java.util.List;
 
-import static domain.TaxiRecommenderDomainGenerator.CLASS_STATE_OF_CHARGE;
-import static domain.TaxiRecommenderDomainGenerator.VAR_STATE_OF_CHARGE;
+import static domain.Utils.CLASS_STATE_OF_CHARGE;
+import static domain.Utils.VAR_STATE_OF_CHARGE;
 
 public class StateOfCharge implements ObjectInstance, MutableState {
 

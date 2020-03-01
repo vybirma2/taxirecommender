@@ -4,19 +4,24 @@ import burlap.domain.singleagent.graphdefined.GraphStateNode;
 import burlap.mdp.core.state.MutableState;
 import burlap.mdp.core.state.State;
 
-import static domain.TaxiRecommenderDomainGenerator.*;
+import static domain.Utils.*;
 
 public class TaxiGraphState extends GraphStateNode  {
 
     private int nodeId;
-    private int stateOfCharge;
-    private int timeStamp;
+    private double stateOfCharge;
+    private double timeStamp;
 
-    public TaxiGraphState(int nodeId, int stateOfCharge, int timeStamp) {
+    private int previousAction = 132132;
+    private int previousNode = 232132;
+
+    public TaxiGraphState(int nodeId, double stateOfCharge, double timeStamp) {
         super(nodeId);
         keys.add(VAR_NODE);
         keys.add(VAR_STATE_OF_CHARGE);
         keys.add(VAR_TIMESTAMP);
+        keys.add(VAR_PREVIOUS_ACTION);
+        keys.add(VAR_PREVIOUS_NODE);
 
         this.nodeId = id;
         this.stateOfCharge = stateOfCharge;
@@ -33,15 +38,29 @@ public class TaxiGraphState extends GraphStateNode  {
                     this.nodeId = (int)value;
                     return this;
                 case VAR_STATE_OF_CHARGE:
-                    if (value instanceof Integer){
-                        this.stateOfCharge = (int)value;
+                    if (value instanceof Double){
+                        this.stateOfCharge = (double)value;
                         return this;
                     } else {
                         throw new RuntimeException("Invalid value data type " + value.getClass());
                     }
                 case VAR_TIMESTAMP:
+                    if (value instanceof Double){
+                        this.timeStamp = (double)value;
+                        return this;
+                    } else {
+                        throw new RuntimeException("Invalid value data type " + value.getClass());
+                    }
+                case VAR_PREVIOUS_ACTION:
                     if (value instanceof Integer){
-                        this.timeStamp = (int)value;
+                        this.previousAction = (int)value;
+                        return this;
+                    } else {
+                        throw new RuntimeException("Invalid value data type " + value.getClass());
+                    }
+                case VAR_PREVIOUS_NODE:
+                    if (value instanceof Integer){
+                        this.previousNode = (int)value;
                         return this;
                     } else {
                         throw new RuntimeException("Invalid value data type " + value.getClass());
@@ -60,24 +79,24 @@ public class TaxiGraphState extends GraphStateNode  {
         return new TaxiGraphState(this.nodeId, this.stateOfCharge, this.timeStamp);
     }
 
-    public Integer getStateOfCharge() {
+    public double getStateOfCharge() {
         return stateOfCharge;
     }
 
-    public void setStateOfCharge(Integer stateOfCharge) {
-        this.stateOfCharge = stateOfCharge;
-    }
-
-    public Integer getTimeStamp() {
+    public double getTimeStamp() {
         return timeStamp;
     }
 
-    public Integer getNodeId() {
+    public int getNodeId() {
         return nodeId;
     }
 
-    public void setTimeStamp(Integer timeStamp) {
-        this.timeStamp = timeStamp;
+    public int getPreviousAction() {
+        return previousAction;
+    }
+
+    public int getPreviousNode() {
+        return previousNode;
     }
 
     @Override

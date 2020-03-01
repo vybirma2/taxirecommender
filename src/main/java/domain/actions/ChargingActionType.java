@@ -4,11 +4,14 @@ import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import domain.Utils;
+import domain.states.TaxiGraphState;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static domain.Utils.VAR_PREVIOUS_ACTION;
 
 public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
 
@@ -30,16 +33,25 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
 
 
     @Override
-    public List<Action> allApplicableActions(State s) {
+    public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
         int time = Utils.CHARGING_INTERVAL;
-        if (this.applicableInState(s)) {
-            while (time <= Utils.SHIFT_LENGTH) {
+        if (this.applicableInState(state)) {
+            while (time + ((TaxiGraphState)state).getTimeStamp() <= Utils.SHIFT_LENGTH) {
                 actions.add(new ChargingAction(this.aId, time));
                 time += Utils.CHARGING_INTERVAL;
             }
         }
 
         return actions;
+    }
+
+
+    @Override
+    protected boolean applicableInState(State s) {
+        if ((int)s.get(VAR_PREVIOUS_ACTION) == ActionTypes.CHARGING_IN_CHARGING_STATION.getValue()){
+            return false;
+        }
+        return super.applicableInState(s);
     }
 }
