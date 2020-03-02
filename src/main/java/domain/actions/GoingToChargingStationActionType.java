@@ -3,15 +3,13 @@ package domain.actions;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
-import domain.TaxiRecommenderDomainGenerator;
-import domain.Utils;
-import domain.states.TaxiGraphState;
-import utils.ChargingStation;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static domain.actions.ActionUtils.*;
 
 public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphActionType {
 
@@ -19,6 +17,7 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
     public GoingToChargingStationActionType(int aId, Map<Integer, Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>>> transitionDynamics) {
         super(aId, transitionDynamics);
     }
+
 
     @Override
     public String typeName() {
@@ -35,12 +34,9 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
     @Override
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
+
         if (this.applicableInState(state)){
-            for (ChargingStation chargingStation : TaxiRecommenderDomainGenerator.getChargingStations()){
-                if (Utils.SHIFT_LENGTH >=  ((TaxiGraphState)state).getTimeStamp() + TaxiRecommenderDomainGenerator.getTripTime(((TaxiGraphState)state).getNodeId(), chargingStation.getRoadNode().getId())){
-                    actions.add(new GoingToChargingStationAction(this.aId, chargingStation.getRoadNode().getId()));
-                }
-            }
+                actions.add(new GoingToChargingStationAction(this.aId));
         }
 
         return actions;
@@ -49,10 +45,8 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
 
     @Override
     protected boolean applicableInState(State s) {
-        if (((TaxiGraphState)s).getPreviousAction() == ActionTypes.GOING_TO_CHARGING_STATION.getValue()){
-            return false;
-        }
-        return super.applicableInState(s);
+        return notChargingInARow(s) && notGoingToChargingPreviously(s) && notFullyCharged(s) && super.applicableInState(s);
     }
+
 
 }

@@ -53,8 +53,8 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
         domain.addActionType(new StayingInLocationActionType(ActionTypes.STAYING_IN_LOCATION.getValue(), ctd));
         domain.addActionType(new NextLocationActionType(ActionTypes.TO_NEXT_LOCATION.getValue(),ctd));
-        //domain.addActionType(new GoingToChargingStationActionType(ActionTypes.GOING_TO_CHARGING_STATION.getValue(),ctd));
-       // domain.addActionType(new ChargingActionType(ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(), ctd));
+        domain.addActionType(new GoingToChargingStationActionType(ActionTypes.GOING_TO_CHARGING_STATION.getValue(),ctd));
+        domain.addActionType(new ChargingActionType(ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(), ctd));
 
         return domain;
     }
@@ -72,14 +72,14 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
             }
 
             // setting transitions between current node and all available charging stations
-          //  for (ChargingStation station : chargingStations){
-            //    this.setTransition(node.getId(), ActionTypes.GOING_TO_CHARGING_STATION.getValue(), station.getRoadNode().getId(), 1.);
-            //}
+            for (ChargingStation station : chargingStations){
+                this.setTransition(node.getId(), ActionTypes.GOING_TO_CHARGING_STATION.getValue(), station.getRoadNode().getId(), 1.);
+            }
 
             // setting transition between node itself - action of charging if node connected with charging station, i.e. prob 1
-           // if (ChargingStationUtils.isChargingStationRoadNode(node.getId())){
-            //        this.setTransition(node.getId(), ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(), node.getId(), 1.);
-           // }
+            if (ChargingStationUtils.isChargingStationRoadNode(node.getId())){
+                    this.setTransition(node.getId(), ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(), node.getId(), 1.);
+            }
         }
     }
 

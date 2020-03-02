@@ -15,6 +15,7 @@ public class TaxiGraphState extends GraphStateNode  {
     private int previousAction = 132132;
     private int previousNode = 232132;
 
+
     public TaxiGraphState(int nodeId, double stateOfCharge, double timeStamp) {
         super(nodeId);
         keys.add(VAR_NODE);
@@ -27,6 +28,7 @@ public class TaxiGraphState extends GraphStateNode  {
         this.stateOfCharge = stateOfCharge;
         this.timeStamp = timeStamp;
     }
+
 
     @Override
     public MutableState set(Object variableKey, Object value) {
@@ -79,25 +81,31 @@ public class TaxiGraphState extends GraphStateNode  {
         return new TaxiGraphState(this.nodeId, this.stateOfCharge, this.timeStamp);
     }
 
+
     public double getStateOfCharge() {
         return stateOfCharge;
     }
+
 
     public double getTimeStamp() {
         return timeStamp;
     }
 
+
     public int getNodeId() {
         return nodeId;
     }
+
 
     public int getPreviousAction() {
         return previousAction;
     }
 
+
     public int getPreviousNode() {
         return previousNode;
     }
+
 
     @Override
     public String toString() {

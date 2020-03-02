@@ -3,18 +3,23 @@ package domain.actions;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
-import domain.Utils;
-import domain.states.TaxiGraphState;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import static domain.Utils.VAR_PREVIOUS_ACTION;
+import static domain.Utils.STAYING_INTERVAL;
+import static domain.actions.ActionUtils.notGoingToChargingPreviously;
+import static domain.actions.ActionUtils.shiftNotOver;
 
 public class StayingInLocationActionType extends GraphDefinedDomain.GraphActionType {
+
 
     public StayingInLocationActionType(int aId, Map<Integer, Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>>> transitionDynamics) {
         super(aId, transitionDynamics);
     }
+
 
     @Override
     public String typeName() {
@@ -31,23 +36,17 @@ public class StayingInLocationActionType extends GraphDefinedDomain.GraphActionT
     @Override
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
-        int time = Utils.STAYING_INTERVAL;
+
         if (this.applicableInState(state)) {
-            while (time + ((TaxiGraphState)state).getTimeStamp() <= Utils.SHIFT_LENGTH) {
-                actions.add(new StayingInLocationAction(this.aId, time));
-                time += Utils.STAYING_INTERVAL;
-            }
+            actions.add(new StayingInLocationAction(this.aId, STAYING_INTERVAL));
         }
 
         return actions;
     }
 
+
     @Override
     protected boolean applicableInState(State s) {
-        if ((int)s.get(VAR_PREVIOUS_ACTION) == ActionTypes.GOING_TO_CHARGING_STATION.getValue()){
-            return false;
-        }
-        return super.applicableInState(s);
+        return notGoingToChargingPreviously(s) && shiftNotOver(s, STAYING_INTERVAL) && super.applicableInState(s);
     }
-
 }

@@ -6,22 +6,53 @@ import burlap.mdp.core.action.Action;
 import domain.TaxiRecommenderDomainGenerator;
 import domain.states.TaxiGraphState;
 
+import static domain.actions.ActionUtils.shiftNotOver;
+
 public class GoingToChargingStationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction  {
 
     private int toNodeId;
+
+
+    public GoingToChargingStationAction(int aId) {
+        super(aId);
+    }
+
 
     public GoingToChargingStationAction(int aId, int toNodeId) {
         super(aId);
         this.toNodeId = toNodeId;
     }
 
+
+    @Override
     public String actionName() {
         return ActionTypes.GOING_TO_CHARGING_STATION.getName();
     }
 
+
+    @Override
     public Action copy() {
         return new GoingToChargingStationAction(this.aId, this.toNodeId);
     }
+
+
+    @Override
+    public double getActionTime(TaxiGraphState state) {
+        return TaxiRecommenderDomainGenerator.getTripTime(state.getNodeId(), toNodeId) ;
+    }
+
+
+    // TODO - estimate energy consumption on the trip
+    @Override
+    public double getActionEnergyConsumption(TaxiGraphState state) {
+        return -TaxiRecommenderDomainGenerator.getDistanceBetweenNodes(state.getNodeId(), toNodeId)/2;
+    }
+
+
+    public boolean applicableInState(TaxiGraphState state){
+        return shiftNotOver(state, this.getActionTime(state));
+    }
+
 
     public boolean equals(Object o) {
         if (this == o) {
@@ -32,16 +63,5 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
         } else {
             return false;
         }
-    }
-
-    @Override
-    public double getActionTime(TaxiGraphState state) {
-        return TaxiRecommenderDomainGenerator.getTripTime(state.getNodeId(), toNodeId) ;
-    }
-
-    // TODO - estimate energy consumption on the trip
-    @Override
-    public double getActionEnergyConsumption(TaxiGraphState state) {
-        return -TaxiRecommenderDomainGenerator.getDistanceBetweenNodes(state.getNodeId(), toNodeId)/2;
     }
 }

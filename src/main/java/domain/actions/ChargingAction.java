@@ -9,36 +9,31 @@ import java.util.Objects;
 
 public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction {
 
-    private int length;
+    private double length;
 
-    public ChargingAction(int aId, int length) {
+
+    public ChargingAction(int aId, double length) {
         super(aId);
         this.length = length;
     }
 
-    public int getLength() {
+
+    public double getLength() {
         return length;
     }
 
 
+    @Override
     public String actionName() {
         return ActionTypes.CHARGING_IN_CHARGING_STATION.getName();
     }
 
+
+    @Override
     public Action copy() {
         return new ChargingAction(this.aId, length);
     }
 
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        } else if (o != null && this.getClass() == o.getClass()) {
-            ChargingAction that = (ChargingAction) o;
-            return this.aId == that.aId && this.length == that.length;
-        } else {
-            return false;
-        }
-    }
 
     @Override
     public int hashCode() {
@@ -51,9 +46,22 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
         return length;
     }
 
+
     // TODO - estimate speed of charging
     @Override
     public double getActionEnergyConsumption(TaxiGraphState state) {
         return length;
+    }
+
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        } else if (o != null && this.getClass() == o.getClass()) {
+            ChargingAction that = (ChargingAction) o;
+            return this.aId == that.aId && this.length == that.length;
+        } else {
+            return false;
+        }
     }
 }

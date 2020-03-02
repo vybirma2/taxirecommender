@@ -8,25 +8,49 @@ import java.util.Objects;
 
 public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction {
 
-    private int length;
+    private double length;
 
-    public StayingInLocationAction(int aId, int length) {
+
+    public StayingInLocationAction(int aId, double length) {
         super(aId);
         this.length = length;
     }
 
-    public int getLength() {
+
+    public double getLength() {
         return length;
     }
 
 
+    @Override
     public String actionName() {
         return ActionTypes.STAYING_IN_LOCATION.getName();
     }
 
+
+    @Override
     public Action copy() {
         return new StayingInLocationAction(this.aId, length);
     }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getLength());
+    }
+
+
+    @Override
+    public double getActionTime(TaxiGraphState state) {
+        return length;
+    }
+
+
+    @Override
+    public double getActionEnergyConsumption(TaxiGraphState state) {
+        return 0;
+    }
+
 
     public boolean equals(Object o) {
         if (this == o) {
@@ -37,20 +61,5 @@ public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.
         } else {
             return false;
         }
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), getLength());
-    }
-
-    @Override
-    public double getActionTime(TaxiGraphState state) {
-        return length;
-    }
-
-    @Override
-    public double getActionEnergyConsumption(TaxiGraphState state) {
-        return 0;
     }
 }

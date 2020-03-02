@@ -4,7 +4,10 @@ import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.StateTransitionProb;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
+import domain.actions.ActionTypes;
+import domain.actions.GoingToChargingStationAction;
 import domain.actions.MeasurableAction;
+import domain.actions.NextLocationAction;
 import domain.states.TaxiGraphState;
 
 import java.util.*;
@@ -12,6 +15,10 @@ import java.util.*;
 import static domain.Utils.VAR_NODE;
 
 public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
+
+    HashMap<Integer, Double> recentlyVisitedNodes = new HashMap<>();
+    int visitInterval = 60;
+
 
     public TaxiGraphStateModel(Map<Integer, Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>>> transitionDynamics) {
         super(transitionDynamics);
@@ -27,6 +34,33 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
         Set<GraphDefinedDomain.NodeTransitionProbability> transitions = actionMap.get(actionId);
 
         for (GraphDefinedDomain.NodeTransitionProbability ntp : transitions) {
+
+            if (actionId == ActionTypes.TO_NEXT_LOCATION.getValue()) {
+                ((NextLocationAction)action).setToNodeId(ntp.transitionTo);
+                if(!((NextLocationAction)action).applicableInState((TaxiGraphState) state)){
+                    continue;
+                }
+
+                if (recentlyVisitedNodes.containsKey(ntp.transitionTo)){
+                    if (((TaxiGraphState)state).getTimeStamp() +
+                            ((NextLocationAction)action).getActionTime((TaxiGraphState)state) -
+                            recentlyVisitedNodes.get(ntp.transitionTo) < visitInterval ){
+                        continue;
+                    } else {
+                        recentlyVisitedNodes.replace(ntp.transitionTo, recentlyVisitedNodes.get(ntp.transitionTo), ((TaxiGraphState)state).getTimeStamp() +
+                                ((NextLocationAction)action).getActionTime((TaxiGraphState)state));
+                    }
+                } else {
+                    recentlyVisitedNodes.put(ntp.transitionTo, ((NextLocationAction)action).getActionTime((TaxiGraphState)state));
+                }
+            } else if (actionId == ActionTypes.GOING_TO_CHARGING_STATION.getValue()){
+                if(!((GoingToChargingStationAction)action).applicableInState((TaxiGraphState) state)){
+                    continue;
+                }
+            }
+
+
+
             State ns = state.copy();
 
             ((TaxiGraphState) ns).set(VAR_NODE, ntp.transitionTo);
