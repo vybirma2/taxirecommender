@@ -28,7 +28,7 @@ public class StayingInLocationActionType extends GraphDefinedDomain.GraphActionT
 
 
     @Override
-    public burlap.mdp.core.action.Action associatedAction(String strRep) {
+    public Action associatedAction(String strRep) {
         return new StayingInLocationAction(this.aId, Integer.parseInt(strRep));
     }
 

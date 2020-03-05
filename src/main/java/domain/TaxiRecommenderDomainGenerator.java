@@ -16,7 +16,6 @@ import java.util.*;
 
 public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
-
     private static Graph<RoadNode, RoadEdge> graph;
     private static Collection<RoadNode> nodes;
     private static List<ChargingStation> chargingStations;
@@ -59,6 +58,7 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         return domain;
     }
 
+
     private void setTransitions() {
         for (RoadNode node : nodes) {
 
@@ -94,6 +94,7 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         return neighbours;
     }
 
+
     public static List<ChargingStation> getChargingStations(){
         return chargingStations;
     }
@@ -104,6 +105,7 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
                 + getDelay(fromNodeId, toNodeId);
     }
 
+
     // TODO - implement real distance - used euclidean now
     public static double getDistanceBetweenNodes(int fromNodeId, int toNodeId){
         RoadNode fromNode = graph.getNode(fromNodeId);
@@ -112,14 +114,15 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
                 toNode.getLongitude(), toNode.getLatitude());
     }
 
+
     // TODO - further development - delay function
     public static double getDelay(int fromNodeId, int toNodeId){
         return 0;
     }
 
+
     // TODO - estimate from data
     public static double getSpeedBetweenNodes(int fromNodeId, int toNodeId){
         return 30;
     }
-
 }

@@ -17,7 +17,7 @@ import static domain.Utils.VAR_NODE;
 public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
 
     HashMap<Integer, Double> recentlyVisitedNodes = new HashMap<>();
-    int visitInterval = 60;
+    int visitInterval = 1;
 
 
     public TaxiGraphStateModel(Map<Integer, Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>>> transitionDynamics) {
@@ -27,77 +27,72 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
 
     @Override
     public List<StateTransitionProb> stateTransitions(State state, Action action) {
+
         int actionId = ((GraphDefinedDomain.GraphActionType.GraphAction)action).aId;
-        List<StateTransitionProb> result = new ArrayList();
         int nodeId = (int)state.get(VAR_NODE);
+
+        List<StateTransitionProb> resultTransitions = new ArrayList();
         Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>> actionMap = this.transitionDynamics.get(nodeId);
         Set<GraphDefinedDomain.NodeTransitionProbability> transitions = actionMap.get(actionId);
 
+
         for (GraphDefinedDomain.NodeTransitionProbability ntp : transitions) {
-
+            Action newAction;
             if (actionId == ActionTypes.TO_NEXT_LOCATION.getValue()) {
-                ((NextLocationAction)action).setToNodeId(ntp.transitionTo);
-                if(!((NextLocationAction)action).applicableInState((TaxiGraphState) state)){
+                newAction = addToNextLocationTransition((NextLocationAction) action, (TaxiGraphState)state, ntp);
+                if (newAction == null){
                     continue;
-                }
-
-                if (recentlyVisitedNodes.containsKey(ntp.transitionTo)){
-                    if (((TaxiGraphState)state).getTimeStamp() +
-                            ((NextLocationAction)action).getActionTime((TaxiGraphState)state) -
-                            recentlyVisitedNodes.get(ntp.transitionTo) < visitInterval ){
-                        continue;
-                    } else {
-                        recentlyVisitedNodes.replace(ntp.transitionTo, recentlyVisitedNodes.get(ntp.transitionTo), ((TaxiGraphState)state).getTimeStamp() +
-                                ((NextLocationAction)action).getActionTime((TaxiGraphState)state));
-                    }
-                } else {
-                    recentlyVisitedNodes.put(ntp.transitionTo, ((NextLocationAction)action).getActionTime((TaxiGraphState)state));
                 }
             } else if (actionId == ActionTypes.GOING_TO_CHARGING_STATION.getValue()){
                 if(!((GoingToChargingStationAction)action).applicableInState((TaxiGraphState) state)){
                     continue;
                 }
+                newAction = action.copy();
+            } else {
+                newAction = action.copy();
             }
-
-
 
             State ns = state.copy();
 
             ((TaxiGraphState) ns).set(VAR_NODE, ntp.transitionTo);
-            ((TaxiGraphState) ns).set(Utils.VAR_TIMESTAMP, this.getResultTimeStamp(state, action));
-            ((TaxiGraphState) ns).set(Utils.VAR_STATE_OF_CHARGE, this.getResultStateOfCharge(state, action));
+            ((TaxiGraphState) ns).set(Utils.VAR_TIMESTAMP, this.getResultTimeStamp(state, newAction));
+            ((TaxiGraphState) ns).set(Utils.VAR_STATE_OF_CHARGE, this.getResultStateOfCharge(state, newAction));
             ((TaxiGraphState) ns).set(Utils.VAR_PREVIOUS_ACTION, actionId);
             ((TaxiGraphState) ns).set(Utils.VAR_PREVIOUS_NODE, state.get(VAR_NODE));
 
             StateTransitionProb tp = new StateTransitionProb(ns, ntp.probability);
-            result.add(tp);
+            resultTransitions.add(tp);
         }
 
-        return result;
+        return resultTransitions;
     }
 
-    @Override
-    public State sample(State fromState, Action a) {
-        TaxiGraphState toState = (TaxiGraphState) fromState.copy();
-        int actionId = ((GraphDefinedDomain.GraphActionType.GraphAction)a).aId;
-        int fromNodeId = (Integer)toState.get("node");
-        Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>> actionMap = this.transitionDynamics.get(fromNodeId);
-        Set<GraphDefinedDomain.NodeTransitionProbability> transitions = actionMap.get(actionId);
 
-        int toNodeId;
-        Iterator var12 = transitions.iterator();
+    private NextLocationAction addToNextLocationTransition(NextLocationAction action, TaxiGraphState state, GraphDefinedDomain.NodeTransitionProbability ntp){
+        NextLocationAction newAction = (NextLocationAction) action.copy();
+        newAction.setToNodeId(ntp.transitionTo);
+        if(!newAction.applicableInState(state)){
+            return null;
+        }
 
-        GraphDefinedDomain.NodeTransitionProbability ntp = (GraphDefinedDomain.NodeTransitionProbability)var12.next();
-        toNodeId = ntp.transitionTo;
-        toState.set("node", toNodeId);
-
-        return toState;
+        if (recentlyVisitedNodes.containsKey(ntp.transitionTo)){
+            if (state.getTimeStamp() + newAction.getActionTime(state) - recentlyVisitedNodes.get(ntp.transitionTo) < visitInterval ){
+                return null;
+            } else {
+                recentlyVisitedNodes.replace(ntp.transitionTo, recentlyVisitedNodes.get(ntp.transitionTo), state.getTimeStamp() +
+                        (newAction).getActionTime(state));
+            }
+        } else {
+            recentlyVisitedNodes.put(ntp.transitionTo, newAction.getActionTime(state));
+        }
+        return newAction;
     }
 
 
     private double getResultTimeStamp(State state, Action action){
         return ((MeasurableAction)action).getActionTime((TaxiGraphState) state) + ((TaxiGraphState)state).getTimeStamp();
     }
+
 
     private double getResultStateOfCharge(State state, Action action){
         return ((MeasurableAction)action).getActionEnergyConsumption((TaxiGraphState)state) + ((TaxiGraphState)state).getStateOfCharge();

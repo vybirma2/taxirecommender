@@ -1,11 +1,11 @@
 import burlap.behavior.policy.Policy;
 import burlap.behavior.policy.PolicyUtils;
 import burlap.behavior.singleagent.planning.Planner;
-import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
 import burlap.mdp.singleagent.SADomain;
-import burlap.statehashing.simple.SimpleHashableStateFactory;
 import domain.TaxiRecommenderDomainGenerator;
 import domain.states.TaxiGraphState;
+import solver.MyValueIteration;
+import solver.TaxiGraphHashableFactory;
 
 public class Main {
     public static void main(String[] args) {
@@ -30,16 +30,16 @@ public class Main {
         TaxiRecommenderDomainGenerator taxiRecommenderDomainGenerator = null;
         try {
             taxiRecommenderDomainGenerator = new TaxiRecommenderDomainGenerator(
-                    "data/graphs/mala_praha.fst",
+                    "data/graphs/prague_full.fst",
                     "data/chargingstations/prague_charging_stations.json");
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
 
-            SimpleHashableStateFactory hashingFactory = new SimpleHashableStateFactory();
+            TaxiGraphHashableFactory hashingFactory = new TaxiGraphHashableFactory();
             SADomain domain = taxiRecommenderDomainGenerator.getDomain();
-            Planner planner = new ValueIteration(domain, 0.99, hashingFactory, 0.001, 100);
+            Planner planner = new MyValueIteration(domain, 0.99, hashingFactory, 0.001, 100);
             TaxiGraphState initialState = new TaxiGraphState(0, 100, 0);
             Policy p = planner.planFromState(initialState);
 
