@@ -3,14 +3,16 @@ package domain.states;
 import burlap.domain.singleagent.graphdefined.GraphStateNode;
 import burlap.mdp.core.state.MutableState;
 import burlap.mdp.core.state.State;
+import utils.Utils;
 
-import static domain.Utils.*;
+import static utils.Utils.*;
 
 public class TaxiGraphState extends GraphStateNode  {
 
     private int nodeId;
     private double stateOfCharge;
     private double timeStamp;
+
 
     private int previousAction = 132132;
     private int previousNode = 232132;
@@ -78,7 +80,10 @@ public class TaxiGraphState extends GraphStateNode  {
 
     @Override
     public State copy() {
-        return new TaxiGraphState(this.nodeId, this.stateOfCharge, this.timeStamp);
+        TaxiGraphState state = new TaxiGraphState(this.nodeId, this.stateOfCharge, this.timeStamp);
+        state.set(Utils.VAR_PREVIOUS_ACTION, this.previousAction);
+        state.set(Utils.VAR_PREVIOUS_NODE, this.previousNode);
+        return state;
     }
 
 

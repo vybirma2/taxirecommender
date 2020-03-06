@@ -1,6 +1,8 @@
-package utils;
+package charging;
 
 import cz.agents.multimodalstructures.nodes.RoadNode;
+
+import java.util.ArrayList;
 
 public class ChargingStation {
 
@@ -17,8 +19,10 @@ public class ChargingStation {
 
     private RoadNode roadNode;
 
+    private ArrayList<ChargingConnection> connections;
+
     public ChargingStation(Integer id, Integer countryId, String postCode, String title, String address, String town,
-                           double longitude, double latitude, RoadNode roadNode) {
+                           double longitude, double latitude, RoadNode roadNode, ArrayList<ChargingConnection> connections) {
         this.id = id;
         this.countryId = countryId;
         this.postCode = postCode;
@@ -28,6 +32,7 @@ public class ChargingStation {
         this.longitude = longitude;
         this.latitude = latitude;
         this.roadNode = roadNode;
+        this.connections = connections;
     }
 
     public Integer getId() {
@@ -64,6 +69,10 @@ public class ChargingStation {
 
     public RoadNode getRoadNode() {
         return roadNode;
+    }
+
+    public ArrayList<ChargingConnection> getAvailableConnections() {
+        return connections;
     }
 
     @Override

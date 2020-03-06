@@ -3,13 +3,17 @@ package domain.actions;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
+import charging.ChargingConnection;
+import charging.ChargingStation;
+import charging.ChargingStationUtils;
+import domain.states.TaxiGraphState;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static domain.Utils.CHARGING_INTERVAL;
+import static utils.Utils.CHARGING_INTERVAL;
 import static domain.actions.ActionUtils.*;
 
 public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
@@ -26,18 +30,18 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
     }
 
 
-    @Override
-    public Action associatedAction(String strRep) {
-        return new ChargingAction(this.aId, Integer.parseInt(strRep));
-    }
-
 
     @Override
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
 
         if (this.applicableInState(state)) {
-            actions.add(new ChargingAction(this.aId, CHARGING_INTERVAL));
+            ChargingStation station = ChargingStationUtils.getChargingStation(((TaxiGraphState)state).getNodeId());
+
+            List<ChargingConnection> connections = station.getAvailableConnections();
+            for (ChargingConnection connection : connections){
+                actions.add(new ChargingAction(this.aId, CHARGING_INTERVAL, station.getId(), connection.getId()));
+            }
         }
 
         return actions;

@@ -3,6 +3,7 @@ package domain.actions;
 
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
+import charging.ChargingStationUtils;
 import domain.states.TaxiGraphState;
 
 import java.util.Objects;
@@ -10,11 +11,17 @@ import java.util.Objects;
 public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction {
 
     private double length;
+    private int stationId;
+    private int connectionId;
+    private double energyProduction;
 
 
-    public ChargingAction(int aId, double length) {
+    public ChargingAction(int aId, double length, int stationId, int connectionId) {
         super(aId);
         this.length = length;
+        this.stationId = stationId;
+        this.connectionId = connectionId;
+        this.energyProduction = ChargingStationUtils.getChargingConnection(connectionId).getPowerKW()*(length/60);
     }
 
 
@@ -31,7 +38,7 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
 
     @Override
     public Action copy() {
-        return new ChargingAction(this.aId, length);
+        return new ChargingAction(this.aId, length, stationId, connectionId);
     }
 
 
@@ -47,10 +54,9 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
     }
 
 
-    // TODO - estimate speed of charging
     @Override
     public double getActionEnergyConsumption(TaxiGraphState state) {
-        return length;
+        return energyProduction;
     }
 
 

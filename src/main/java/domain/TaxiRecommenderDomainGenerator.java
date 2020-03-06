@@ -2,14 +2,13 @@ package domain;
 
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.singleagent.SADomain;
-import burlap.mdp.singleagent.common.NullRewardFunction;
 import burlap.mdp.singleagent.model.FactoredModel;
 import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.actions.*;
-import utils.ChargingStation;
-import utils.ChargingStationUtils;
+import charging.ChargingStation;
+import charging.ChargingStationUtils;
 import utils.GraphLoader;
 
 import java.util.*;
@@ -29,8 +28,6 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         nodes = graph.getAllNodes();
         chargingStations = ChargingStationUtils.readChargingStations(chargingStationsInputFile, nodes);
         setTransitions();
-        setRf(new NullRewardFunction());
-        setTf(new TaxiGraphTerminalFunction());
     }
 
 
@@ -38,6 +35,7 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         if (this.domain == null){
             this.domain = this.generateDomain();
         }
+
         return domain;
     }
 
@@ -47,13 +45,17 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         SADomain domain = new SADomain();
         Map<Integer, Map<Integer, Set<NodeTransitionProbability>>> ctd = this.copyTransitionDynamics();
         TaxiGraphStateModel stateModel = new TaxiGraphStateModel(ctd);
-        FactoredModel model = new FactoredModel(stateModel, this.rf, this.tf);
-        domain.setModel(model);
 
         domain.addActionType(new StayingInLocationActionType(ActionTypes.STAYING_IN_LOCATION.getValue(), ctd));
         domain.addActionType(new NextLocationActionType(ActionTypes.TO_NEXT_LOCATION.getValue(),ctd));
         domain.addActionType(new GoingToChargingStationActionType(ActionTypes.GOING_TO_CHARGING_STATION.getValue(),ctd));
         domain.addActionType(new ChargingActionType(ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(), ctd));
+
+        setRf(new TaxiGraphRewardFunction());
+        setTf(new TaxiGraphTerminalFunction(domain.getActionTypes()));
+
+        FactoredModel model = new FactoredModel(stateModel, this.rf, this.tf);
+        domain.setModel(model);
 
         return domain;
     }
@@ -108,10 +110,7 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
     // TODO - implement real distance - used euclidean now
     public static double getDistanceBetweenNodes(int fromNodeId, int toNodeId){
-        RoadNode fromNode = graph.getNode(fromNodeId);
-        RoadNode toNode = graph.getNode(toNodeId);
-        return ChargingStationUtils.getDistance(fromNode.getLongitude(), fromNode.getLatitude(),
-                toNode.getLongitude(), toNode.getLatitude());
+        return graph.getEdge(fromNodeId, toNodeId).getLength()/1000.;
     }
 
 
@@ -121,8 +120,8 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
     }
 
 
-    // TODO - estimate from data
+
     public static double getSpeedBetweenNodes(int fromNodeId, int toNodeId){
-        return 30;
+        return graph.getEdge(fromNodeId, toNodeId).getAllowedMaxSpeedInMpS() * 3.6;
     }
 }

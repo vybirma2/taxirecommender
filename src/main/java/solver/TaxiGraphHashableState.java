@@ -6,7 +6,7 @@ import burlap.statehashing.simple.IISimpleHashableState;
 import domain.states.TaxiGraphState;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import static domain.Utils.*;
+import static utils.Utils.*;
 
 public class TaxiGraphHashableState extends IISimpleHashableState {
 

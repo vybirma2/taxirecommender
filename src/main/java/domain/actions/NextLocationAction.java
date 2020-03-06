@@ -5,17 +5,12 @@ import burlap.mdp.core.action.Action;
 import domain.TaxiRecommenderDomainGenerator;
 import domain.states.TaxiGraphState;
 
-import static domain.actions.ActionUtils.notReturningBack;
-import static domain.actions.ActionUtils.shiftNotOver;
+import static domain.TaxiRecommenderDomainGenerator.getDistanceBetweenNodes;
+import static utils.Utils.*;
 
 public class NextLocationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction {
 
     private int toNodeId;
-
-
-    public NextLocationAction(int aId) {
-        super(aId);
-    }
 
 
     public NextLocationAction(int aId, int toNodeId) {
@@ -42,22 +37,26 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
     }
 
 
-    // TODO - estimate energy consumption on the trip
     @Override
     public double getActionEnergyConsumption(TaxiGraphState state) {
-        return -TaxiRecommenderDomainGenerator.getDistanceBetweenNodes(state.getNodeId(), toNodeId);
+        return getMovingEnergyConsumption(state.getNodeId()) + getAuxiliaryEnergyConsumption(state);
+    }
+
+    private double getMovingEnergyConsumption(int fromNodeId){
+        double speed = TaxiRecommenderDomainGenerator.getSpeedBetweenNodes(fromNodeId, toNodeId);
+        double distance = getDistanceBetweenNodes(fromNodeId, toNodeId);
+        return - RIDER_AGGRESSIVENESS * (ALPHA_1 * speed * speed + ALPHA_2*speed + ALPHA_3) * distance;
     }
 
 
-    public void setToNodeId(int toNodeId) {
-        this.toNodeId = toNodeId;
+    private double getAuxiliaryEnergyConsumption(TaxiGraphState state){
+        return - LOADING * (getActionTime(state)/60);
     }
 
 
-    public boolean applicableInState(TaxiGraphState state){
-        return notReturningBack(state, toNodeId) && shiftNotOver(state, this.getActionTime(state));
+    public int getToNodeId() {
+        return toNodeId;
     }
-
 
     public boolean equals(Object o) {
         if (this == o) {

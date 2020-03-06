@@ -1,4 +1,4 @@
-package domain;
+package utils;
 
 public class Utils {
     public static final double SHIFT_LENGTH = 480;
@@ -11,8 +11,17 @@ public class Utils {
     public static final String VAR_PREVIOUS_ACTION = "previous_action";
     public static final String VAR_PREVIOUS_NODE = "previous_node";
 
+    public static final double COST_FOR_KW = 5.5;
+    public static final double BATTERY_CAPACITY = 40;
 
-    public static final String CLASS_TIME = "time";
-    public static final String CLASS_STATE_OF_CHARGE = "state_of_charge";
+    public static final double RIDER_AGGRESSIVENESS = 1.2;
+    public static final double ALPHA_1 = 0.1554;
+    public static final double ALPHA_2 = -5.4634;
+    public static final double ALPHA_3 = 189.297;
+
+    public static final double LOADING = 1.;
+
+    public static final double DEFAULT_SPEED = 50;
+
 
 }

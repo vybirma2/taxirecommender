@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static domain.Utils.STAYING_INTERVAL;
+import static utils.Utils.STAYING_INTERVAL;
 import static domain.actions.ActionUtils.notGoingToChargingPreviously;
 import static domain.actions.ActionUtils.shiftNotOver;
 

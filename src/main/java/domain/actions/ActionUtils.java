@@ -1,7 +1,7 @@
 package domain.actions;
 
 import burlap.mdp.core.state.State;
-import domain.Utils;
+import utils.Utils;
 import domain.states.TaxiGraphState;
 
 public class ActionUtils {

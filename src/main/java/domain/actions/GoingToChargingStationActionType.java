@@ -3,6 +3,9 @@ package domain.actions;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
+import domain.TaxiRecommenderDomainGenerator;
+import domain.states.TaxiGraphState;
+import charging.ChargingStation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +38,12 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
 
-        if (this.applicableInState(state)){
-                actions.add(new GoingToChargingStationAction(this.aId));
+        List<ChargingStation> chargingStations = TaxiRecommenderDomainGenerator.getChargingStations();
+
+        for (ChargingStation chargingStation : chargingStations){
+            if (this.applicableInState((TaxiGraphState) state, chargingStation.getRoadNode().getId())){
+                actions.add(new GoingToChargingStationAction(this.aId, chargingStation.getRoadNode().getId()));
+            }
         }
 
         return actions;
@@ -48,5 +55,14 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
         return notChargingInARow(s) && notGoingToChargingPreviously(s) && notFullyCharged(s) && super.applicableInState(s);
     }
 
+
+    public double getActionTime(TaxiGraphState state, int toNodeId) {
+        return TaxiRecommenderDomainGenerator.getTripTime(state.getNodeId(), toNodeId);
+    }
+
+
+    private boolean applicableInState(TaxiGraphState state, int toNodeId){
+        return applicableInState(state) && notReturningBack(state, toNodeId) && shiftNotOver(state, this.getActionTime(state, toNodeId));
+    }
 
 }

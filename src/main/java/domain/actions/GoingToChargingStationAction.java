@@ -6,6 +6,7 @@ import burlap.mdp.core.action.Action;
 import domain.TaxiRecommenderDomainGenerator;
 import domain.states.TaxiGraphState;
 
+import static domain.actions.ActionUtils.notGoingToChargingPreviously;
 import static domain.actions.ActionUtils.shiftNotOver;
 
 public class GoingToChargingStationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction  {
@@ -49,8 +50,12 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
     }
 
 
+    public int getToNodeId() {
+        return toNodeId;
+    }
+
     public boolean applicableInState(TaxiGraphState state){
-        return shiftNotOver(state, this.getActionTime(state));
+        return shiftNotOver(state, this.getActionTime(state)) && notGoingToChargingPreviously(state);
     }
 
 

@@ -1,4 +1,4 @@
-package utils;
+package charging;
 
 
 import cz.agents.multimodalstructures.nodes.RoadNode;
@@ -6,6 +6,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import utils.Utils;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,7 +17,8 @@ public class ChargingStationUtils {
     private static JSONParser jsonParser = new JSONParser();
     private static Collection<RoadNode> nodes;
     private static double maxChargingStationRoadNodeDistance = 0.5;
-    private static HashSet<Integer> chargingStationRoadNodes = new HashSet();
+    private static HashMap<Integer, ChargingStation> chargingStations = new HashMap<>();
+    private static HashMap<Integer, ChargingConnection> chargingConnections = new HashMap<>();
 
 
     public static List<ChargingStation> readChargingStations(String sourceFile, Collection<RoadNode> nodes)
@@ -30,7 +32,7 @@ public class ChargingStationUtils {
 
         while (iterator.hasNext()) {
             ChargingStation chargingStation = ChargingStationUtils.createChargingStation(iterator.next());
-            if (chargingStation != null){
+            if (chargingStation != null) {
 
                 System.out.println(chargingStation);
 
@@ -43,31 +45,45 @@ public class ChargingStationUtils {
 
 
     public static boolean isChargingStationRoadNode(Integer roadNodeId){
-        return chargingStationRoadNodes.contains(roadNodeId);
+        return chargingStations.containsKey(roadNodeId);
     }
 
 
     private static ChargingStation createChargingStation(JSONObject station){
-        Long id = (Long)station.get("ID");
-        Long countryId = (Long)station.get("CountryID");
-        String postCode = (String)station.get("Postcode");
+        JSONObject addressInfo = (JSONObject) station.get("AddressInfo");
+        Long id = (Long)addressInfo.get("ID");
+        Long countryId = (Long)addressInfo.get("CountryID");
+        String postCode = (String)addressInfo.get("Postcode");
 
-        String title = (String)station.get("Title");
-        String address = (String)station.get("AddressLine1");
-        String town = (String)station.get("Town");
+        String title = (String)addressInfo.get("Title");
+        String address = (String)addressInfo.get("AddressLine1");
+        String town = (String)addressInfo.get("Town");
 
-        double longitude = (double)station.get("Longitude");
-        double latitude = (double)station.get("Latitude");
+        double longitude = (double)addressInfo.get("Longitude");
+        double latitude = (double)addressInfo.get("Latitude");
 
-        if (station.get("AddressLine2") != null){
-            address += "\n" + station.get("AddressLine2");
+        JSONArray connectionsJSON = (JSONArray)station.get("Connections");
+        ArrayList<ChargingConnection> connections = new ArrayList<>(connectionsJSON.size());
+
+        for (JSONObject connection : (Iterable<JSONObject>) connectionsJSON) {
+            if (connection.get("ID") != null && connection.get("PowerKW") != null){
+                ChargingConnection chargingConnection = new ChargingConnection(Math.toIntExact((Long) connection.get("ID")),
+                        (Double) connection.get("PowerKW"), Utils.COST_FOR_KW);
+                connections.add(chargingConnection);
+                chargingConnections.put(chargingConnection.getId(), chargingConnection);
+            }
+        }
+
+        if (addressInfo.get("AddressLine2") != null) {
+            address += "\n" + addressInfo.get("AddressLine2");
         }
 
         RoadNode node = ChargingStationUtils.chooseRoadNode(longitude, latitude);
 
         if (node != null){
-            chargingStationRoadNodes.add(node.getId());
-            return new ChargingStation(Math.toIntExact(id), Math.toIntExact(countryId), postCode, title, address, town, longitude, latitude, node);
+            ChargingStation chargingStation = new ChargingStation(Math.toIntExact(id), Math.toIntExact(countryId), postCode, title, address, town, longitude, latitude, node, connections);
+            chargingStations.put(node.getId(), chargingStation);
+            return chargingStation;
         } else {
             return null;
         }
@@ -104,5 +120,14 @@ public class ChargingStationUtils {
         double radius = 6371;
 
         return (c * radius);
+    }
+
+
+    public static ChargingStation getChargingStation(int nodeId){
+        return chargingStations.get(nodeId);
+    }
+
+    public static ChargingConnection getChargingConnection(int connectionId) {
+        return chargingConnections.get(connectionId);
     }
 }
