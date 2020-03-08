@@ -30,7 +30,7 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
     }
 
 
-
+    // TODO - add more charging intervals, charging to full battery
     @Override
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
@@ -48,6 +48,7 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
     }
 
 
+    // TODO - add not applicable if future state of charge would be more than 100
     @Override
     protected boolean applicableInState(State s) {
         return notChargingInARow(s) && shiftNotOver(s, CHARGING_INTERVAL) && notFullyCharged(s) && super.applicableInState(s);

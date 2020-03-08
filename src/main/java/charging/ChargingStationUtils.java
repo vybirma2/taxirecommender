@@ -16,7 +16,7 @@ public class ChargingStationUtils {
 
     private static JSONParser jsonParser = new JSONParser();
     private static Collection<RoadNode> nodes;
-    private static double maxChargingStationRoadNodeDistance = 0.5;
+    private static double maxChargingStationRoadNodeDistance = 0.2;
     private static HashMap<Integer, ChargingStation> chargingStations = new HashMap<>();
     private static HashMap<Integer, ChargingConnection> chargingConnections = new HashMap<>();
 
@@ -122,6 +122,7 @@ public class ChargingStationUtils {
     public static ChargingStation getChargingStation(int nodeId){
         return chargingStations.get(nodeId);
     }
+
 
     public static ChargingConnection getChargingConnection(int connectionId) {
         return chargingConnections.get(connectionId);

@@ -29,7 +29,7 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
 
 
     @Override
-    public burlap.mdp.core.action.Action associatedAction(String strRep) {
+    public Action associatedAction(String strRep) {
         return new GoingToChargingStationAction(this.aId, Integer.parseInt(strRep));
     }
 

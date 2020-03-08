@@ -28,13 +28,13 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
 
 
     @Override
-    public burlap.mdp.core.action.Action associatedAction(String strRep) {
+    public Action associatedAction(String strRep) {
         return new NextLocationAction(this.aId, Integer.parseInt(strRep));
     }
 
 
     @Override
-    public List<burlap.mdp.core.action.Action> allApplicableActions(State state) {
+    public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
         Set<Integer> neighbours = TaxiRecommenderDomainGenerator.getNeighbours(((TaxiGraphState)state).getNodeId());
 
@@ -48,7 +48,6 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
     }
 
 
-
     @Override
     protected boolean applicableInState(State state) {
         return notGoingToChargingPreviously(state) && super.applicableInState(state);
@@ -58,6 +57,7 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
     public double getActionTime(TaxiGraphState state, int toNodeId) {
         return TaxiRecommenderDomainGenerator.getTripTime(state.getNodeId(), toNodeId);
     }
+
 
     private boolean applicableInState(TaxiGraphState state, int toNodeId){
         return applicableInState(state) && notReturningBack(state, toNodeId) && shiftNotOver(state, this.getActionTime(state, toNodeId));

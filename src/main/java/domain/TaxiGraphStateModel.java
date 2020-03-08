@@ -33,7 +33,7 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
         int nodeId = (int)state.get(VAR_NODE);
         int toNodeId;
 
-        List<StateTransitionProb> resultTransitions = new ArrayList();
+        List<StateTransitionProb> resultTransitions = new ArrayList<>();
 
         Action newAction;
         if (actionId == ActionTypes.TO_NEXT_LOCATION.getValue()) {

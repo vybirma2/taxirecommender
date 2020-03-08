@@ -29,6 +29,17 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
         return length;
     }
 
+    public int getStationId() {
+        return stationId;
+    }
+
+    public int getConnectionId() {
+        return connectionId;
+    }
+
+    public double getEnergyProduction() {
+        return energyProduction;
+    }
 
     @Override
     public String actionName() {
@@ -44,7 +55,7 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getLength());
+        return Objects.hash(super.hashCode(), getLength(), getStationId(), getConnectionId(), getEnergyProduction());
     }
 
 
@@ -65,7 +76,10 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
             return true;
         } else if (o != null && this.getClass() == o.getClass()) {
             ChargingAction that = (ChargingAction) o;
-            return this.aId == that.aId && this.length == that.length;
+            return this.aId == that.aId
+                    && this.length == that.length
+                    && this.connectionId == that.connectionId
+                    && this.stationId == that.stationId;
         } else {
             return false;
         }

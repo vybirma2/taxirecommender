@@ -14,8 +14,8 @@ public class TaxiGraphState extends GraphStateNode  {
     private double timeStamp;
 
 
-    private int previousAction = 132132;
-    private int previousNode = 232132;
+    private int previousAction = Integer.MAX_VALUE;
+    private int previousNode = Integer.MAX_VALUE;
 
 
     public TaxiGraphState(int nodeId, double stateOfCharge, double timeStamp) {

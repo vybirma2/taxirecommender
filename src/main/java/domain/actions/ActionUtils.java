@@ -36,6 +36,7 @@ public class ActionUtils {
     }
 
 
+    // TODO - repaire for speed and distance on every edge not average for whole trip
     public static double getMovingEnergyConsumption(int fromNodeId, int toNodeId){
         double speed = TaxiRecommenderDomainGenerator.getSpeedBetweenNodes(fromNodeId, toNodeId);
         double distance = getDistanceBetweenNodes(fromNodeId, toNodeId);
@@ -44,7 +45,7 @@ public class ActionUtils {
 
 
     public static double getAuxiliaryEnergyConsumption(TaxiGraphState state, double actionTime){
-        return - LOADING * actionTime;
+        return - LOADING * (actionTime/60);
     }
 
 }
