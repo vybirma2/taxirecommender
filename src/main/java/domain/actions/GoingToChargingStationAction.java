@@ -14,11 +14,6 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
     private int toNodeId;
 
 
-    public GoingToChargingStationAction(int aId) {
-        super(aId);
-    }
-
-
     public GoingToChargingStationAction(int aId, int toNodeId) {
         super(aId);
         this.toNodeId = toNodeId;
@@ -43,16 +38,17 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
     }
 
 
-    // TODO - estimate energy consumption on the trip
     @Override
     public double getActionEnergyConsumption(TaxiGraphState state) {
-        return -TaxiRecommenderDomainGenerator.getDistanceBetweenNodes(state.getNodeId(), toNodeId)/2;
+        return ActionUtils.getMovingEnergyConsumption(state.getNodeId(), toNodeId)
+                + ActionUtils.getAuxiliaryEnergyConsumption(state, getActionTime(state)/60);
     }
 
 
     public int getToNodeId() {
         return toNodeId;
     }
+
 
     public boolean applicableInState(TaxiGraphState state){
         return shiftNotOver(state, this.getActionTime(state)) && notGoingToChargingPreviously(state);

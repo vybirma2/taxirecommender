@@ -1,8 +1,12 @@
 package domain.actions;
 
 import burlap.mdp.core.state.State;
+import domain.TaxiRecommenderDomainGenerator;
 import utils.Utils;
 import domain.states.TaxiGraphState;
+
+import static domain.TaxiRecommenderDomainGenerator.getDistanceBetweenNodes;
+import static utils.Utils.*;
 
 public class ActionUtils {
 
@@ -30,4 +34,17 @@ public class ActionUtils {
     public static boolean notReturningBack(TaxiGraphState state, int toNodeId){
         return state.getPreviousNode() != toNodeId;
     }
+
+
+    public static double getMovingEnergyConsumption(int fromNodeId, int toNodeId){
+        double speed = TaxiRecommenderDomainGenerator.getSpeedBetweenNodes(fromNodeId, toNodeId);
+        double distance = getDistanceBetweenNodes(fromNodeId, toNodeId);
+        return - (RIDER_AGGRESSIVENESS * (ALPHA_1 * speed * speed + ALPHA_2*speed + ALPHA_3) * distance)/2000;
+    }
+
+
+    public static double getAuxiliaryEnergyConsumption(TaxiGraphState state, double actionTime){
+        return - LOADING * actionTime;
+    }
+
 }

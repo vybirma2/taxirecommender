@@ -3,39 +3,58 @@ package domain;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.singleagent.SADomain;
 import burlap.mdp.singleagent.model.FactoredModel;
+import charging.ChargingStation;
+import charging.ChargingStationUtils;
 import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.actions.*;
-import charging.ChargingStation;
-import charging.ChargingStationUtils;
 import utils.GraphLoader;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
+
+    private final static Logger LOGGER = Logger.getLogger(TaxiRecommenderDomainGenerator.class.getName());
 
     private static Graph<RoadNode, RoadEdge> graph;
     private static Collection<RoadNode> nodes;
     private static List<ChargingStation> chargingStations;
+    private static HashMap<Integer, HashMap<Integer, Double>> chargingStationDistances;
+    private static HashMap<Integer, HashMap<Integer, Double>> chargingStationSpeeds;
 
     private SADomain domain = null;
 
 
     public TaxiRecommenderDomainGenerator(String roadGraphInputFile, String chargingStationsInputFile) throws Exception {
         super();
+        long startTime;
+        long stopTime;
+
+        System.out.println("Loading graph...");
+        startTime = System.nanoTime();
         graph = GraphLoader.loadGraph(roadGraphInputFile);
+        stopTime  = System.nanoTime();
         nodes = graph.getAllNodes();
+
+        System.out.println("Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + nodes.size() + " nodes, " + graph.getAllEdges().size() + " edges.");
+
+        System.out.println("Loading charging stations...");
+        startTime = System.nanoTime();
         chargingStations = ChargingStationUtils.readChargingStations(chargingStationsInputFile, nodes);
+        stopTime  = System.nanoTime();
+        System.out.println("Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + chargingStations.size() + " charging stations.");
 
-        List<Integer> nodes = aStar(graph.getNode(0), graph.getNode(444));
-
-        for (Integer node : nodes){
-            System.out.println("" + node);
-        }
+        System.out.println("Computing shortest paths to ");
+        startTime = System.nanoTime();
+        DistanceSpeedPair distanceSpeedPair = getChargingStationDistancesAndSpeed();
+        chargingStationDistances = distanceSpeedPair.getDistances();
+        chargingStationSpeeds = distanceSpeedPair.getSpeeds();
+        stopTime  = System.nanoTime();
+        System.out.println("Computing finished in " + (stopTime - startTime)/1000000000. + "s.");
 
         setTransitions();
-
     }
 
 
@@ -116,16 +135,23 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
     }
 
 
-
     public static double getDistanceBetweenNodes(int fromNodeId, int toNodeId){
+        if (fromNodeId == toNodeId){
+            return 0;
+        }
+
         RoadEdge edge = graph.getEdge(fromNodeId, toNodeId);
-        if (edge != null){
+        if (edge != null) {
             return edge.getLength()/1000.;
         } else {
-            return 0.;
+            if (chargingStationDistances.containsKey(toNodeId)){
+                HashMap<Integer, Double> nodes = chargingStationDistances.get(toNodeId);
+                return nodes.get(fromNodeId);
+            } else {
+                throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
+            }
         }
     }
-
 
 
     public static double getEuclideanDistanceBetweenNodes(int fromNodeId, int toNodeId){
@@ -144,16 +170,25 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
 
     public static double getSpeedBetweenNodes(int fromNodeId, int toNodeId){
+        if (fromNodeId == toNodeId){
+           return 0;
+        }
+
         RoadEdge edge = graph.getEdge(fromNodeId, toNodeId);
         if (edge != null){
             return edge.getAllowedMaxSpeedInMpS() * 3.6;
         } else {
-            return 0.;
+            if (chargingStationSpeeds.containsKey(toNodeId)){
+                HashMap<Integer, Double> nodes = chargingStationSpeeds.get(toNodeId);
+                return nodes.get(fromNodeId);
+            } else {
+                throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
+            }
         }
     }
 
 
-    public List<Integer> aStar(RoadNode start, RoadNode goal){
+    public static LinkedList<Integer> aStar(RoadNode start, RoadNode goal){
         AStarNode fromNode = new AStarNode(start.getId(), 0., getEuclideanDistanceBetweenNodes(start.getId(), goal.getId()));
         AStarNode toNode = new AStarNode(goal.getId(), Double.MAX_VALUE, 0.);
 
@@ -204,7 +239,7 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
     }
 
 
-    private List<Integer> reconstructPath(HashMap<Integer, Integer> parentMap, Integer fromNodeId, Integer toNodeId){
+    private static LinkedList<Integer> reconstructPath(HashMap<Integer, Integer> parentMap, Integer fromNodeId, Integer toNodeId){
         LinkedList<Integer> path = new LinkedList<>();
         Integer current = toNodeId;
 
@@ -213,11 +248,46 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
             current = parentMap.get(current);
         }
 
+        path.addFirst(current);
+
         return path;
     }
 
 
-    public static Graph<RoadNode, RoadEdge> getGraph() {
-        return graph;
+    private DistanceSpeedPair getChargingStationDistancesAndSpeed(){
+        HashMap<Integer, HashMap<Integer, Double>> resultDistances = new HashMap<>();
+        HashMap<Integer, HashMap<Integer, Double>> resultSpeeds = new HashMap<>();
+
+        for (ChargingStation chargingStation : chargingStations) {
+            HashMap<Integer, Double> stationDistances = new HashMap<>();
+            HashMap<Integer, Double> stationSpeeds = new HashMap<>();
+
+            for (RoadNode roadNode : nodes){
+                LinkedList<Integer> nodePath = aStar(roadNode, chargingStation.getRoadNode());
+                if (nodePath != null){
+
+                    double distance = 0;
+                    double speed = 0;
+                    Integer current = nodePath.getFirst();
+
+                    for (Integer node : nodePath){
+                        distance += getDistanceBetweenNodes(current, node);
+                        speed += getSpeedBetweenNodes(current, node);
+                        current = node;
+                    }
+
+                    stationDistances.put(roadNode.getId(), distance);
+                    stationSpeeds.put(roadNode.getId(), speed/(nodePath.size() - 1));
+
+                } else {
+                    throw new IllegalArgumentException("No connection between node: " + roadNode.getId() + " and node: " + chargingStation.getId());
+                }
+            }
+            resultDistances.put(chargingStation.getRoadNode().getId(), stationDistances);
+            resultSpeeds.put(chargingStation.getRoadNode().getId(), stationSpeeds);
+        }
+
+        return new DistanceSpeedPair(resultDistances, resultSpeeds);
     }
+
 }

@@ -62,6 +62,4 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
     private boolean applicableInState(TaxiGraphState state, int toNodeId){
         return applicableInState(state) && notReturningBack(state, toNodeId) && shiftNotOver(state, this.getActionTime(state, toNodeId));
     }
-
-
 }

@@ -5,9 +5,6 @@ import burlap.mdp.core.action.Action;
 import domain.TaxiRecommenderDomainGenerator;
 import domain.states.TaxiGraphState;
 
-import static domain.TaxiRecommenderDomainGenerator.getDistanceBetweenNodes;
-import static utils.Utils.*;
-
 public class NextLocationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction {
 
     private int toNodeId;
@@ -39,18 +36,8 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
 
     @Override
     public double getActionEnergyConsumption(TaxiGraphState state) {
-        return getMovingEnergyConsumption(state.getNodeId()) + getAuxiliaryEnergyConsumption(state);
-    }
-
-    private double getMovingEnergyConsumption(int fromNodeId){
-        double speed = TaxiRecommenderDomainGenerator.getSpeedBetweenNodes(fromNodeId, toNodeId);
-        double distance = getDistanceBetweenNodes(fromNodeId, toNodeId);
-        return - (RIDER_AGGRESSIVENESS * (ALPHA_1 * speed * speed + ALPHA_2*speed + ALPHA_3) * distance)/2000;
-    }
-
-
-    private double getAuxiliaryEnergyConsumption(TaxiGraphState state){
-        return - LOADING * (getActionTime(state)/60);
+        return ActionUtils.getMovingEnergyConsumption(state.getNodeId(), toNodeId)
+                + ActionUtils.getAuxiliaryEnergyConsumption(state, getActionTime(state)/60);
     }
 
 

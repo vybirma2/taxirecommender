@@ -32,9 +32,6 @@ public class ChargingStationUtils {
         for (JSONObject station : (Iterable<JSONObject>) stations) {
             ChargingStation chargingStation = ChargingStationUtils.createChargingStation(station);
             if (chargingStation != null) {
-
-                System.out.println(chargingStation);
-
                 chargingStations.add(chargingStation);
             }
         }
