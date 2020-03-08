@@ -45,7 +45,7 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
     private double getMovingEnergyConsumption(int fromNodeId){
         double speed = TaxiRecommenderDomainGenerator.getSpeedBetweenNodes(fromNodeId, toNodeId);
         double distance = getDistanceBetweenNodes(fromNodeId, toNodeId);
-        return - RIDER_AGGRESSIVENESS * (ALPHA_1 * speed * speed + ALPHA_2*speed + ALPHA_3) * distance;
+        return - (RIDER_AGGRESSIVENESS * (ALPHA_1 * speed * speed + ALPHA_2*speed + ALPHA_3) * distance)/2000;
     }
 
 

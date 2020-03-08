@@ -27,7 +27,15 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         graph = GraphLoader.loadGraph(roadGraphInputFile);
         nodes = graph.getAllNodes();
         chargingStations = ChargingStationUtils.readChargingStations(chargingStationsInputFile, nodes);
+
+        List<Integer> nodes = aStar(graph.getNode(0), graph.getNode(444));
+
+        for (Integer node : nodes){
+            System.out.println("" + node);
+        }
+
         setTransitions();
+
     }
 
 
@@ -108,9 +116,23 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
     }
 
 
-    // TODO - implement real distance - used euclidean now
+
     public static double getDistanceBetweenNodes(int fromNodeId, int toNodeId){
-        return graph.getEdge(fromNodeId, toNodeId).getLength()/1000.;
+        RoadEdge edge = graph.getEdge(fromNodeId, toNodeId);
+        if (edge != null){
+            return edge.getLength()/1000.;
+        } else {
+            return 0.;
+        }
+    }
+
+
+
+    public static double getEuclideanDistanceBetweenNodes(int fromNodeId, int toNodeId){
+        RoadNode fromNode = graph.getNode(fromNodeId);
+        RoadNode toNode = graph.getNode(toNodeId);
+        return ChargingStationUtils.getDistance(fromNode.getLongitude(), fromNode.getLatitude(),
+                toNode.getLongitude(), toNode.getLatitude());
     }
 
 
@@ -122,6 +144,80 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
 
     public static double getSpeedBetweenNodes(int fromNodeId, int toNodeId){
-        return graph.getEdge(fromNodeId, toNodeId).getAllowedMaxSpeedInMpS() * 3.6;
+        RoadEdge edge = graph.getEdge(fromNodeId, toNodeId);
+        if (edge != null){
+            return edge.getAllowedMaxSpeedInMpS() * 3.6;
+        } else {
+            return 0.;
+        }
+    }
+
+
+    public List<Integer> aStar(RoadNode start, RoadNode goal){
+        AStarNode fromNode = new AStarNode(start.getId(), 0., getEuclideanDistanceBetweenNodes(start.getId(), goal.getId()));
+        AStarNode toNode = new AStarNode(goal.getId(), Double.MAX_VALUE, 0.);
+
+        HashMap<Integer,Integer> parentMap = new HashMap<>();
+        HashSet<Integer> visited = new HashSet<>();
+        Map<Integer, Double> distances = new HashMap<>();
+
+        PriorityQueue<AStarNode> priorityQueue = new PriorityQueue<>();
+
+
+        distances.put(fromNode.getNodeId(), 0.);
+
+        priorityQueue.add(fromNode);
+        AStarNode current = null;
+
+        while (!priorityQueue.isEmpty()) {
+            current = priorityQueue.remove();
+
+            if (!visited.contains(current.getNodeId()) ){
+                visited.add(current.getNodeId());
+
+                if (current.getNodeId() == toNode.getNodeId()){
+                    return reconstructPath(parentMap, fromNode.getNodeId(), toNode.getNodeId());
+                }
+
+                Set<Integer> neighbors = getNeighbours(current.getNodeId());
+                for (Integer neighbor : neighbors) {
+                    if (!visited.contains(neighbor) ){
+
+                        double predictedDistance = getEuclideanDistanceBetweenNodes(neighbor, toNode.getNodeId());
+
+                        double neighborDistance = getDistanceBetweenNodes(current.getNodeId(), neighbor);
+                        double totalDistance = current.getDistanceToStart() + neighborDistance;
+
+
+                        if(!distances.containsKey(neighbor) || totalDistance + predictedDistance < distances.get(neighbor) ){
+                            distances.put(neighbor, totalDistance + predictedDistance);
+                            AStarNode neighbourNode = new AStarNode(neighbor, totalDistance, predictedDistance);
+
+                            parentMap.put(neighbourNode.getNodeId(), current.getNodeId());
+                            priorityQueue.add(neighbourNode);
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
+    private List<Integer> reconstructPath(HashMap<Integer, Integer> parentMap, Integer fromNodeId, Integer toNodeId){
+        LinkedList<Integer> path = new LinkedList<>();
+        Integer current = toNodeId;
+
+        while (!current.equals(fromNodeId)){
+            path.addFirst(current);
+            current = parentMap.get(current);
+        }
+
+        return path;
+    }
+
+
+    public static Graph<RoadNode, RoadEdge> getGraph() {
+        return graph;
     }
 }

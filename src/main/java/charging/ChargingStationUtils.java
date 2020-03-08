@@ -28,10 +28,9 @@ public class ChargingStationUtils {
         ArrayList<ChargingStation> chargingStations = new ArrayList<>();
 
         JSONArray stations = (JSONArray) jsonParser.parse(new FileReader(sourceFile));
-        Iterator<JSONObject> iterator = stations.iterator();
 
-        while (iterator.hasNext()) {
-            ChargingStation chargingStation = ChargingStationUtils.createChargingStation(iterator.next());
+        for (JSONObject station : (Iterable<JSONObject>) stations) {
+            ChargingStation chargingStation = ChargingStationUtils.createChargingStation(station);
             if (chargingStation != null) {
 
                 System.out.println(chargingStation);
