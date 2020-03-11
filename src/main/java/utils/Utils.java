@@ -1,5 +1,8 @@
 package utils;
 
+import parameterestimation.DataSetReader;
+import parameterestimation.PragueDataSetReader;
+
 public class Utils {
     public static final double SHIFT_LENGTH = 480;
     public static final double STAYING_INTERVAL = 30;
@@ -22,6 +25,17 @@ public class Utils {
     public static final double LOADING = 1.;
 
     public static final double DEFAULT_SPEED = 50;
+
+
+    public static final double MAX_NODE_FITTING_DISTANCE = 0.2;
+
+
+    public static final DataSetReader DATA_SET_READER = new PragueDataSetReader();
+
+
+    public static final int ESTIMATION_EPISODE_LENGTH = 60;
+
+    public static final int SHIFT_START_TIME = 8*60;
 
 
 }

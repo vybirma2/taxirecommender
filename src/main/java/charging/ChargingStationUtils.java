@@ -6,6 +6,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import utils.DistanceGraphUtils;
 import utils.Utils;
 
 import java.io.FileReader;
@@ -15,16 +16,13 @@ import java.util.*;
 public class ChargingStationUtils {
 
     private static JSONParser jsonParser = new JSONParser();
-    private static Collection<RoadNode> nodes;
-    private static double maxChargingStationRoadNodeDistance = 0.2;
     private static HashMap<Integer, ChargingStation> chargingStations = new HashMap<>();
     private static HashMap<Integer, ChargingConnection> chargingConnections = new HashMap<>();
 
 
-    public static List<ChargingStation> readChargingStations(String sourceFile, Collection<RoadNode> nodes)
+    public static List<ChargingStation> readChargingStations(String sourceFile)
             throws ParseException, IOException {
 
-        ChargingStationUtils.nodes = nodes;
         ArrayList<ChargingStation> chargingStations = new ArrayList<>();
 
         JSONArray stations = (JSONArray) jsonParser.parse(new FileReader(sourceFile));
@@ -74,7 +72,7 @@ public class ChargingStationUtils {
             address += "\n" + addressInfo.get("AddressLine2");
         }
 
-        RoadNode node = ChargingStationUtils.chooseRoadNode(longitude, latitude);
+        RoadNode node = DistanceGraphUtils.chooseRoadNode(longitude, latitude);
 
         if (node != null){
             ChargingStation chargingStation = new ChargingStation(Math.toIntExact(id), Math.toIntExact(countryId), postCode, title, address, town, longitude, latitude, node, connections);
@@ -83,39 +81,6 @@ public class ChargingStationUtils {
         } else {
             return null;
         }
-    }
-
-
-    private static RoadNode chooseRoadNode(double longitude, double latitude){
-        double min = Double.MAX_VALUE;
-        RoadNode roadNode = null;
-
-        for (RoadNode node : nodes){
-            double distance = getDistance(longitude, latitude, node.getLongitude(), node.getLatitude());
-
-            if (distance < ChargingStationUtils.maxChargingStationRoadNodeDistance && distance < min){
-                min = distance;
-                roadNode = node;
-            }
-        }
-
-        return roadNode;
-    }
-
-
-    public static double getDistance(double longitude1, double latitude1, double longitude2, double latitude2){
-        longitude1 = Math.toRadians(longitude1);
-        latitude1 = Math.toRadians(latitude1);
-        longitude2 = Math.toRadians(longitude2);
-        latitude2 = Math.toRadians(latitude2);
-
-        double dlon = longitude2 - longitude1;
-        double dlat = latitude2 - latitude1;
-        double a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(latitude1) * Math.cos(latitude2) * Math.pow(Math.sin(dlon / 2),2);
-        double c = 2 * Math.asin(Math.sqrt(a));
-        double radius = 6371;
-
-        return (c * radius);
     }
 
 
