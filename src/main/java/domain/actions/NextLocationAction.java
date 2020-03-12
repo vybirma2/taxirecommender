@@ -5,6 +5,8 @@ import burlap.mdp.core.action.Action;
 import domain.TaxiRecommenderDomainGenerator;
 import domain.states.TaxiGraphState;
 
+import static utils.DistanceGraphUtils.getTripTime;
+
 public class NextLocationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction {
 
     private int toNodeId;
@@ -30,14 +32,14 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
 
     @Override
     public double getActionTime(TaxiGraphState state) {
-        return TaxiRecommenderDomainGenerator.getTripTime(state.getNodeId(), toNodeId);
+        return getTripTime(state.getNodeId(), toNodeId);
     }
 
 
     @Override
     public double getActionEnergyConsumption(TaxiGraphState state) {
         return ActionUtils.getMovingEnergyConsumption(state.getNodeId(), toNodeId)
-                + ActionUtils.getAuxiliaryEnergyConsumption(state, getActionTime(state));
+                + ActionUtils.getAuxiliaryEnergyConsumption(getActionTime(state));
     }
 
 

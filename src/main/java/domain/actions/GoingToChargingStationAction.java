@@ -8,6 +8,7 @@ import domain.states.TaxiGraphState;
 
 import static domain.actions.ActionUtils.notGoingToChargingPreviously;
 import static domain.actions.ActionUtils.shiftNotOver;
+import static utils.DistanceGraphUtils.getTripTime;
 
 public class GoingToChargingStationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction  {
 
@@ -34,14 +35,14 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
 
     @Override
     public double getActionTime(TaxiGraphState state) {
-        return TaxiRecommenderDomainGenerator.getTripTime(state.getNodeId(), toNodeId) ;
+        return getTripTime(state.getNodeId(), toNodeId) ;
     }
 
 
     @Override
     public double getActionEnergyConsumption(TaxiGraphState state) {
         return ActionUtils.getMovingEnergyConsumption(state.getNodeId(), toNodeId)
-                + ActionUtils.getAuxiliaryEnergyConsumption(state, getActionTime(state)/60);
+                + ActionUtils.getAuxiliaryEnergyConsumption(getActionTime(state)/60);
     }
 
 

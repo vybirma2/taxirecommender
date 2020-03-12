@@ -21,6 +21,8 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static utils.DistanceGraphUtils.*;
+
 public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
     private final static Logger LOGGER = Logger.getLogger(TaxiRecommenderDomainGenerator.class.getName());
@@ -28,9 +30,8 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
     private static Graph<RoadNode, RoadEdge> graph;
     private static Collection<RoadNode> nodes;
     private static List<ChargingStation> chargingStations;
-    private static HashMap<Integer, HashMap<Integer, Double>> chargingStationDistances;
-    private static HashMap<Integer, HashMap<Integer, Double>> chargingStationSpeeds;
     private static ArrayList<TaxiTrip> taxiTrips;
+
 
     private String roadGraphInputFile;
     private String chargingStationsInputFile;
@@ -105,9 +106,11 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         LOGGER.log(Level.INFO, "Loading graph...");
         startTime = System.nanoTime();
         graph = GraphLoader.loadGraph(roadGraphInputFile);
+        DistanceGraphUtils.setGraph(graph);
         stopTime  = System.nanoTime();
         nodes = graph.getAllNodes();
         DistanceGraphUtils.setNodes(nodes);
+
 
         LOGGER.log(Level.INFO, "Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + nodes.size() + " nodes, " + graph.getAllEdges().size() + " edges.");
     }
@@ -120,9 +123,9 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         LOGGER.log(Level.INFO, "Loading charging stations...");
         startTime = System.nanoTime();
         chargingStations = ChargingStationUtils.readChargingStations(chargingStationsInputFile);
+        DistanceGraphUtils.setChargingStations(chargingStations);
         stopTime  = System.nanoTime();
         LOGGER.log(Level.INFO, "Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + chargingStations.size() + " charging stations.");
-
     }
 
 
@@ -133,8 +136,8 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         LOGGER.log(Level.INFO, "Computing shortest paths to charging stations...");
         startTime = System.nanoTime();
         DistanceSpeedPair distanceSpeedPair = getChargingStationDistancesAndSpeed();
-        chargingStationDistances = distanceSpeedPair.getDistances();
-        chargingStationSpeeds = distanceSpeedPair.getSpeeds();
+        DistanceGraphUtils.setChargingStationDistances(distanceSpeedPair.getDistances());
+        DistanceGraphUtils.setChargingStationSpeeds(distanceSpeedPair.getSpeeds());
         stopTime  = System.nanoTime();
         LOGGER.log(Level.INFO, "Computing finished in " + (stopTime - startTime)/1000000000. + "s.");
     }
@@ -180,146 +183,6 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         }
     }
 
-
-    public static Set<Integer> getNeighbours(int node){
-        List<RoadEdge> edges = graph.getOutEdges(node);
-        Set<Integer> neighbours = new HashSet<>();
-        for (RoadEdge edge : edges){
-            neighbours.add(edge.getToId());
-        }
-
-        return neighbours;
-    }
-
-
-    public static List<ChargingStation> getChargingStations(){
-        return chargingStations;
-    }
-
-
-    public static double getTripTime(int fromNodeId, int toNodeId){
-        return (getDistanceBetweenNodes(fromNodeId, toNodeId)/getSpeedBetweenNodes(fromNodeId, toNodeId))*60
-                + getDelay(fromNodeId, toNodeId);
-    }
-
-
-    public static double getDistanceBetweenNodes(int fromNodeId, int toNodeId){
-        if (fromNodeId == toNodeId){
-            return 0;
-        }
-
-        RoadEdge edge = graph.getEdge(fromNodeId, toNodeId);
-        if (edge != null) {
-            return edge.getLength()/1000.;
-        } else {
-            if (chargingStationDistances.containsKey(toNodeId)){
-                HashMap<Integer, Double> nodes = chargingStationDistances.get(toNodeId);
-                return nodes.get(fromNodeId);
-            } else {
-                throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
-            }
-        }
-    }
-
-
-    public static double getEuclideanDistanceBetweenNodes(int fromNodeId, int toNodeId){
-        RoadNode fromNode = graph.getNode(fromNodeId);
-        RoadNode toNode = graph.getNode(toNodeId);
-        return DistanceGraphUtils.getDistance(fromNode.getLongitude(), fromNode.getLatitude(),
-                toNode.getLongitude(), toNode.getLatitude());
-    }
-
-
-    // TODO - further development - delay function
-    public static double getDelay(int fromNodeId, int toNodeId){
-        return 0;
-    }
-
-
-
-    public static double getSpeedBetweenNodes(int fromNodeId, int toNodeId){
-        if (fromNodeId == toNodeId){
-           return 0;
-        }
-
-        RoadEdge edge = graph.getEdge(fromNodeId, toNodeId);
-        if (edge != null){
-            return edge.getAllowedMaxSpeedInMpS() * 3.6;
-        } else {
-            if (chargingStationSpeeds.containsKey(toNodeId)){
-                HashMap<Integer, Double> nodes = chargingStationSpeeds.get(toNodeId);
-                return nodes.get(fromNodeId);
-            } else {
-                throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
-            }
-        }
-    }
-
-
-    public static LinkedList<Integer> aStar(RoadNode start, RoadNode goal){
-        AStarNode fromNode = new AStarNode(start.getId(), 0., getEuclideanDistanceBetweenNodes(start.getId(), goal.getId()));
-        AStarNode toNode = new AStarNode(goal.getId(), Double.MAX_VALUE, 0.);
-
-        HashMap<Integer,Integer> parentMap = new HashMap<>();
-        HashSet<Integer> visited = new HashSet<>();
-        Map<Integer, Double> distances = new HashMap<>();
-
-        PriorityQueue<AStarNode> priorityQueue = new PriorityQueue<>();
-
-
-        distances.put(fromNode.getNodeId(), 0.);
-
-        priorityQueue.add(fromNode);
-        AStarNode current = null;
-
-        while (!priorityQueue.isEmpty()) {
-            current = priorityQueue.remove();
-
-            if (!visited.contains(current.getNodeId()) ){
-                visited.add(current.getNodeId());
-
-                if (current.getNodeId() == toNode.getNodeId()){
-                    return reconstructPath(parentMap, fromNode.getNodeId(), toNode.getNodeId());
-                }
-
-                Set<Integer> neighbors = getNeighbours(current.getNodeId());
-                for (Integer neighbor : neighbors) {
-                    if (!visited.contains(neighbor) ){
-
-                        double predictedDistance = getEuclideanDistanceBetweenNodes(neighbor, toNode.getNodeId());
-
-                        double neighborDistance = getDistanceBetweenNodes(current.getNodeId(), neighbor);
-                        double totalDistance = current.getDistanceToStart() + neighborDistance;
-
-
-                        if(!distances.containsKey(neighbor) || totalDistance + predictedDistance < distances.get(neighbor) ){
-                            distances.put(neighbor, totalDistance + predictedDistance);
-                            AStarNode neighbourNode = new AStarNode(neighbor, totalDistance, predictedDistance);
-
-                            parentMap.put(neighbourNode.getNodeId(), current.getNodeId());
-                            priorityQueue.add(neighbourNode);
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-
-    private static LinkedList<Integer> reconstructPath(HashMap<Integer, Integer> parentMap, Integer fromNodeId, Integer toNodeId){
-        LinkedList<Integer> path = new LinkedList<>();
-        Integer current = toNodeId;
-
-        while (!current.equals(fromNodeId)){
-            path.addFirst(current);
-            current = parentMap.get(current);
-        }
-
-        path.addFirst(current);
-
-        return path;
-    }
 
 
     private DistanceSpeedPair getChargingStationDistancesAndSpeed(){

@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static domain.actions.ActionUtils.*;
+import static utils.DistanceGraphUtils.getChargingStations;
+import static utils.DistanceGraphUtils.getTripTime;
 
 public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphActionType {
 
@@ -38,7 +40,7 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
 
-        List<ChargingStation> chargingStations = TaxiRecommenderDomainGenerator.getChargingStations();
+        List<ChargingStation> chargingStations = getChargingStations();
 
         for (ChargingStation chargingStation : chargingStations){
             if (this.applicableInState((TaxiGraphState) state, chargingStation.getRoadNode().getId())){
@@ -57,7 +59,7 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
 
 
     public double getActionTime(TaxiGraphState state, int toNodeId) {
-        return TaxiRecommenderDomainGenerator.getTripTime(state.getNodeId(), toNodeId);
+        return getTripTime(state.getNodeId(), toNodeId);
     }
 
 

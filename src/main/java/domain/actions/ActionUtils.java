@@ -1,11 +1,11 @@
 package domain.actions;
 
 import burlap.mdp.core.state.State;
-import domain.TaxiRecommenderDomainGenerator;
 import utils.Utils;
 import domain.states.TaxiGraphState;
 
-import static domain.TaxiRecommenderDomainGenerator.getDistanceBetweenNodes;
+import static utils.DistanceGraphUtils.getDistanceBetweenNodes;
+import static utils.DistanceGraphUtils.getSpeedBetweenNodes;
 import static utils.Utils.*;
 
 public class ActionUtils {
@@ -38,13 +38,13 @@ public class ActionUtils {
 
     // TODO - repaire for speed and distance on every edge not average for whole trip
     public static double getMovingEnergyConsumption(int fromNodeId, int toNodeId){
-        double speed = TaxiRecommenderDomainGenerator.getSpeedBetweenNodes(fromNodeId, toNodeId);
+        double speed = getSpeedBetweenNodes(fromNodeId, toNodeId);
         double distance = getDistanceBetweenNodes(fromNodeId, toNodeId);
         return - (RIDER_AGGRESSIVENESS * (ALPHA_1 * speed * speed + ALPHA_2*speed + ALPHA_3) * distance)/2000;
     }
 
 
-    public static double getAuxiliaryEnergyConsumption(TaxiGraphState state, double actionTime){
+    public static double getAuxiliaryEnergyConsumption(double actionTime){
         return - LOADING * (actionTime/60);
     }
 

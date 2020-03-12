@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static domain.actions.ActionUtils.*;
+import static utils.DistanceGraphUtils.getNeighbours;
+import static utils.DistanceGraphUtils.getTripTime;
 
 public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
 
@@ -36,7 +38,7 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
     @Override
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
-        Set<Integer> neighbours = TaxiRecommenderDomainGenerator.getNeighbours(((TaxiGraphState)state).getNodeId());
+        Set<Integer> neighbours = getNeighbours(((TaxiGraphState)state).getNodeId());
 
         for (Integer neighbour : neighbours){
             if (this.applicableInState((TaxiGraphState) state, neighbour)){
@@ -55,7 +57,7 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
 
 
     public double getActionTime(TaxiGraphState state, int toNodeId) {
-        return TaxiRecommenderDomainGenerator.getTripTime(state.getNodeId(), toNodeId);
+        return getTripTime(state.getNodeId(), toNodeId);
     }
 
 
