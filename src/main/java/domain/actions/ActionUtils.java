@@ -12,22 +12,27 @@ public class ActionUtils {
 
 
     public static boolean notGoingToChargingPreviously(State state){
-        return !(((TaxiGraphState)state).getPreviousAction() == ActionTypes.GOING_TO_CHARGING_STATION.getValue());
+        return !(((TaxiGraphState)state).getPreviousActionId() == ActionTypes.GOING_TO_CHARGING_STATION.getValue());
     }
 
 
     public static boolean notChargingInARow(State state){
-        return !(((TaxiGraphState)state).getPreviousAction() == ActionTypes.CHARGING_IN_CHARGING_STATION.getValue());
+        return !(((TaxiGraphState)state).getPreviousActionId() == ActionTypes.CHARGING_IN_CHARGING_STATION.getValue());
     }
 
 
     public static boolean shiftNotOver(State state, double actionTime){
-        return ((TaxiGraphState)state).getTimeStamp() + actionTime < Utils.SHIFT_LENGTH;
+        return ((TaxiGraphState)state).getTimeStamp() + actionTime < Utils.SHIFT_LENGTH + SHIFT_START_TIME;
     }
 
 
     public static boolean notFullyCharged(State state){
         return ((TaxiGraphState)state).getStateOfCharge() < 100;
+    }
+
+
+    public static boolean notChargedALot(State state){
+        return ((TaxiGraphState)state).getStateOfCharge() < MINIMAL_CHARGING_STATE_OF_CHARGE;
     }
 
 

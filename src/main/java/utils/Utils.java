@@ -4,7 +4,7 @@ import parameterestimation.DataSetReader;
 import parameterestimation.PragueDataSetReader;
 
 public class Utils {
-    public static final double SHIFT_LENGTH = 480;
+    public static final double SHIFT_LENGTH = 100;
     public static final double STAYING_INTERVAL = 30;
     public static final double CHARGING_INTERVAL = 60;
 
@@ -12,10 +12,14 @@ public class Utils {
     public static final String VAR_STATE_OF_CHARGE = "state_of_charge";
     public static final String VAR_TIMESTAMP = "timestamp";
     public static final String VAR_PREVIOUS_ACTION = "previous_action";
-    public static final String VAR_PREVIOUS_NODE = "previous_node";
+    public static final String VAR_PREVIOUS_STATE = "previous_node";
 
     public static final double COST_FOR_KW = 5.5;
     public static final double BATTERY_CAPACITY = 40;
+    public static final double MINIMAL_CHARGING_STATE_OF_CHARGE = 60;
+
+    public static final int ONE_GRID_CELL_WIDTH = 100;
+    public static final int ONE_GRID_CELL_HEIGHT = 100;
 
     public static final double RIDER_AGGRESSIVENESS = 1.2;
     public static final double ALPHA_1 = 0.1554;

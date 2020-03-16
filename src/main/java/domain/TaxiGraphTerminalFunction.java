@@ -27,7 +27,7 @@ public class TaxiGraphTerminalFunction implements TerminalFunction {
 
 
     private boolean shiftOver(State state){
-       return ((TaxiGraphState)state).getTimeStamp() >= Utils.SHIFT_LENGTH;
+       return ((TaxiGraphState)state).getTimeStamp() >= Utils.SHIFT_LENGTH + Utils.SHIFT_START_TIME;
     }
 
 

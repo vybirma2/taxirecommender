@@ -3,7 +3,6 @@ package domain.actions;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
-import domain.TaxiRecommenderDomainGenerator;
 import domain.states.TaxiGraphState;
 
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static domain.actions.ActionUtils.*;
-import static utils.DistanceGraphUtils.getNeighbours;
+import static utils.DistanceGraphUtils.getEnvironmentNeighbours;
 import static utils.DistanceGraphUtils.getTripTime;
 
 public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
@@ -38,7 +37,7 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
     @Override
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
-        Set<Integer> neighbours = getNeighbours(((TaxiGraphState)state).getNodeId());
+        Set<Integer> neighbours = getEnvironmentNeighbours(((TaxiGraphState)state).getNodeId());
 
         for (Integer neighbour : neighbours){
             if (this.applicableInState((TaxiGraphState) state, neighbour)){

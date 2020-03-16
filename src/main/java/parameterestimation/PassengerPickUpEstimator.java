@@ -1,12 +1,8 @@
 package parameterestimation;
 
-import utils.Utils;
-
 import java.util.*;
 
 import static parameterestimation.ParameterEstimationUtils.*;
-import static utils.DistanceGraphUtils.getNeighbours;
-import static utils.DistanceGraphUtils.getSurroundingNodesToLevel;
 
 public class PassengerPickUpEstimator {
 
@@ -21,31 +17,30 @@ public class PassengerPickUpEstimator {
 
     public HashMap<Integer, HashMap<Integer, Double>> estimatePickUpProbability(){
         HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips = getTimeSortedTrips(taxiTrips);
-        HashMap<Integer, HashMap<Integer, Integer>> pickupsInOSMNodes = getPickUpsInOSMNodes(timeSortedTaxiTrips);
-        HashMap<Integer, HashMap<Integer, Integer>> dropOffsInOSMNodes = getDropOffsInOSMNodes(timeSortedTaxiTrips);
+        HashMap<Integer, HashMap<Integer, Integer>> pickupsInNodes = getPickUpsInNodes(timeSortedTaxiTrips);
+        HashMap<Integer, HashMap<Integer, Integer>> dropOffsInNodes = getDropOffsInNodes(timeSortedTaxiTrips);
 
-        addSurroundingNodeActions(pickupsInOSMNodes);
-        addSurroundingNodeActions(dropOffsInOSMNodes);
+        addSurroundingNodeActions(pickupsInNodes);
+        addSurroundingNodeActions(dropOffsInNodes);
 
-
-        passengerPickUpProbability = getPassengerPickUpProbability(pickupsInOSMNodes, dropOffsInOSMNodes);
+        passengerPickUpProbability = getPassengerPickUpProbability(pickupsInNodes, dropOffsInNodes);
         timeIntervals = passengerPickUpProbability.keySet();
 
         return passengerPickUpProbability;
     }
 
 
-    private HashMap<Integer, HashMap<Integer, Double>> getPassengerPickUpProbability(HashMap<Integer, HashMap<Integer, Integer>> pickupsInOSMNodes,
-                                                                                      HashMap<Integer, HashMap<Integer, Integer>> dropOffsInOSMNodes){
+    private HashMap<Integer, HashMap<Integer, Double>> getPassengerPickUpProbability(HashMap<Integer, HashMap<Integer, Integer>> pickupsInNodes,
+                                                                                      HashMap<Integer, HashMap<Integer, Integer>> dropOffsInNodes){
         HashMap<Integer, HashMap<Integer, Double>> result = new  HashMap<>();
 
-        for (Map.Entry<Integer, HashMap<Integer, Integer>> timeInterval : pickupsInOSMNodes.entrySet()){
+        for (Map.Entry<Integer, HashMap<Integer, Integer>> timeInterval : pickupsInNodes.entrySet()){
             HashMap<Integer, Double> nodeProbabilities = new HashMap<>();
 
             for (Map.Entry<Integer, Integer> node : timeInterval.getValue().entrySet()){
 
                 nodeProbabilities.put(node.getKey(), getProbability(node.getValue(),
-                        dropOffsInOSMNodes.get(timeInterval.getKey()).getOrDefault(node.getKey(), 0)));
+                        dropOffsInNodes.get(timeInterval.getKey()).getOrDefault(node.getKey(), 0)));
 
             }
             result.put(timeInterval.getKey(), nodeProbabilities);

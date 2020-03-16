@@ -1,7 +1,7 @@
 package parameterestimation;
 
 import cz.agents.multimodalstructures.nodes.RoadNode;
-import domain.TaxiRecommenderDomainGenerator;
+import domain.environmentrepresentation.EnvironmentNode;
 
 import java.util.Date;
 
@@ -14,24 +14,31 @@ public class TaxiTrip implements Comparable{
     private double destinationLatitude;
     private double distance;
 
-    private RoadNode pickUpRoadNode;
-    private RoadNode destinationRoadNode;
+    private EnvironmentNode pickUpNode;
+    private EnvironmentNode destinationNode;
+
+    private RoadNode pickUpOsmNode;
+    private RoadNode destinationOsmNode;
+
+
 
     private Date startDate;
     private Date finishDate;
 
 
     public TaxiTrip(String orderId, double pickUpLongitude, double pickUpLatitude, double destinationLongitude,
-                    double destinationLatitude, double distance, RoadNode pickUpRoadNode, RoadNode destinationRoadNode,
-                    Date startDate, Date finishDate) {
+                    double destinationLatitude, double distance, EnvironmentNode pickUpNode, EnvironmentNode destinationNode,
+                    RoadNode pickUpOsmNode, RoadNode destinationOsmNode, Date startDate, Date finishDate) {
         this.orderId = orderId;
         this.pickUpLongitude = pickUpLongitude;
         this.pickUpLatitude = pickUpLatitude;
         this.destinationLongitude = destinationLongitude;
         this.destinationLatitude = destinationLatitude;
         this.distance = distance;
-        this.pickUpRoadNode = pickUpRoadNode;
-        this.destinationRoadNode = destinationRoadNode;
+        this.pickUpNode = pickUpNode;
+        this.destinationNode = destinationNode;
+        this.pickUpOsmNode = pickUpOsmNode;
+        this.destinationOsmNode = destinationOsmNode;
         this.startDate = startDate;
         this.finishDate = finishDate;
     }
@@ -85,20 +92,20 @@ public class TaxiTrip implements Comparable{
         this.distance = distance;
     }
 
-    public RoadNode getPickUpRoadNode() {
-        return pickUpRoadNode;
+    public RoadNode getPickUpNode() {
+        return pickUpNode;
     }
 
-    public void setPickUpRoadNode(RoadNode pickUpRoadNode) {
-        this.pickUpRoadNode = pickUpRoadNode;
+    public void setPickUpNode(EnvironmentNode pickUpNode) {
+        this.pickUpNode = pickUpNode;
     }
 
-    public RoadNode getDestinationRoadNode() {
-        return destinationRoadNode;
+    public RoadNode getDestinationNode() {
+        return destinationNode;
     }
 
-    public void setDestinationRoadNode(RoadNode destinationRoadNode) {
-        this.destinationRoadNode = destinationRoadNode;
+    public void setDestinationNode(EnvironmentNode destinationNode) {
+        this.destinationNode = destinationNode;
     }
 
     public Date getStartDate() {

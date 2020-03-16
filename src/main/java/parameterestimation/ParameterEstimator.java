@@ -1,5 +1,7 @@
 package parameterestimation;
 
+import utils.Utils;
+
 import java.util.*;
 
 
@@ -14,17 +16,18 @@ public class ParameterEstimator {
     private Set<Integer> timeIntervals;
 
 
+
     public ParameterEstimator(ArrayList<TaxiTrip> taxiTrips) {
         this.taxiTrips = taxiTrips;
         this.passengerPickUpEstimator = new PassengerPickUpEstimator(taxiTrips);
         this.passengerDestinationEstimator = new PassengerDestinationEstimator(taxiTrips);
-        estimateParameters();
     }
 
-
-    private void estimateParameters(){
+    
+    public void estimateParameters(){
         passengerPickUpProbability = passengerPickUpEstimator.estimatePickUpProbability();
         passengerDestinationProbability = passengerDestinationEstimator.estimatePickUpProbability();
+
         timeIntervals = passengerPickUpEstimator.getTimeIntervals();
     }
 
@@ -43,6 +46,12 @@ public class ParameterEstimator {
         return passengerPickUpProbability;
     }
 
+
+    private int getIntervalStart(double timeStamp){
+        int intTime = (int)timeStamp;
+        int rest = intTime % Utils.ESTIMATION_EPISODE_LENGTH;
+        return intTime - rest;
+    }
 
     public Set<Integer> getTimeIntervals() {
         return timeIntervals;

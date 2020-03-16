@@ -74,7 +74,7 @@ public class ChargingStationUtils {
 
         RoadNode node = DistanceGraphUtils.chooseRoadNode(longitude, latitude);
 
-        if (node != null){
+        if (node != null) {
             ChargingStation chargingStation = new ChargingStation(Math.toIntExact(id), Math.toIntExact(countryId), postCode, title, address, town, longitude, latitude, node, connections);
             chargingStations.put(node.getId(), chargingStation);
             return chargingStation;

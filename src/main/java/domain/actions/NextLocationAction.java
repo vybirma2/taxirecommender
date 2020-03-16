@@ -32,7 +32,7 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
 
     @Override
     public double getActionTime(TaxiGraphState state) {
-        return getTripTime(state.getNodeId(), toNodeId);
+        return getTripTime(state.getNodeId(), toNodeId) + 2;
     }
 
 

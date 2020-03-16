@@ -2,17 +2,14 @@ package parameterestimation;
 
 import utils.Utils;
 
-import javax.swing.*;
 import java.util.*;
 
-import static utils.DistanceGraphUtils.getNeighbours;
 import static utils.DistanceGraphUtils.getSurroundingNodesToLevel;
 
 public class ParameterEstimationUtils {
 
+
     public static final int NUM_OF_LEVELS_IN_DROP_OFF_SEARCH = 3;
-
-
 
 
     public static HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getNumberOfTripsToDestinationNodes(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
@@ -22,17 +19,17 @@ public class ParameterEstimationUtils {
             HashMap<Integer, HashMap<Integer, Integer>> intervalTripsToDestination = new HashMap<>();
 
             for (TaxiTrip taxiTrip : entry.getValue()){
-                if (intervalTripsToDestination.containsKey(taxiTrip.getPickUpRoadNode().getId())){
-                    HashMap<Integer, Integer> tripsFromNode = intervalTripsToDestination.get(taxiTrip.getPickUpRoadNode().getId());
-                    if (tripsFromNode.containsKey(taxiTrip.getDestinationRoadNode().getId())){
-                        tripsFromNode.replace(taxiTrip.getDestinationRoadNode().getId(), tripsFromNode.get(taxiTrip.getDestinationRoadNode().getId()) + 1);
+                if (intervalTripsToDestination.containsKey(taxiTrip.getPickUpNode().getId())){
+                    HashMap<Integer, Integer> tripsFromNode = intervalTripsToDestination.get(taxiTrip.getPickUpNode().getId());
+                    if (tripsFromNode.containsKey(taxiTrip.getDestinationNode().getId())){
+                        tripsFromNode.replace(taxiTrip.getDestinationNode().getId(), tripsFromNode.get(taxiTrip.getDestinationNode().getId()) + 1);
                     } else {
-                        tripsFromNode.put(taxiTrip.getDestinationRoadNode().getId(), 1);
+                        tripsFromNode.put(taxiTrip.getDestinationNode().getId(), 1);
                     }
                 } else {
                     HashMap<Integer, Integer> toNodeTrips = new HashMap<>();
-                    toNodeTrips.put(taxiTrip.getDestinationRoadNode().getId(), 1);
-                    intervalTripsToDestination.put(taxiTrip.getPickUpRoadNode().getId(), toNodeTrips);
+                    toNodeTrips.put(taxiTrip.getDestinationNode().getId(), 1);
+                    intervalTripsToDestination.put(taxiTrip.getPickUpNode().getId(), toNodeTrips);
                 }
             }
             tripsToDestinationNode.put(entry.getKey(), intervalTripsToDestination);
@@ -87,17 +84,17 @@ public class ParameterEstimationUtils {
     }
 
 
-    public static HashMap<Integer, HashMap<Integer, Integer>> getPickUpsInOSMNodes(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
+    public static HashMap<Integer, HashMap<Integer, Integer>> getPickUpsInNodes(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
         HashMap<Integer, HashMap<Integer, Integer>> pickupsInOSMNodes = new HashMap<>();
 
         for (Map.Entry<Integer, ArrayList<TaxiTrip>> entry : timeSortedTaxiTrips.entrySet()){
             HashMap<Integer, Integer> intervalPickUps = new HashMap<>();
 
             for (TaxiTrip taxiTrip : entry.getValue()){
-                if (intervalPickUps.containsKey(taxiTrip.getPickUpRoadNode().getId())){
-                    intervalPickUps.replace(taxiTrip.getPickUpRoadNode().getId(), intervalPickUps.get(taxiTrip.getPickUpRoadNode().getId()) + 1 );
+                if (intervalPickUps.containsKey(taxiTrip.getPickUpNode().getId())){
+                    intervalPickUps.replace(taxiTrip.getPickUpNode().getId(), intervalPickUps.get(taxiTrip.getPickUpNode().getId()) + 1 );
                 } else {
-                    intervalPickUps.put(taxiTrip.getPickUpRoadNode().getId(), 1);
+                    intervalPickUps.put(taxiTrip.getPickUpNode().getId(), 1);
                 }
             }
             pickupsInOSMNodes.put(entry.getKey(), intervalPickUps);
@@ -107,17 +104,17 @@ public class ParameterEstimationUtils {
     }
 
 
-    public static HashMap<Integer, HashMap<Integer, Integer>> getDropOffsInOSMNodes(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
+    public static HashMap<Integer, HashMap<Integer, Integer>> getDropOffsInNodes(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
         HashMap<Integer, HashMap<Integer, Integer>> dropOffsInOSMNodes = new HashMap<>();
 
         for (Map.Entry<Integer, ArrayList<TaxiTrip>> entry : timeSortedTaxiTrips.entrySet()){
             HashMap<Integer, Integer> intervalDropOffs = new HashMap<>();
 
             for (TaxiTrip taxiTrip : entry.getValue()){
-                if (intervalDropOffs.containsKey(taxiTrip.getDestinationRoadNode().getId())){
-                    intervalDropOffs.replace(taxiTrip.getDestinationRoadNode().getId(), intervalDropOffs.get(taxiTrip.getDestinationRoadNode().getId()) + 1 );
+                if (intervalDropOffs.containsKey(taxiTrip.getDestinationNode().getId())){
+                    intervalDropOffs.replace(taxiTrip.getDestinationNode().getId(), intervalDropOffs.get(taxiTrip.getDestinationNode().getId()) + 1 );
                 } else {
-                    intervalDropOffs.put(taxiTrip.getDestinationRoadNode().getId(), 1);
+                    intervalDropOffs.put(taxiTrip.getDestinationNode().getId(), 1);
                 }
             }
             dropOffsInOSMNodes.put(entry.getKey(), intervalDropOffs);
@@ -135,18 +132,23 @@ public class ParameterEstimationUtils {
         Collections.sort(taxiTrips);
 
         for (TaxiTrip taxiTrip : taxiTrips){
-            if (beforeTripTime(taxiTrip, Utils.SHIFT_START_TIME)){
+            if (beforeTripTime(taxiTrip, estimationTime)){
                 continue;
             } else if (afterTripTime(taxiTrip, estimationTime) && beforeTripTime(taxiTrip, estimationTime + Utils.ESTIMATION_EPISODE_LENGTH)){
                 trips.add(taxiTrip);
             } else {
-                timeSortedTaxiTrips.put(estimationTime, trips);
+                if (!trips.isEmpty()){
+                    timeSortedTaxiTrips.put(estimationTime, trips);
+                }
+
                 trips = new ArrayList<>();
                 estimationTime += Utils.ESTIMATION_EPISODE_LENGTH;
                 if (estimationTime >= Utils.SHIFT_LENGTH + Utils.SHIFT_START_TIME){
                     return timeSortedTaxiTrips;
                 }
+
                 trips.add(taxiTrip);
+
             }
             if (afterTripTime(taxiTrip, Utils.SHIFT_START_TIME + Utils.SHIFT_LENGTH + 1)) {
                 break;

@@ -1,6 +1,7 @@
 package parameterestimation;
 
 import cz.agents.multimodalstructures.nodes.RoadNode;
+import domain.environmentrepresentation.EnvironmentNode;
 import utils.DistanceGraphUtils;
 
 import java.io.*;
@@ -61,10 +62,14 @@ public class PragueDataSetReader implements DataSetReader {
 
         double distance = Integer.parseInt(trip[5])/1000.;
 
-        RoadNode pickUpRoadNode = DistanceGraphUtils.chooseRoadNode(pickUpLongitude, pickUpLatitude);
-        RoadNode destinationRoadNode = DistanceGraphUtils.chooseRoadNode(destinationLongitude, destinationLatitude);
+        EnvironmentNode pickUpNode = DistanceGraphUtils.chooseEnvironmentNode(pickUpLongitude, pickUpLatitude);
+        EnvironmentNode destinationNode = DistanceGraphUtils.chooseEnvironmentNode(destinationLongitude, destinationLatitude);
 
-        if (pickUpRoadNode == null || destinationRoadNode == null){
+       // RoadNode pickUpOsmNode = DistanceGraphUtils.chooseRoadNode(pickUpLongitude, pickUpLatitude);
+       // RoadNode destinationOsmNode = DistanceGraphUtils.chooseRoadNode(destinationLongitude, destinationLatitude);
+
+
+        if (pickUpNode == null || destinationNode == null){
             return null;
         }
 
@@ -73,7 +78,7 @@ public class PragueDataSetReader implements DataSetReader {
 
 
         return new TaxiTrip(orderId, pickUpLongitude, pickUpLatitude, destinationLongitude,
-                destinationLatitude, distance, pickUpRoadNode, destinationRoadNode, startDate, finishDate);
+                destinationLatitude, distance, pickUpNode, destinationNode, null, null, startDate, finishDate);
     }
 
 }

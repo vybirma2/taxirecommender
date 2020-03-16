@@ -9,6 +9,12 @@ import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.actions.*;
+import domain.environmentrepresentation.Environment;
+import domain.environmentrepresentation.EnvironmentEdge;
+import domain.environmentrepresentation.EnvironmentNode;
+import domain.environmentrepresentation.fullenvironment.FullEnvironment;
+import domain.environmentrepresentation.fullenvironment.FullEnvironmentEdge;
+import domain.environmentrepresentation.fullenvironment.FullEnvironmentNode;
 import org.json.simple.parser.ParseException;
 import parameterestimation.ParameterEstimator;
 import parameterestimation.TaxiTrip;
@@ -27,10 +33,12 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
     private final static Logger LOGGER = Logger.getLogger(TaxiRecommenderDomainGenerator.class.getName());
 
-    private static Graph<RoadNode, RoadEdge> graph;
-    private static Collection<RoadNode> nodes;
-    private static List<ChargingStation> chargingStations;
-    private static ArrayList<TaxiTrip> taxiTrips;
+    private Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> environment;
+
+    private Graph<RoadNode, RoadEdge> osmGraph;
+    private Collection<RoadNode> osmNodes;
+    private List<ChargingStation> chargingStations;
+    private ArrayList<TaxiTrip> taxiTrips;
 
 
     private String roadGraphInputFile;
@@ -41,10 +49,12 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
     private SADomain domain = null;
 
 
-    public TaxiRecommenderDomainGenerator(String roadGraphInputFile, String chargingStationsInputFile){
+    public TaxiRecommenderDomainGenerator(String roadGraphInputFile, String chargingStationsInputFile,
+                                          Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> environment){
         super();
         this.roadGraphInputFile = roadGraphInputFile;
         this.chargingStationsInputFile = chargingStationsInputFile;
+        this.environment = environment;
     }
 
 
@@ -105,14 +115,21 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
         LOGGER.log(Level.INFO, "Loading graph...");
         startTime = System.nanoTime();
-        graph = GraphLoader.loadGraph(roadGraphInputFile);
-        DistanceGraphUtils.setGraph(graph);
+        osmGraph = GraphLoader.loadGraph(roadGraphInputFile);
+
+
+        DistanceGraphUtils.setOsmGraph(osmGraph);
+        osmNodes = osmGraph.getAllNodes();
+        DistanceGraphUtils.setOsmNodes(osmNodes);
+
+        environment.setOsmGraph(osmGraph);
+
+        DistanceGraphUtils.setNodes(environment.getEnvironmentNodes());
+        DistanceGraphUtils.setGraph(environment.getEnvironmentGraph());
+
         stopTime  = System.nanoTime();
-        nodes = graph.getAllNodes();
-        DistanceGraphUtils.setNodes(nodes);
 
-
-        LOGGER.log(Level.INFO, "Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + nodes.size() + " nodes, " + graph.getAllEdges().size() + " edges.");
+        LOGGER.log(Level.INFO, "Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + osmNodes.size() + " nodes, " + osmGraph.getAllEdges().size() + " edges.");
     }
 
 
@@ -154,32 +171,32 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         LOGGER.log(Level.INFO, "Reading finished in " + (stopTime - startTime)/1000000000. + "s.");
 
         this.parameterEstimator = new ParameterEstimator(taxiTrips);
+        this.parameterEstimator.estimateParameters();
     }
 
 
-
-
     private void setTransitions() {
-        for (RoadNode node : nodes) {
+        for (EnvironmentNode node : environment.getEnvironmentNodes()) {
 
             // setting transition between node itself - action of staying in location, i.e. prob 1
             this.setTransition(node.getId(), ActionTypes.STAYING_IN_LOCATION.getValue(), node.getId(), 1.);
 
+
             // setting transitions between neighbouring nodes - action of going to next location, i.e. prob 1
-            List<RoadEdge> edges = graph.getOutEdges(node);
-            for (RoadEdge edge : edges) {
-                this.setTransition(edge.getFromId(), ActionTypes.TO_NEXT_LOCATION.getValue(), edge.getToId(), 1.);
+            Set<Integer> neighbours = node.getNeighbours();
+            for (Integer neighbour : neighbours) {
+                this.setTransition(node.getId(), ActionTypes.TO_NEXT_LOCATION.getValue(), neighbour, 1.);
             }
+
 
             // setting transitions between current node and all available charging stations
             for (ChargingStation station : chargingStations){
                 this.setTransition(node.getId(), ActionTypes.GOING_TO_CHARGING_STATION.getValue(), station.getRoadNode().getId(), 1.);
             }
+        }
 
-            // setting transition between node itself - action of charging if node connected with charging station, i.e. prob 1
-            if (ChargingStationUtils.isChargingStationRoadNode(node.getId())){
-                    this.setTransition(node.getId(), ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(), node.getId(), 1.);
-            }
+        for (ChargingStation chargingStation : chargingStations){
+            this.setTransition(chargingStation.getId(), ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(), chargingStation.getId(), 1.);
         }
     }
 
@@ -193,8 +210,8 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
             HashMap<Integer, Double> stationDistances = new HashMap<>();
             HashMap<Integer, Double> stationSpeeds = new HashMap<>();
 
-            for (RoadNode roadNode : nodes){
-                LinkedList<Integer> nodePath = aStar(roadNode, chargingStation.getRoadNode());
+            for (EnvironmentNode environmentNode : environment.getEnvironmentNodes()){
+                LinkedList<Integer> nodePath = aStar(environmentNode.getId(), chargingStation.getRoadNode().getId());
                 if (nodePath != null){
 
                     double distance = 0;
@@ -202,18 +219,19 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
                     Integer current = nodePath.getFirst();
 
                     for (Integer node : nodePath){
-                        distance += getDistanceBetweenNodes(current, node);
-                        speed += getSpeedBetweenNodes(current, node);
+                        distance += getDistanceBetweenOsmNodes(current, node);
+                        speed += getSpeedBetweenOsmNodes(current, node);
                         current = node;
                     }
 
-                    stationDistances.put(roadNode.getId(), distance);
-                    stationSpeeds.put(roadNode.getId(), speed/(nodePath.size() - 1));
+                    stationDistances.put(environmentNode.getId(), distance);
+                    stationSpeeds.put(environmentNode.getId(), speed/(nodePath.size() - 1));
 
                 } else {
-                    throw new IllegalArgumentException("No connection between node: " + roadNode.getId() + " and node: " + chargingStation.getId());
+                    throw new IllegalArgumentException("No connection between node: " + environmentNode.getId() + " and node: " + chargingStation.getId());
                 }
             }
+
             resultDistances.put(chargingStation.getRoadNode().getId(), stationDistances);
             resultSpeeds.put(chargingStation.getRoadNode().getId(), stationSpeeds);
         }

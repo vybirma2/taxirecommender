@@ -1,21 +1,32 @@
 package domain.states;
 
+import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.domain.singleagent.graphdefined.GraphStateNode;
+import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.MutableState;
 import burlap.mdp.core.state.State;
 import utils.Utils;
 
+
+import java.util.HashMap;
+
+
 import static utils.Utils.*;
 
-public class TaxiGraphState extends GraphStateNode  {
+public class TaxiGraphState extends GraphStateNode implements Comparable {
 
     private int nodeId;
     private double stateOfCharge;
     private double timeStamp;
 
 
-    private int previousAction = Integer.MAX_VALUE;
+    private int previousActionId = Integer.MAX_VALUE;
     private int previousNode = Integer.MAX_VALUE;
+
+    private TaxiGraphState previousState = null;
+    private Action previousAction = null;
+
+    private HashMap<Integer, Double> recentlyVisitedNodes = new HashMap<>();
 
 
     public TaxiGraphState(int nodeId, double stateOfCharge, double timeStamp) {
@@ -24,7 +35,7 @@ public class TaxiGraphState extends GraphStateNode  {
         keys.add(VAR_STATE_OF_CHARGE);
         keys.add(VAR_TIMESTAMP);
         keys.add(VAR_PREVIOUS_ACTION);
-        keys.add(VAR_PREVIOUS_NODE);
+        keys.add(VAR_PREVIOUS_STATE);
 
         this.nodeId = id;
         this.stateOfCharge = stateOfCharge;
@@ -56,15 +67,25 @@ public class TaxiGraphState extends GraphStateNode  {
                         throw new RuntimeException("Invalid value data type " + value.getClass());
                     }
                 case VAR_PREVIOUS_ACTION:
-                    if (value instanceof Integer){
-                        this.previousAction = (int)value;
+                    if (value instanceof GraphDefinedDomain.GraphActionType.GraphAction){
+                        this.previousActionId = ((GraphDefinedDomain.GraphActionType.GraphAction)value).aId;
+                        this.previousAction = (GraphDefinedDomain.GraphActionType.GraphAction)value;
+                        return this;
+                    } else if (value == null){
+                        this.previousActionId = Integer.MAX_VALUE;
+                        this.previousAction = null;
                         return this;
                     } else {
                         throw new RuntimeException("Invalid value data type " + value.getClass());
                     }
-                case VAR_PREVIOUS_NODE:
-                    if (value instanceof Integer){
-                        this.previousNode = (int)value;
+                case VAR_PREVIOUS_STATE:
+                    if (value instanceof TaxiGraphState){
+                        this.previousNode = ((TaxiGraphState)value).nodeId;
+                        this.previousState = (TaxiGraphState)value;
+                        return this;
+                    } else if (value == null){
+                        this.previousNode = Integer.MAX_VALUE;
+                        this.previousState = null;
                         return this;
                     } else {
                         throw new RuntimeException("Invalid value data type " + value.getClass());
@@ -82,10 +103,18 @@ public class TaxiGraphState extends GraphStateNode  {
     public State copy() {
         TaxiGraphState state = new TaxiGraphState(this.nodeId, this.stateOfCharge, this.timeStamp);
         state.set(Utils.VAR_PREVIOUS_ACTION, this.previousAction);
-        state.set(Utils.VAR_PREVIOUS_NODE, this.previousNode);
+        state.set(Utils.VAR_PREVIOUS_STATE, this.previousState);
+        state.setRecentlyVisitedNodes(new HashMap<>(recentlyVisitedNodes));
         return state;
     }
 
+    public HashMap<Integer, Double> getRecentlyVisitedNodes() {
+        return recentlyVisitedNodes;
+    }
+
+    public void setRecentlyVisitedNodes(HashMap<Integer, Double> recentlyVisitedNodes) {
+        this.recentlyVisitedNodes = recentlyVisitedNodes;
+    }
 
     public double getStateOfCharge() {
         return stateOfCharge;
@@ -102,8 +131,8 @@ public class TaxiGraphState extends GraphStateNode  {
     }
 
 
-    public int getPreviousAction() {
-        return previousAction;
+    public int getPreviousActionId() {
+        return previousActionId;
     }
 
 
@@ -111,6 +140,13 @@ public class TaxiGraphState extends GraphStateNode  {
         return previousNode;
     }
 
+    public TaxiGraphState getPreviousState() {
+        return previousState;
+    }
+
+    public Action getPreviousAction() {
+        return previousAction;
+    }
 
     @Override
     public String toString() {
@@ -119,5 +155,11 @@ public class TaxiGraphState extends GraphStateNode  {
                 ", timeStamp=" + timeStamp +
                 ", id=" + id +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        TaxiGraphState state = (TaxiGraphState)o;
+        return Double.compare(this.timeStamp, state.timeStamp);
     }
 }

@@ -1,7 +1,5 @@
 package parameterestimation;
 
-import utils.Utils;
-
 import java.util.*;
 
 import static parameterestimation.ParameterEstimationUtils.*;
@@ -19,13 +17,13 @@ public class PassengerDestinationEstimator {
 
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> estimatePickUpProbability(){
         HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips = getTimeSortedTrips(taxiTrips);
-        HashMap<Integer, HashMap<Integer, Integer>> pickupsInOSMNodes = getPickUpsInOSMNodes(timeSortedTaxiTrips);
+        HashMap<Integer, HashMap<Integer, Integer>> pickupsInNodes = getPickUpsInNodes(timeSortedTaxiTrips);
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> numberOfTripsToDestinationNodes = getNumberOfTripsToDestinationNodes(timeSortedTaxiTrips);
 
-        addSurroundingNodeActions(pickupsInOSMNodes);
+        addSurroundingNodeActions(pickupsInNodes);
         addSurroundingsNodesTripsToDestination(numberOfTripsToDestinationNodes);
 
-        passengerDestinationProbability = getPassengerDestinationProbability(pickupsInOSMNodes, numberOfTripsToDestinationNodes);
+        passengerDestinationProbability = getPassengerDestinationProbability(pickupsInNodes, numberOfTripsToDestinationNodes);
 
         return passengerDestinationProbability;
     }

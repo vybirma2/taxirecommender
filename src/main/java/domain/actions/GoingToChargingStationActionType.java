@@ -30,11 +30,6 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
     }
 
 
-    @Override
-    public Action associatedAction(String strRep) {
-        return new GoingToChargingStationAction(this.aId, Integer.parseInt(strRep));
-    }
-
 
     @Override
     public List<Action> allApplicableActions(State state) {
@@ -54,7 +49,7 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
 
     @Override
     protected boolean applicableInState(State s) {
-        return notChargingInARow(s) && notGoingToChargingPreviously(s) && notFullyCharged(s) && super.applicableInState(s);
+        return notChargingInARow(s) && notGoingToChargingPreviously(s) && notChargedALot(s) && super.applicableInState(s);
     }
 
 
