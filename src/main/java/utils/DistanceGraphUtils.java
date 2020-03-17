@@ -58,6 +58,23 @@ public class DistanceGraphUtils {
     }
 
 
+    public static RoadNode chooseRoadNode(Set<RoadNode> nodes, double longitude, double latitude){
+        double min = Double.MAX_VALUE;
+        RoadNode roadNode = null;
+
+        for (RoadNode node : nodes){
+            double distance = getDistance(longitude, latitude, node.getLongitude(), node.getLatitude());
+
+            if (distance < Utils.MAX_NODE_FITTING_DISTANCE && distance < min){
+                min = distance;
+                roadNode = node;
+            }
+        }
+
+        return roadNode;
+    }
+
+
     public static RoadNode chooseRoadNode(double longitude, double latitude){
         double min = Double.MAX_VALUE;
         RoadNode roadNode = null;
@@ -145,6 +162,9 @@ public class DistanceGraphUtils {
     public static Set<Integer> getEnvironmentNeighbours(int node){
         EnvironmentNode environmentNode = graph.getNode(node);
 
+        if (environmentNode == null){
+            return graph.getNodeIds();
+        }
         return environmentNode.getNeighbours();
     }
 

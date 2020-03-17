@@ -22,7 +22,7 @@ public class Main {
         TaxiRecommenderDomainGenerator taxiRecommenderDomainGenerator = null;
         try {
             taxiRecommenderDomainGenerator = new TaxiRecommenderDomainGenerator(
-                    "data/graphs/mala_praha.fst",
+                    "data/graphs/prague_small.fst",
                     "data/chargingstations/prague_charging_stations_full.json",
                     new GridEnvironment());
         } catch (Exception e) {
@@ -33,7 +33,7 @@ public class Main {
             TaxiGraphHashableFactory hashingFactory = new TaxiGraphHashableFactory();
             SADomain domain = taxiRecommenderDomainGenerator.getDomain();
             ValueIteration planner = new ValueIteration(domain, 0.99, hashingFactory, 0.001, 100);
-            TaxiGraphState initialState = new TaxiGraphState(0, 100, Utils.SHIFT_START_TIME);
+            TaxiGraphState initialState = new TaxiGraphState(84, 100, Utils.SHIFT_START_TIME);
             planner.performReachabilityFrom(initialState);
 
             ((TaxiGraphRewardFunction)taxiRecommenderDomainGenerator.getRf()).computeRewardForStates(planner.getAllStates());

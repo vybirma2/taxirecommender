@@ -190,9 +190,9 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
 
             // setting transitions between current node and all available charging stations
-            for (ChargingStation station : chargingStations){
-                this.setTransition(node.getId(), ActionTypes.GOING_TO_CHARGING_STATION.getValue(), station.getRoadNode().getId(), 1.);
-            }
+           // for (ChargingStation station : chargingStations){
+            this.setTransition(node.getId(), ActionTypes.GOING_TO_CHARGING_STATION.getValue(), chargingStations.get(0).getId(), 1.);
+            //}
         }
 
         for (ChargingStation chargingStation : chargingStations){

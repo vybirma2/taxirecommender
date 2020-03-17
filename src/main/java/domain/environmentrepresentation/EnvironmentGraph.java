@@ -40,6 +40,10 @@ public abstract class EnvironmentGraph<TNode extends EnvironmentNode, TEdge exte
         return nodes.values();
     }
 
+    public Set<Integer> getNodeIds(){
+        return nodes.keySet();
+    }
+
 
 }
 

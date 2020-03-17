@@ -45,7 +45,7 @@ public class ActionUtils {
     public static double getMovingEnergyConsumption(int fromNodeId, int toNodeId){
         double speed = getSpeedBetweenNodes(fromNodeId, toNodeId);
         double distance = getDistanceBetweenNodes(fromNodeId, toNodeId);
-        return - (RIDER_AGGRESSIVENESS * (ALPHA_1 * speed * speed + ALPHA_2*speed + ALPHA_3) * distance)/2000;
+        return - (RIDER_AGGRESSIVENESS * (ALPHA_1 * speed * speed + ALPHA_2*speed + ALPHA_3) * distance)/1500;
     }
 
 

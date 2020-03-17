@@ -4,7 +4,7 @@ import parameterestimation.DataSetReader;
 import parameterestimation.PragueDataSetReader;
 
 public class Utils {
-    public static final double SHIFT_LENGTH = 100;
+    public static final double SHIFT_LENGTH = 480;
     public static final double STAYING_INTERVAL = 30;
     public static final double CHARGING_INTERVAL = 60;
 
@@ -18,8 +18,8 @@ public class Utils {
     public static final double BATTERY_CAPACITY = 40;
     public static final double MINIMAL_CHARGING_STATE_OF_CHARGE = 60;
 
-    public static final int ONE_GRID_CELL_WIDTH = 100;
-    public static final int ONE_GRID_CELL_HEIGHT = 100;
+    public static final int ONE_GRID_CELL_WIDTH = 1000;
+    public static final int ONE_GRID_CELL_HEIGHT = 1000;
 
     public static final double RIDER_AGGRESSIVENESS = 1.2;
     public static final double ALPHA_1 = 0.1554;
