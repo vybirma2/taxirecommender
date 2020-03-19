@@ -17,7 +17,7 @@ import static utils.Utils.VAR_NODE;
 
 public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
 
-    int visitInterval = 10;
+    int visitInterval = 60;
 
 
     public TaxiGraphStateModel(Map<Integer, Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>>> transitionDynamics) {

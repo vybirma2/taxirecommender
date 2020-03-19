@@ -6,6 +6,7 @@ import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueItera
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.SADomain;
 import domain.TaxiGraphRewardFunction;
+import domain.TaxiGraphStateModel;
 import domain.TaxiRecommenderDomainGenerator;
 import domain.environmentrepresentation.fullenvironment.FullEnvironment;
 import domain.environmentrepresentation.gridenvironment.GridEnvironment;
@@ -22,8 +23,8 @@ public class Main {
         TaxiRecommenderDomainGenerator taxiRecommenderDomainGenerator = null;
         try {
             taxiRecommenderDomainGenerator = new TaxiRecommenderDomainGenerator(
-                    "data/graphs/prague_small.fst",
-                    "data/chargingstations/prague_charging_stations_full.json",
+                    "prague_full.fst",
+                    "prague_charging_stations_full.json",
                     new GridEnvironment());
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,7 +34,7 @@ public class Main {
             TaxiGraphHashableFactory hashingFactory = new TaxiGraphHashableFactory();
             SADomain domain = taxiRecommenderDomainGenerator.getDomain();
             ValueIteration planner = new ValueIteration(domain, 0.99, hashingFactory, 0.001, 100);
-            TaxiGraphState initialState = new TaxiGraphState(84, 100, Utils.SHIFT_START_TIME);
+            TaxiGraphState initialState = new TaxiGraphState(taxiRecommenderDomainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getId(), 100, Utils.SHIFT_START_TIME);
             planner.performReachabilityFrom(initialState);
 
             ((TaxiGraphRewardFunction)taxiRecommenderDomainGenerator.getRf()).computeRewardForStates(planner.getAllStates());

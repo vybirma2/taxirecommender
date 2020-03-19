@@ -3,9 +3,10 @@ package parameterestimation;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.environmentrepresentation.EnvironmentNode;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class TaxiTrip implements Comparable{
+public class TaxiTrip implements Comparable, Serializable {
     private String orderId;
 
     private double pickUpLongitude;

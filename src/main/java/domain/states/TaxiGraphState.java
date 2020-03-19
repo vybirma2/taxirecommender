@@ -160,6 +160,6 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
     @Override
     public int compareTo(Object o) {
         TaxiGraphState state = (TaxiGraphState)o;
-        return Double.compare(this.timeStamp, state.timeStamp);
+        return Double.compare(this.stateOfCharge, state.stateOfCharge);
     }
 }

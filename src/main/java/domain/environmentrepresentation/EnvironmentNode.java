@@ -3,9 +3,10 @@ package domain.environmentrepresentation;
 import cz.agents.basestructures.GPSLocation;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 
+import java.io.Serializable;
 import java.util.Set;
 
-public abstract class EnvironmentNode extends RoadNode {
+public abstract class EnvironmentNode extends RoadNode implements Serializable {
     protected Set<Integer> neighbours;
 
 

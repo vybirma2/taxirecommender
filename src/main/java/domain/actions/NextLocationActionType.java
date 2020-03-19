@@ -37,11 +37,14 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
     @Override
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
-        Set<Integer> neighbours = getEnvironmentNeighbours(((TaxiGraphState)state).getNodeId());
 
-        for (Integer neighbour : neighbours){
-            if (this.applicableInState((TaxiGraphState) state, neighbour)){
-                actions.add(new NextLocationAction(this.aId, neighbour));
+        int n = (Integer)state.get("node");
+        Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>> actionMap = this.transitionDynamics.get(n);
+        Set<GraphDefinedDomain.NodeTransitionProbability> transitions = actionMap.get(this.aId);
+
+        for (GraphDefinedDomain.NodeTransitionProbability neighbour : transitions){
+            if (this.applicableInState((TaxiGraphState) state, neighbour.transitionTo)){
+                actions.add(new NextLocationAction(this.aId, neighbour.transitionTo));
             }
         }
 
@@ -61,6 +64,8 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
 
 
     private boolean applicableInState(TaxiGraphState state, int toNodeId){
-        return applicableInState(state) && notReturningBack(state, toNodeId) && shiftNotOver(state, this.getActionTime(state, toNodeId));
+        return applicableInState(state) && notReturningBack(state, toNodeId) &&
+                shiftNotOver(state, this.getActionTime(state, toNodeId)) &&
+                notRunOutOfBattery(state, toNodeId, getActionTime(state, toNodeId));
     }
 }

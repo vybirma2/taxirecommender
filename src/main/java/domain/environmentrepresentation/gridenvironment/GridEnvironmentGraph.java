@@ -121,25 +121,28 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
     private void setNeighbours(){
         for (int row = 0; row < numOfRows; row++){
             for (int column = 0; column < numOfColumns; column++){
-                if (insideGrid(row, column)){
-                    addAllNeighbours(row, column);
-                } else if (topInside(row, column)){
-                    addBottomInsideNeighbours(row, column);
-                } else if (leftInside(row, column)){
-                    addRightInsideNeighbours(row, column);
-                } else if (rightInside(row, column)){
-                    addLeftInsideNeighbours(row, column);
-                } else if (bottomInside(row, column)){
-                    addTopInsideNeighbours(row, column);
-                } else if (topLeft(row, column)){
-                    addTopLeftCornerNeighbours(row, column);
-                } else if (topRight(row, column)){
-                    addTopRightCornerNeighbours(row, column);
-                } else if (bottomLeft(row, column)){
-                    addBottomLeftCornerNeighbours(row, column);
-                } else if (bottomRight(row, column)){
-                    addBottomRightCornerNeighbours(row, column);
+                if (gridWorld[row][column] != null){
+                    if (insideGrid(row, column)){
+                        addAllNeighbours(row, column);
+                    } else if (topInside(row, column)){
+                        addBottomInsideNeighbours(row, column);
+                    } else if (leftInside(row, column)){
+                        addRightInsideNeighbours(row, column);
+                    } else if (rightInside(row, column)){
+                        addLeftInsideNeighbours(row, column);
+                    } else if (bottomInside(row, column)){
+                        addTopInsideNeighbours(row, column);
+                    } else if (topLeft(row, column)){
+                        addTopLeftCornerNeighbours(row, column);
+                    } else if (topRight(row, column)){
+                        addTopRightCornerNeighbours(row, column);
+                    } else if (bottomLeft(row, column)){
+                        addBottomLeftCornerNeighbours(row, column);
+                    } else if (bottomRight(row, column)){
+                        addBottomRightCornerNeighbours(row, column);
+                    }
                 }
+
             }
         }
     }
@@ -241,22 +244,50 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
     }
 
     private void addTopNeighbour(int row, int column){
-        gridWorld[row][column].getNeighbours().add(gridWorld[row - 1][column].getId());
+        int i = row - 1;
+        while (i >= 0){
+            if (gridWorld[i][column] != null){
+                gridWorld[row][column].getNeighbours().add(gridWorld[i][column].getId());
+                return;
+            }
+            i--;
+        }
     }
 
 
     private void addBottomNeighbour(int row, int column){
-        gridWorld[row][column].getNeighbours().add(gridWorld[row + 1][column].getId());
+        int i = row + 1;
+        while (i < numOfRows){
+            if (gridWorld[i][column] != null){
+                gridWorld[row][column].getNeighbours().add(gridWorld[i][column].getId());
+                return;
+            }
+            i++;
+        }
     }
 
 
     private void addLeftNeighbour(int row, int column){
-        gridWorld[row][column].getNeighbours().add(gridWorld[row][column - 1].getId());
+        int i = column - 1;
+        while (i >= 0){
+            if (gridWorld[row][i] != null){
+                gridWorld[row][column].getNeighbours().add(gridWorld[row][i].getId());
+                return;
+            }
+            i--;
+        }
     }
 
 
     private void addRightNeighbour(int row, int column){
-        gridWorld[row][column].getNeighbours().add(gridWorld[row][column + 1].getId());
+        int i = column + 1;
+        while (i < numOfColumns){
+            if (gridWorld[row][i] != null){
+                gridWorld[row][column].getNeighbours().add(gridWorld[row][i].getId());
+                return;
+            }
+            i++;
+        }
     }
 
     private void addTopLeftNeighbour(int row, int column){

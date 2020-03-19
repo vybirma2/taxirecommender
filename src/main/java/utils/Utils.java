@@ -4,8 +4,8 @@ import parameterestimation.DataSetReader;
 import parameterestimation.PragueDataSetReader;
 
 public class Utils {
-    public static final double SHIFT_LENGTH = 480;
-    public static final double STAYING_INTERVAL = 30;
+    public static final double SHIFT_LENGTH = 100;
+    public static final double STAYING_INTERVAL = 60;
     public static final double CHARGING_INTERVAL = 60;
 
     public static final String VAR_NODE = "node";

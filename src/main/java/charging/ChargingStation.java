@@ -2,9 +2,10 @@ package charging;
 
 import cz.agents.multimodalstructures.nodes.RoadNode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ChargingStation {
+public class ChargingStation implements Serializable {
 
     private Integer id;
     private Integer countryId;

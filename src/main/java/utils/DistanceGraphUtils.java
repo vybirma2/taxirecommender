@@ -99,7 +99,7 @@ public class DistanceGraphUtils {
         for (EnvironmentNode node : nodes){
             double distance = getDistance(longitude, latitude, node.getLongitude(), node.getLatitude());
 
-            if (distance < Utils.MAX_NODE_FITTING_DISTANCE && distance < min){
+            if (distance < Math.max(Utils.ONE_GRID_CELL_WIDTH, Utils.ONE_GRID_CELL_HEIGHT) && distance < min){
                 min = distance;
                 environmentNode = node;
             }
@@ -204,6 +204,9 @@ public class DistanceGraphUtils {
             if (chargingStationDistances.containsKey(toNodeId)){
                 HashMap<Integer, Double> nodes = chargingStationDistances.get(toNodeId);
                 return nodes.get(fromNodeId);
+            } else if (chargingStationDistances.containsKey(fromNodeId)){
+                HashMap<Integer, Double> nodes = chargingStationDistances.get(fromNodeId);
+                return nodes.get(toNodeId);
             } else {
                 throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
             }
@@ -254,13 +257,14 @@ public class DistanceGraphUtils {
         EnvironmentEdge edge = graph.getEdge(fromNodeId, toNodeId);
         if (edge != null){
             return edge.getAllowedMaxSpeedInMpS() * 3.6;
+        } else if (chargingStationSpeeds.containsKey(toNodeId)){
+            HashMap<Integer, Double> nodes = chargingStationSpeeds.get(toNodeId);
+            return nodes.get(fromNodeId);
+        }  else if (chargingStationSpeeds.containsKey(fromNodeId)){
+            HashMap<Integer, Double> nodes = chargingStationSpeeds.get(fromNodeId);
+            return nodes.get(toNodeId);
         } else {
-            if (chargingStationSpeeds.containsKey(toNodeId)){
-                HashMap<Integer, Double> nodes = chargingStationSpeeds.get(toNodeId);
-                return nodes.get(fromNodeId);
-            } else {
-                throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
-            }
+            throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
         }
     }
 

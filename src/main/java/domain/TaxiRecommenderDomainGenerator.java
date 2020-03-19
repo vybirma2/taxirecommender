@@ -12,22 +12,21 @@ import domain.actions.*;
 import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.EnvironmentEdge;
 import domain.environmentrepresentation.EnvironmentNode;
-import domain.environmentrepresentation.fullenvironment.FullEnvironment;
-import domain.environmentrepresentation.fullenvironment.FullEnvironmentEdge;
-import domain.environmentrepresentation.fullenvironment.FullEnvironmentNode;
 import org.json.simple.parser.ParseException;
+import org.nustaq.serialization.FSTObjectInput;
 import parameterestimation.ParameterEstimator;
 import parameterestimation.TaxiTrip;
+import utils.DataSerialization;
 import utils.DistanceGraphUtils;
 import utils.GraphLoader;
 import utils.Utils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static utils.DistanceGraphUtils.*;
 
 public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
@@ -41,7 +40,9 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
     private ArrayList<TaxiTrip> taxiTrips;
 
 
+    private String roadGraphInputFileFullPath;
     private String roadGraphInputFile;
+    private String chargingStationsInputFileFullPath;
     private String chargingStationsInputFile;
 
     private ParameterEstimator parameterEstimator;
@@ -52,7 +53,9 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
     public TaxiRecommenderDomainGenerator(String roadGraphInputFile, String chargingStationsInputFile,
                                           Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> environment){
         super();
+        this.roadGraphInputFileFullPath = "data/graphs/" + roadGraphInputFile;
         this.roadGraphInputFile = roadGraphInputFile;
+        this.chargingStationsInputFileFullPath = "data/chargingstations/" + chargingStationsInputFile;
         this.chargingStationsInputFile = chargingStationsInputFile;
         this.environment = environment;
     }
@@ -115,7 +118,7 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
         LOGGER.log(Level.INFO, "Loading graph...");
         startTime = System.nanoTime();
-        osmGraph = GraphLoader.loadGraph(roadGraphInputFile);
+        osmGraph = GraphLoader.loadGraph(roadGraphInputFileFullPath);
 
 
         DistanceGraphUtils.setOsmGraph(osmGraph);
@@ -133,26 +136,26 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
     }
 
 
-    private void loadChargingStations() throws IOException, ParseException {
+    private void loadChargingStations() throws IOException, ParseException, ClassNotFoundException {
         long startTime;
         long stopTime;
 
         LOGGER.log(Level.INFO, "Loading charging stations...");
         startTime = System.nanoTime();
-        chargingStations = ChargingStationUtils.readChargingStations(chargingStationsInputFile);
+        chargingStations = ChargingStationUtils.readChargingStations(chargingStationsInputFileFullPath, chargingStationsInputFile);
         DistanceGraphUtils.setChargingStations(chargingStations);
         stopTime  = System.nanoTime();
         LOGGER.log(Level.INFO, "Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + chargingStations.size() + " charging stations.");
     }
 
 
-    private void computeShortestPathsToChargingStations(){
+    private void computeShortestPathsToChargingStations() throws IOException, ClassNotFoundException {
         long startTime;
         long stopTime;
 
         LOGGER.log(Level.INFO, "Computing shortest paths to charging stations...");
         startTime = System.nanoTime();
-        DistanceSpeedPair distanceSpeedPair = getChargingStationDistancesAndSpeed();
+        DistanceSpeedPair distanceSpeedPair = getChargingStationDistancesAndSpeed("distance_speed_" + roadGraphInputFile);
         DistanceGraphUtils.setChargingStationDistances(distanceSpeedPair.getDistances());
         DistanceGraphUtils.setChargingStationSpeeds(distanceSpeedPair.getSpeeds());
         stopTime  = System.nanoTime();
@@ -160,7 +163,7 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
     }
 
 
-    private void loadTaxiTripDataset(){
+    private void loadTaxiTripDataset() throws IOException, ClassNotFoundException {
         long startTime;
         long stopTime;
 
@@ -190,53 +193,36 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
 
             // setting transitions between current node and all available charging stations
-           // for (ChargingStation station : chargingStations){
-            this.setTransition(node.getId(), ActionTypes.GOING_TO_CHARGING_STATION.getValue(), chargingStations.get(0).getId(), 1.);
-            //}
+           // for (ChargingStation station : chargingStations) {
+                this.setTransition(node.getId(), ActionTypes.GOING_TO_CHARGING_STATION.getValue(), chargingStations.get(0).getRoadNode().getId(), 1.);
+           // }
         }
 
         for (ChargingStation chargingStation : chargingStations){
-            this.setTransition(chargingStation.getId(), ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(), chargingStation.getId(), 1.);
+            EnvironmentNode node = DistanceGraphUtils.chooseEnvironmentNode(chargingStation.getRoadNode().getLongitude(), chargingStation.getRoadNode().getLatitude());
+
+            this.setTransition(chargingStation.getRoadNode().getId(), ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(), chargingStation.getRoadNode().getId(), 1.);
+            this.setTransition(chargingStation.getRoadNode().getId(), ActionTypes.TO_NEXT_LOCATION.getValue(), node.getId(), 1.);
         }
     }
 
 
 
-    private DistanceSpeedPair getChargingStationDistancesAndSpeed(){
-        HashMap<Integer, HashMap<Integer, Double>> resultDistances = new HashMap<>();
-        HashMap<Integer, HashMap<Integer, Double>> resultSpeeds = new HashMap<>();
+    private DistanceSpeedPair getChargingStationDistancesAndSpeed(String inputFile) throws IOException, ClassNotFoundException {
 
-        for (ChargingStation chargingStation : chargingStations) {
-            HashMap<Integer, Double> stationDistances = new HashMap<>();
-            HashMap<Integer, Double> stationSpeeds = new HashMap<>();
+        File file = new File("data/programdata/" + Utils.ONE_GRID_CELL_HEIGHT + "x" + Utils.ONE_GRID_CELL_WIDTH + "_" + inputFile);
 
-            for (EnvironmentNode environmentNode : environment.getEnvironmentNodes()){
-                LinkedList<Integer> nodePath = aStar(environmentNode.getId(), chargingStation.getRoadNode().getId());
-                if (nodePath != null){
-
-                    double distance = 0;
-                    double speed = 0;
-                    Integer current = nodePath.getFirst();
-
-                    for (Integer node : nodePath){
-                        distance += getDistanceBetweenOsmNodes(current, node);
-                        speed += getSpeedBetweenOsmNodes(current, node);
-                        current = node;
-                    }
-
-                    stationDistances.put(environmentNode.getId(), distance);
-                    stationSpeeds.put(environmentNode.getId(), speed/(nodePath.size() - 1));
-
-                } else {
-                    throw new IllegalArgumentException("No connection between node: " + environmentNode.getId() + " and node: " + chargingStation.getId());
-                }
-            }
-
-            resultDistances.put(chargingStation.getRoadNode().getId(), stationDistances);
-            resultSpeeds.put(chargingStation.getRoadNode().getId(), stationSpeeds);
+        if(!file.exists()){
+            DataSerialization.serializeChargingStationDistancesAndSpeed(chargingStations, environment.getEnvironmentNodes(), file.getPath());
         }
 
-        return new DistanceSpeedPair(resultDistances, resultSpeeds);
+        FSTObjectInput in = new FSTObjectInput(new FileInputStream(file));
+        DistanceSpeedPair result = (DistanceSpeedPair) in.readObject();
+        in.close();
+        return result;
     }
 
+    public Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> getEnvironment() {
+        return environment;
+    }
 }

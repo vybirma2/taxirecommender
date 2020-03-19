@@ -45,9 +45,20 @@ public class ActionUtils {
     public static double getMovingEnergyConsumption(int fromNodeId, int toNodeId){
         double speed = getSpeedBetweenNodes(fromNodeId, toNodeId);
         double distance = getDistanceBetweenNodes(fromNodeId, toNodeId);
-        return - (RIDER_AGGRESSIVENESS * (ALPHA_1 * speed * speed + ALPHA_2*speed + ALPHA_3) * distance)/1500;
+        return - (RIDER_AGGRESSIVENESS * (ALPHA_1 * speed * speed + ALPHA_2*speed + ALPHA_3) * distance)/1000;
     }
 
+
+
+    public static double getActionEnergyConsumption(TaxiGraphState state, int toNodeId, double actionTime) {
+        return ActionUtils.getMovingEnergyConsumption(state.getNodeId(), toNodeId)
+                + ActionUtils.getAuxiliaryEnergyConsumption(actionTime);
+    }
+
+
+    public static boolean notRunOutOfBattery(State state, int toNodeId, double actionTime){
+        return ((TaxiGraphState)state).getStateOfCharge() + getActionEnergyConsumption((TaxiGraphState) state, toNodeId, actionTime) > 0;
+    }
 
     public static double getAuxiliaryEnergyConsumption(double actionTime){
         return - LOADING * (actionTime/60);

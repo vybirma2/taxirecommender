@@ -1,7 +1,9 @@
 package parameterestimation;
 
-import cz.agents.multimodalstructures.nodes.RoadNode;
+import charging.ChargingStation;
 import domain.environmentrepresentation.EnvironmentNode;
+import org.nustaq.serialization.FSTObjectInput;
+import org.nustaq.serialization.FSTObjectOutput;
 import utils.DistanceGraphUtils;
 
 import java.io.*;
@@ -16,32 +18,45 @@ public class PragueDataSetReader implements DataSetReader {
 
 
     @Override
-    public ArrayList<TaxiTrip> readDataSet() {
+    public ArrayList<TaxiTrip> readDataSet() throws IOException, ClassNotFoundException {
+
+        File file = new File("data/programdata/liftago_prague.fst");
 
         ArrayList<TaxiTrip> taxiTrips = null;
-        File csvFile = new File(inputFile);
-        if (csvFile.isFile()) {
-            BufferedReader csvReader;
-            String row;
-            try {
-                int numOfRows = 0;
-                csvReader = new BufferedReader(new FileReader(inputFile));
-                taxiTrips = new ArrayList<>();
 
-                while ((row = csvReader.readLine()) != null) {
-                    if (numOfRows > 0){
-                        TaxiTrip taxiTrip = parseTaxiTrip(row.split(","));
-                        if (taxiTrip != null){
-                            taxiTrips.add(taxiTrip);
+        if(!file.exists()) {
+            File csvFile = new File(inputFile);
+            if (csvFile.isFile()) {
+                BufferedReader csvReader;
+                String row;
+                try {
+                    int numOfRows = 0;
+                    csvReader = new BufferedReader(new FileReader(inputFile));
+                    taxiTrips = new ArrayList<>();
+
+                    while ((row = csvReader.readLine()) != null) {
+                        if (numOfRows > 0){
+                            TaxiTrip taxiTrip = parseTaxiTrip(row.split(","));
+                            if (taxiTrip != null){
+                                taxiTrips.add(taxiTrip);
+                            }
                         }
+                        numOfRows++;
                     }
-                    numOfRows++;
-                }
 
-                csvReader.close();
-            } catch (IOException | ParseException e) {
-                e.printStackTrace();
+                    csvReader.close();
+
+                    FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));
+                    out.writeObject(taxiTrips);
+                    out.close();
+                } catch (IOException | ParseException e) {
+                    e.printStackTrace();
+                }
             }
+        } else {
+            FSTObjectInput in = new FSTObjectInput(new FileInputStream(file));
+            taxiTrips = (ArrayList<TaxiTrip>) in.readObject();
+            in.close();
         }
 
         return taxiTrips;

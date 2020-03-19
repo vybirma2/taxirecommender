@@ -2,15 +2,18 @@ package charging;
 
 
 import cz.agents.multimodalstructures.nodes.RoadNode;
+import domain.DistanceSpeedPair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.nustaq.serialization.FSTObjectInput;
+import org.nustaq.serialization.FSTObjectOutput;
+import utils.DataSerialization;
 import utils.DistanceGraphUtils;
 import utils.Utils;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class ChargingStationUtils {
@@ -20,19 +23,35 @@ public class ChargingStationUtils {
     private static HashMap<Integer, ChargingConnection> chargingConnections = new HashMap<>();
 
 
-    public static List<ChargingStation> readChargingStations(String sourceFile)
-            throws ParseException, IOException {
+    public static List<ChargingStation> readChargingStations(String sourceFile, String fileName)
+            throws ParseException, IOException, ClassNotFoundException {
 
-        ArrayList<ChargingStation> chargingStations = new ArrayList<>();
+        File file = new File("data/programdata/" + fileName +".fst");
+        ArrayList<ChargingStation> chargingStations;
 
-        JSONArray stations = (JSONArray) jsonParser.parse(new FileReader(sourceFile));
+        if(!file.exists()){
+            chargingStations = new ArrayList<>();
 
-        for (JSONObject station : (Iterable<JSONObject>) stations) {
-            ChargingStation chargingStation = ChargingStationUtils.createChargingStation(station);
-            if (chargingStation != null) {
-                chargingStations.add(chargingStation);
+            JSONArray stations = (JSONArray) jsonParser.parse(new FileReader(sourceFile));
+
+            for (JSONObject station : (Iterable<JSONObject>) stations) {
+                ChargingStation chargingStation = ChargingStationUtils.createChargingStation(station);
+                if (chargingStation != null) {
+                    chargingStations.add(chargingStation);
+                }
             }
+
+            FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));
+            out.writeObject(chargingStations);
+            out.close();
+
+        } else {
+            FSTObjectInput in = new FSTObjectInput(new FileInputStream(file));
+            chargingStations = (ArrayList<ChargingStation>) in.readObject();
+            in.close();
         }
+
+
 
         return chargingStations;
     }

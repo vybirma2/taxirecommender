@@ -5,6 +5,7 @@ package domain.environmentrepresentation;
 import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
+import domain.environmentrepresentation.gridenvironment.GridEnvironmentEdge;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,7 +33,9 @@ public abstract class EnvironmentGraph<TNode extends EnvironmentNode, TEdge exte
 
 
     public EnvironmentEdge getEdge(int fromNode, int toNode){
-        return edges.get(fromNode).get(toNode);
+        HashMap<Integer, TEdge> fromNodeEdges = edges.get(fromNode);
+
+        return fromNodeEdges != null ? edges.get(fromNode).get(toNode) : null;
     }
 
 

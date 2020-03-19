@@ -35,13 +35,18 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
 
-        List<ChargingStation> chargingStations = getChargingStations();
+        int n = (Integer)state.get("node");
+        Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>> actionMap = this.transitionDynamics.get(n);
+        Set<GraphDefinedDomain.NodeTransitionProbability> transitions = actionMap.get(this.aId);
 
-        for (ChargingStation chargingStation : chargingStations){
-            if (this.applicableInState((TaxiGraphState) state, chargingStation.getRoadNode().getId())){
-                actions.add(new GoingToChargingStationAction(this.aId, chargingStation.getRoadNode().getId()));
+        if (transitions != null){
+            for (GraphDefinedDomain.NodeTransitionProbability chargingStation : transitions){
+                if (this.applicableInState((TaxiGraphState) state, chargingStation.transitionTo)){
+                    actions.add(new GoingToChargingStationAction(this.aId, chargingStation.transitionTo));
+                }
             }
         }
+
 
         return actions;
     }
@@ -59,7 +64,9 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
 
 
     private boolean applicableInState(TaxiGraphState state, int toNodeId){
-        return applicableInState(state) && notReturningBack(state, toNodeId) && shiftNotOver(state, this.getActionTime(state, toNodeId));
+        return applicableInState(state) && notReturningBack(state, toNodeId) &&
+                notRunOutOfBattery(state, toNodeId, getActionTime(state, toNodeId))
+                && shiftNotOver(state, this.getActionTime(state, toNodeId));
     }
 
 }

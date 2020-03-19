@@ -1,6 +1,8 @@
 package charging;
 
-public class ChargingConnection {
+import java.io.Serializable;
+
+public class ChargingConnection implements Serializable {
     private int id;
     private double powerKW;
     private double prizeForKW;

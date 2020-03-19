@@ -1,8 +1,9 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class DistanceSpeedPair {
+public class DistanceSpeedPair implements Serializable {
     private HashMap<Integer, HashMap<Integer, Double>> distances;
     private HashMap<Integer, HashMap<Integer, Double>> speeds;
 

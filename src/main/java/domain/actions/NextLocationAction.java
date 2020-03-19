@@ -38,8 +38,7 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
 
     @Override
     public double getActionEnergyConsumption(TaxiGraphState state) {
-        return ActionUtils.getMovingEnergyConsumption(state.getNodeId(), toNodeId)
-                + ActionUtils.getAuxiliaryEnergyConsumption(getActionTime(state));
+        return ActionUtils.getActionEnergyConsumption(state, toNodeId, getActionTime(state)/60);
     }
 
 
