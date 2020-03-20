@@ -27,38 +27,32 @@ public class ChargingStationUtils {
             throws ParseException, IOException, ClassNotFoundException {
 
         File file = new File("data/programdata/" + fileName +".fst");
-        ArrayList<ChargingStation> chargingStations;
 
         if(!file.exists()){
-            chargingStations = new ArrayList<>();
 
             JSONArray stations = (JSONArray) jsonParser.parse(new FileReader(sourceFile));
 
             for (JSONObject station : (Iterable<JSONObject>) stations) {
                 ChargingStation chargingStation = ChargingStationUtils.createChargingStation(station);
                 if (chargingStation != null) {
-                    chargingStations.add(chargingStation);
+                    ChargingStationUtils.chargingStations.put(chargingStation.getRoadNode().getId(), chargingStation);
                 }
             }
 
             FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));
-            out.writeObject(chargingStations);
+            out.writeObject(ChargingStationUtils.chargingStations);
+            out.writeObject(ChargingStationUtils.chargingConnections);
             out.close();
 
         } else {
             FSTObjectInput in = new FSTObjectInput(new FileInputStream(file));
-            chargingStations = (ArrayList<ChargingStation>) in.readObject();
+            ChargingStationUtils.chargingStations = (HashMap<Integer, ChargingStation>) in.readObject();
+            ChargingStationUtils.chargingConnections = (HashMap<Integer, ChargingConnection>) in.readObject();
+
             in.close();
         }
 
-
-
-        return chargingStations;
-    }
-
-
-    public static boolean isChargingStationRoadNode(Integer roadNodeId){
-        return chargingStations.containsKey(roadNodeId);
+        return new ArrayList<>(ChargingStationUtils.chargingStations.values());
     }
 
 

@@ -10,7 +10,6 @@ public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.
 
     private double length;
 
-
     public StayingInLocationAction(int aId, double length) {
         super(aId);
         this.length = length;

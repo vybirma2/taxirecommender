@@ -41,7 +41,7 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
 
     @Override
     public double getActionEnergyConsumption(TaxiGraphState state) {
-        return ActionUtils.getActionEnergyConsumption(state, toNodeId, getActionTime(state)/60);
+        return ActionUtils.getActionEnergyConsumption(state, toNodeId, getActionTime(state));
     }
 
 

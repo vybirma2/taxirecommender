@@ -42,9 +42,11 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
         Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>> actionMap = this.transitionDynamics.get(n);
         Set<GraphDefinedDomain.NodeTransitionProbability> transitions = actionMap.get(this.aId);
 
-        for (GraphDefinedDomain.NodeTransitionProbability neighbour : transitions){
-            if (this.applicableInState((TaxiGraphState) state, neighbour.transitionTo)){
-                actions.add(new NextLocationAction(this.aId, neighbour.transitionTo));
+        if (transitions != null){
+            for (GraphDefinedDomain.NodeTransitionProbability neighbour : transitions){
+                if (this.applicableInState((TaxiGraphState) state, neighbour.transitionTo)){
+                    actions.add(new NextLocationAction(this.aId, neighbour.transitionTo));
+                }
             }
         }
 

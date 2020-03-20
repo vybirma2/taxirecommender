@@ -28,12 +28,6 @@ public class StayingInLocationActionType extends GraphDefinedDomain.GraphActionT
 
 
     @Override
-    public Action associatedAction(String strRep) {
-        return new StayingInLocationAction(this.aId, Integer.parseInt(strRep));
-    }
-
-
-    @Override
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
 

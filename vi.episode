@@ -2,42 +2,111 @@
 actionSequence:
 - !!domain.actions.StayingInLocationAction {aId: 1}
 - !!domain.actions.NextLocationAction {aId: 0}
+- !!domain.actions.StayingInLocationAction {aId: 1}
+- !!domain.actions.NextLocationAction {aId: 0}
+- !!domain.actions.StayingInLocationAction {aId: 1}
 - !!domain.actions.NextLocationAction {aId: 0}
 - !!domain.actions.NextLocationAction {aId: 0}
+- !!domain.actions.GoingToChargingStationAction {aId: 2}
+- !!domain.actions.ChargingAction {aId: 3}
+- !!domain.actions.NextLocationAction {aId: 0}
+- !!domain.actions.GoingToChargingStationAction {aId: 2}
+- !!domain.actions.ChargingAction {aId: 3}
+- !!domain.actions.NextLocationAction {aId: 0}
+- !!domain.actions.StayingInLocationAction {aId: 1}
+- !!domain.actions.GoingToChargingStationAction {aId: 2}
+- !!domain.actions.ChargingAction {aId: 3}
+- !!domain.actions.NextLocationAction {aId: 0}
+- !!domain.actions.StayingInLocationAction {aId: 1}
 - !!domain.actions.NextLocationAction {aId: 0}
 - !!domain.actions.NextLocationAction {aId: 0}
+- !!domain.actions.GoingToChargingStationAction {aId: 2}
+- !!domain.actions.ChargingAction {aId: 3}
 - !!domain.actions.NextLocationAction {aId: 0}
-rewardSequence: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+- !!domain.actions.StayingInLocationAction {aId: 1}
+- !!domain.actions.GoingToChargingStationAction {aId: 2}
+- !!domain.actions.ChargingAction {aId: 3}
+rewardSequence: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 stateSequence:
 - !!domain.states.TaxiGraphState
-  id: 16384
-  recentlyVisitedNodes: {6280: 493.7261534272649, 79344: 483.4024614346267, 37001: 483.3415383595628,
-    13839: 494.8793072382273}
+  id: 29234
+  recentlyVisitedNodes: {19043: 542.7680129061093}
 - !!domain.states.TaxiGraphState
-  id: 16384
-  recentlyVisitedNodes: {6280: 493.7261534272649, 79344: 483.4024614346267, 37001: 483.3415383595628,
-    13839: 494.8793072382273}
+  id: 29234
+  recentlyVisitedNodes: {19043: 542.7680129061093}
 - !!domain.states.TaxiGraphState
-  id: 6280
-  recentlyVisitedNodes: {6280: 493.7261534272649, 79344: 483.4024614346267, 37001: 483.3415383595628,
-    13839: 494.8793072382273}
+  id: 19043
+  recentlyVisitedNodes: {19043: 542.7680129061093}
 - !!domain.states.TaxiGraphState
-  id: 43789
-  recentlyVisitedNodes: {6280: 493.7261534272649, 79344: 483.4024614346267, 37001: 483.3415383595628,
-    13839: 494.8793072382273}
+  id: 19043
+  recentlyVisitedNodes: {19043: 542.7680129061093}
 - !!domain.states.TaxiGraphState
-  id: 6280
-  recentlyVisitedNodes: {6280: 493.7261534272649, 79344: 483.4024614346267, 37001: 483.3415383595628,
-    13839: 494.8793072382273}
+  id: 48422
+  recentlyVisitedNodes: {19043: 542.7680129061093}
 - !!domain.states.TaxiGraphState
-  id: 85044
-  recentlyVisitedNodes: {6280: 493.7261534272649, 79344: 483.4024614346267, 37001: 483.3415383595628,
-    13839: 494.8793072382273}
+  id: 48422
+  recentlyVisitedNodes: {19043: 542.7680129061093}
 - !!domain.states.TaxiGraphState
-  id: 6280
-  recentlyVisitedNodes: {6280: 493.7261534272649, 79344: 483.4024614346267, 37001: 483.3415383595628,
-    13839: 494.8793072382273}
+  id: 19043
+  recentlyVisitedNodes: {19043: 542.7680129061093}
 - !!domain.states.TaxiGraphState
-  id: 85044
-  recentlyVisitedNodes: {6280: 493.7261534272649, 79344: 483.4024614346267, 37001: 483.3415383595628,
-    13839: 494.8793072382273}
+  id: 48422
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 55527
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 55527
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 29234
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 84965
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 84965
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 29234
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 29234
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 84965
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 84965
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 29234
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 29234
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 19043
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 48422
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 55527
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 55527
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 29234
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 29234
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 84965
+  recentlyVisitedNodes: {19043: 542.7680129061093}
+- !!domain.states.TaxiGraphState
+  id: 84965
+  recentlyVisitedNodes: {19043: 542.7680129061093}

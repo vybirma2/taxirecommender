@@ -3,14 +3,16 @@ package domain.actions;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
+import charging.ChargingStationUtils;
+import charging.TripToChargingStation;
 import domain.TaxiRecommenderDomainGenerator;
+import domain.environmentrepresentation.EnvironmentNode;
 import domain.states.TaxiGraphState;
 import charging.ChargingStation;
+import utils.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static domain.actions.ActionUtils.*;
 import static utils.DistanceGraphUtils.getChargingStations;
@@ -35,20 +37,34 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
 
-        int n = (Integer)state.get("node");
-        Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>> actionMap = this.transitionDynamics.get(n);
-        Set<GraphDefinedDomain.NodeTransitionProbability> transitions = actionMap.get(this.aId);
+        int nodeId = (Integer)state.get("node");
+        Set<GraphDefinedDomain.NodeTransitionProbability> transitions = this.transitionDynamics.get(nodeId).get(this.aId);
 
         if (transitions != null){
-            for (GraphDefinedDomain.NodeTransitionProbability chargingStation : transitions){
-                if (this.applicableInState((TaxiGraphState) state, chargingStation.transitionTo)){
-                    actions.add(new GoingToChargingStationAction(this.aId, chargingStation.transitionTo));
+            List<ChargingStation> stations = chooseBestChargingStation(Utils.NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO,
+                    (TaxiGraphState) state, transitions);
+
+            for (ChargingStation chargingStation : stations){
+                if (this.applicableInState((TaxiGraphState) state, chargingStation.getRoadNode().getId())){
+                    actions.add(new GoingToChargingStationAction(this.aId, chargingStation.getRoadNode().getId()));
                 }
             }
         }
 
-
         return actions;
+    }
+
+
+    private List<ChargingStation> chooseBestChargingStation(int numOfStations, TaxiGraphState state,
+                                                            Set<GraphDefinedDomain.NodeTransitionProbability> transitions){
+        return transitions
+                .stream()
+                .map(trans -> ChargingStationUtils.getChargingStation(trans.transitionTo))
+                .map(station -> new TripToChargingStation(state, station))
+                .sorted(Utils.tripToChargingStationComparator)
+                .limit(numOfStations)
+                .map(TripToChargingStation::getChargingStation)
+                .collect(Collectors.toList());
     }
 
 

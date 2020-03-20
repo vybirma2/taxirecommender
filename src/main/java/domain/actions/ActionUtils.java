@@ -26,8 +26,8 @@ public class ActionUtils {
     }
 
 
-    public static boolean notFullyCharged(State state){
-        return ((TaxiGraphState)state).getStateOfCharge() < 100;
+    public static boolean notOverCharging(State state, double energyCharged){
+        return ((TaxiGraphState)state).getStateOfCharge() + energyCharged <= 100;
     }
 
 
@@ -41,27 +41,20 @@ public class ActionUtils {
     }
 
 
-    // TODO - repaire for speed and distance on every edge not average for whole trip
+    // TODO - get some good energy consumption estimate
     public static double getMovingEnergyConsumption(int fromNodeId, int toNodeId){
-        double speed = getSpeedBetweenNodes(fromNodeId, toNodeId);
         double distance = getDistanceBetweenNodes(fromNodeId, toNodeId);
-        return - (RIDER_AGGRESSIVENESS * (ALPHA_1 * speed * speed + ALPHA_2*speed + ALPHA_3) * distance)/1000;
+        return - (distance/CAR_FULL_BATTERY_DISTANCE) * 100;
     }
 
 
 
     public static double getActionEnergyConsumption(TaxiGraphState state, int toNodeId, double actionTime) {
-        return ActionUtils.getMovingEnergyConsumption(state.getNodeId(), toNodeId)
-                + ActionUtils.getAuxiliaryEnergyConsumption(actionTime);
+        return ActionUtils.getMovingEnergyConsumption(state.getNodeId(), toNodeId);
     }
 
 
     public static boolean notRunOutOfBattery(State state, int toNodeId, double actionTime){
         return ((TaxiGraphState)state).getStateOfCharge() + getActionEnergyConsumption((TaxiGraphState) state, toNodeId, actionTime) > 0;
     }
-
-    public static double getAuxiliaryEnergyConsumption(double actionTime){
-        return - LOADING * (actionTime/60);
-    }
-
 }

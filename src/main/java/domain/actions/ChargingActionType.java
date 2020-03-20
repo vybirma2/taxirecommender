@@ -7,14 +7,15 @@ import charging.ChargingConnection;
 import charging.ChargingStation;
 import charging.ChargingStationUtils;
 import domain.states.TaxiGraphState;
+import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static utils.Utils.CHARGING_INTERVAL;
 import static domain.actions.ActionUtils.*;
+import static utils.Utils.NUM_OF_CHARGING_LENGTH_POSSIBILITIES;
 
 public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
 
@@ -30,27 +31,53 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
     }
 
 
-    // TODO - add more charging intervals, charging to full battery
+
     @Override
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
 
         if (this.applicableInState(state)) {
             ChargingStation station = ChargingStationUtils.getChargingStation(((TaxiGraphState)state).getNodeId());
+            ChargingConnection connection = chooseBestChargingConnection(station.getAvailableConnections());
 
-            List<ChargingConnection> connections = station.getAvailableConnections();
-            for (ChargingConnection connection : connections){
-                actions.add(new ChargingAction(this.aId, CHARGING_INTERVAL, station.getId(), connection.getId()));
+            double timeToFullStateOfCharge = timeToFullStateOfCharge((TaxiGraphState)state, connection);
+            double chargingTimeUnit = timeToFullStateOfCharge/NUM_OF_CHARGING_LENGTH_POSSIBILITIES;
+
+            for(int i = 1; i <= NUM_OF_CHARGING_LENGTH_POSSIBILITIES; i++){
+                if (applicableInState(state, i * chargingTimeUnit, getEnergyCharged(connection, i * chargingTimeUnit))){
+                    actions.add(new ChargingAction(this.aId, timeToFullStateOfCharge, station.getId(), connection.getId()));
+                }
             }
         }
-
         return actions;
     }
 
 
-    // TODO - add not applicable if future state of charge would be more than 100
+    private double getEnergyCharged(ChargingConnection connection, double chargingTime){
+        return ((connection.getPowerKW()*(chargingTime/60))/Utils.BATTERY_CAPACITY)*100;
+    }
+
+
+    private double timeToFullStateOfCharge(TaxiGraphState state, ChargingConnection connection){
+        double currentStateOfChargeInKW = (state.getStateOfCharge()/100) * Utils.BATTERY_CAPACITY;
+        return ((Utils.BATTERY_CAPACITY - currentStateOfChargeInKW)/connection.getPowerKW())*60;
+    }
+
+
+    private ChargingConnection chooseBestChargingConnection(List<ChargingConnection> connections){
+        return connections
+                .stream()
+                .max(Utils.chargingConnectionComparator).get();
+    }
+
+
     @Override
     protected boolean applicableInState(State s) {
-        return notChargingInARow(s) && shiftNotOver(s, CHARGING_INTERVAL) && notFullyCharged(s) && super.applicableInState(s);
+        return notChargingInARow(s) && super.applicableInState(s);
+    }
+
+
+    protected boolean applicableInState(State s, double chargingTime, double energyCharged) {
+        return shiftNotOver(s, chargingTime) && notOverCharging(s, energyCharged);
     }
 }
