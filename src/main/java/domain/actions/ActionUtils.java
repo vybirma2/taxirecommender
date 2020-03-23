@@ -47,10 +47,17 @@ public class ActionUtils {
         return - (distance/CAR_FULL_BATTERY_DISTANCE) * 100;
     }
 
+    public static double getMovingEnergyConsumption(double distance){
+        return - (distance/CAR_FULL_BATTERY_DISTANCE) * 100;
+    }
 
 
     public static double getActionEnergyConsumption(TaxiGraphState state, int toNodeId, double actionTime) {
         return ActionUtils.getMovingEnergyConsumption(state.getNodeId(), toNodeId);
+    }
+
+    public static double getEnergyConsumption(double distance) {
+        return ActionUtils.getMovingEnergyConsumption(distance);
     }
 
 

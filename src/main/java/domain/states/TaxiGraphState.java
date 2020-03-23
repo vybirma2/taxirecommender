@@ -19,7 +19,6 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
     private double stateOfCharge;
     private double timeStamp;
 
-
     private int previousActionId = Integer.MAX_VALUE;
     private int previousNode = Integer.MAX_VALUE;
 
@@ -28,6 +27,11 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
 
     private HashMap<Integer, Double> recentlyVisitedNodes = new HashMap<>();
 
+    private HashMap<Action, Double> rewards = new HashMap<>();
+
+    private Action maxRewardAction = null;
+
+    private double maxReward = Double.MIN_VALUE;
 
     public TaxiGraphState(int nodeId, double stateOfCharge, double timeStamp) {
         super(nodeId);
@@ -148,6 +152,22 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
         return previousAction;
     }
 
+
+    public double getReward() {
+        if (maxRewardAction == null){
+            return 0;
+        } else {
+            return maxReward;
+        }
+    }
+
+    public void setReward(Action action, Double reward) {
+        if (maxRewardAction == null || rewards.get(maxRewardAction) < reward){
+            this.maxRewardAction = action;
+            this.maxReward = reward;
+        }
+    }
+
     @Override
     public String toString() {
         return "TaxiGraphState{" +
@@ -160,6 +180,6 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
     @Override
     public int compareTo(Object o) {
         TaxiGraphState state = (TaxiGraphState)o;
-        return Double.compare(this.stateOfCharge, state.stateOfCharge);
+        return Double.compare(state.timeStamp, this.timeStamp);
     }
 }

@@ -20,8 +20,8 @@ public class PassengerPickUpEstimator {
         HashMap<Integer, HashMap<Integer, Integer>> pickupsInNodes = getPickUpsInNodes(timeSortedTaxiTrips);
         HashMap<Integer, HashMap<Integer, Integer>> dropOffsInNodes = getDropOffsInNodes(timeSortedTaxiTrips);
 
-        addSurroundingNodeActions(pickupsInNodes);
-        addSurroundingNodeActions(dropOffsInNodes);
+        //addSurroundingNodeActions(pickupsInNodes);
+        //addSurroundingNodeActions(dropOffsInNodes);
 
         passengerPickUpProbability = getPassengerPickUpProbability(pickupsInNodes, dropOffsInNodes);
         timeIntervals = passengerPickUpProbability.keySet();

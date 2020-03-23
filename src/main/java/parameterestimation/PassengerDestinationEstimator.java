@@ -18,10 +18,11 @@ public class PassengerDestinationEstimator {
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> estimatePickUpProbability(){
         HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips = getTimeSortedTrips(taxiTrips);
         HashMap<Integer, HashMap<Integer, Integer>> pickupsInNodes = getPickUpsInNodes(timeSortedTaxiTrips);
-        HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> numberOfTripsToDestinationNodes = getNumberOfTripsToDestinationNodes(timeSortedTaxiTrips);
+        HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> numberOfTripsToDestinationNodes
+                = getNumberOfTripsToDestinationNodes(timeSortedTaxiTrips);
 
-        addSurroundingNodeActions(pickupsInNodes);
-        addSurroundingsNodesTripsToDestination(numberOfTripsToDestinationNodes);
+        //addSurroundingNodeActions(pickupsInNodes);
+        //addSurroundingsNodesTripsToDestination(numberOfTripsToDestinationNodes);
 
         passengerDestinationProbability = getPassengerDestinationProbability(pickupsInNodes, numberOfTripsToDestinationNodes);
 

@@ -65,7 +65,7 @@ public class DistanceGraphUtils {
         for (RoadNode node : nodes){
             double distance = getDistance(longitude, latitude, node.getLongitude(), node.getLatitude());
 
-            if (distance < Utils.MAX_NODE_FITTING_DISTANCE && distance < min){
+            if (distance < min){
                 min = distance;
                 roadNode = node;
             }
@@ -73,6 +73,7 @@ public class DistanceGraphUtils {
 
         return roadNode;
     }
+
 
 
     public static RoadNode chooseRoadNode(double longitude, double latitude){
@@ -186,7 +187,7 @@ public class DistanceGraphUtils {
 
 
     public static double getTripTime(int fromNodeId, int toNodeId){
-        return (getDistanceBetweenNodes(fromNodeId, toNodeId)/(getSpeedBetweenNodes(fromNodeId, toNodeId)*0.75))*60
+        return (getDistanceBetweenNodes(fromNodeId, toNodeId)/(getSpeedBetweenNodes(fromNodeId, toNodeId)*0.7))*60
                 + getDelay(fromNodeId, toNodeId);
     }
 
@@ -331,5 +332,12 @@ public class DistanceGraphUtils {
         path.addFirst(current);
 
         return path;
+    }
+
+
+    public static int getIntervalStart(double timeStamp){
+        int intTime = (int)timeStamp;
+        int rest = intTime % Utils.ESTIMATION_EPISODE_LENGTH;
+        return intTime - rest;
     }
 }

@@ -17,8 +17,6 @@ import static utils.Utils.VAR_NODE;
 
 public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
 
-    int visitInterval = 30;
-
 
     public TaxiGraphStateModel(Map<Integer, Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>>> transitionDynamics) {
         super(transitionDynamics);
@@ -118,7 +116,7 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
 
         if (state.getRecentlyVisitedNodes().containsKey(toNodeId)){
 
-            if (state.getTimeStamp() + newAction.getActionTime(state) - state.getRecentlyVisitedNodes().get(toNodeId) < visitInterval ){
+            if (state.getTimeStamp() + newAction.getActionTime(state) - state.getRecentlyVisitedNodes().get(toNodeId) < Utils.VISIT_INTERVAL ){
                 return null;
             } else {
                 state.getRecentlyVisitedNodes().replace(toNodeId, state.getRecentlyVisitedNodes().get(toNodeId), state.getTimeStamp() +

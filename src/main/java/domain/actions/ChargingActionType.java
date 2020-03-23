@@ -45,7 +45,7 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
 
             for(int i = 1; i <= NUM_OF_CHARGING_LENGTH_POSSIBILITIES; i++){
                 if (applicableInState(state, i * chargingTimeUnit, getEnergyCharged(connection, i * chargingTimeUnit))){
-                    actions.add(new ChargingAction(this.aId, timeToFullStateOfCharge, station.getId(), connection.getId()));
+                    actions.add(new ChargingAction(this.aId, i*chargingTimeUnit, station.getId(), connection.getId()));
                 }
             }
         }

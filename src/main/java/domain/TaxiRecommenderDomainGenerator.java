@@ -85,8 +85,8 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
             domain.addActionType(new GoingToChargingStationActionType(ActionTypes.GOING_TO_CHARGING_STATION.getValue(),ctd));
             domain.addActionType(new ChargingActionType(ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(), ctd));
 
-            setRf(new TaxiGraphRewardFunction());
             setTf(new TaxiGraphTerminalFunction(domain.getActionTypes()));
+            setRf(new TaxiGraphRewardFunction(this.getTf(), parameterEstimator));
 
             FactoredModel model = new FactoredModel(stateModel, this.rf, this.tf);
             domain.setModel(model);

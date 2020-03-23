@@ -1,6 +1,5 @@
 package parameterestimation;
 
-import charging.ChargingStation;
 import domain.environmentrepresentation.EnvironmentNode;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
@@ -11,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class PragueDataSetReader implements DataSetReader {
 
@@ -80,10 +80,6 @@ public class PragueDataSetReader implements DataSetReader {
         EnvironmentNode pickUpNode = DistanceGraphUtils.chooseEnvironmentNode(pickUpLongitude, pickUpLatitude);
         EnvironmentNode destinationNode = DistanceGraphUtils.chooseEnvironmentNode(destinationLongitude, destinationLatitude);
 
-       // RoadNode pickUpOsmNode = DistanceGraphUtils.chooseRoadNode(pickUpLongitude, pickUpLatitude);
-       // RoadNode destinationOsmNode = DistanceGraphUtils.chooseRoadNode(destinationLongitude, destinationLatitude);
-
-
         if (pickUpNode == null || destinationNode == null){
             return null;
         }
@@ -91,9 +87,11 @@ public class PragueDataSetReader implements DataSetReader {
         Date startDate = dateFormat.parse(trip[6]);
         Date finishDate = dateFormat.parse(trip[7]);
 
+        long tripLengthMilliseconds = Math.abs(finishDate.getTime() - startDate.getTime());
+        long tripLengthMinutes = TimeUnit.MINUTES.convert(tripLengthMilliseconds, TimeUnit.MILLISECONDS);
 
         return new TaxiTrip(orderId, pickUpLongitude, pickUpLatitude, destinationLongitude,
-                destinationLatitude, distance, pickUpNode, destinationNode, null, null, startDate, finishDate);
+                destinationLatitude, distance,tripLengthMinutes , pickUpNode, destinationNode, startDate, finishDate);
     }
 
 }

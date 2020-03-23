@@ -57,6 +57,7 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
 
     private List<ChargingStation> chooseBestChargingStation(int numOfStations, TaxiGraphState state,
                                                             Set<GraphDefinedDomain.NodeTransitionProbability> transitions){
+
         return transitions
                 .stream()
                 .map(trans -> ChargingStationUtils.getChargingStation(trans.transitionTo))
