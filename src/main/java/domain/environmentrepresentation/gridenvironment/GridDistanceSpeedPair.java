@@ -1,6 +1,8 @@
 package domain.environmentrepresentation.gridenvironment;
 
-public class GridDistanceSpeedPair {
+import java.io.Serializable;
+
+public class GridDistanceSpeedPair implements Serializable {
 
     private double distance;
     private double speed;

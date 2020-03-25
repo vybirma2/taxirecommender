@@ -12,6 +12,7 @@ import domain.actions.*;
 import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.EnvironmentEdge;
 import domain.environmentrepresentation.EnvironmentNode;
+import domain.states.TaxiGraphState;
 import org.json.simple.parser.ParseException;
 import org.nustaq.serialization.FSTObjectInput;
 import parameterestimation.ParameterEstimator;
@@ -27,6 +28,10 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static domain.actions.ActionUtils.runOutOfBattery;
+import static domain.actions.ActionUtils.shiftOver;
+import static utils.DistanceGraphUtils.getIntervalStart;
 
 public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
@@ -84,6 +89,7 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
             domain.addActionType(new NextLocationActionType(ActionTypes.TO_NEXT_LOCATION.getValue(),ctd));
             domain.addActionType(new GoingToChargingStationActionType(ActionTypes.GOING_TO_CHARGING_STATION.getValue(),ctd));
             domain.addActionType(new ChargingActionType(ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(), ctd));
+            domain.addActionType(new PickUpPassengerActionType(ActionTypes.PICK_UP_PASSENGER.getValue(), ctd, parameterEstimator));
 
             setTf(new TaxiGraphTerminalFunction(domain.getActionTypes()));
             setRf(new TaxiGraphRewardFunction(this.getTf(), parameterEstimator));
@@ -186,10 +192,7 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
 
             // setting transitions between neighbouring nodes - action of going to next location, i.e. prob 1
-            Set<Integer> neighbours = node.getNeighbours();
-            for (Integer neighbour : neighbours) {
-                this.setTransition(node.getId(), ActionTypes.TO_NEXT_LOCATION.getValue(), neighbour, 1.);
-            }
+            setToNextLocationTransitions(node);
 
 
             // setting transitions between current node and all available charging stations
@@ -205,6 +208,27 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
             this.setTransition(chargingStation.getRoadNode().getId(), ActionTypes.TO_NEXT_LOCATION.getValue(), node.getId(), 1.);
         }
     }
+
+
+    private void setToNextLocationTransitions(EnvironmentNode node){
+        Set<Integer> neighbours = node.getNeighbours();
+        for (Integer neighbour : neighbours) {
+            HashMap<Integer, Double> destinationProbabilities = parameterEstimator.getDestinationProbabilitiesInNode(neighbour);
+
+            double pickUpProbability = parameterEstimator.getPickUpProbabilityInNode(neighbour);
+            double notPickingPassengerProbability = 1 - pickUpProbability;
+
+            this.setTransition(node.getId(), ActionTypes.TO_NEXT_LOCATION.getValue(), neighbour, notPickingPassengerProbability);
+
+            if (destinationProbabilities != null){
+                for (Map.Entry<Integer, Double> destination : destinationProbabilities.entrySet()){
+                    this.setTransition(node.getId(), ActionTypes.PICK_UP_PASSENGER.getValue(), destination.getKey(), pickUpProbability * destination.getValue());
+                }
+            }
+        }
+    }
+
+
 
 
 

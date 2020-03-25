@@ -1,7 +1,5 @@
 package parameterestimation;
 
-import utils.Utils;
-
 import java.util.*;
 
 import static utils.DistanceGraphUtils.getIntervalStart;
@@ -15,12 +13,14 @@ public class ParameterEstimator {
     private ArrayList<TaxiTrip> taxiTrips;
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Long>>> taxiTripLengths;
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripDistances;
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripConsumptions;
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> taxiTripConsumptions;
 
     private HashMap<Integer, HashMap<Integer, Double>> passengerPickUpProbability;
+    private HashMap<Integer, Double> passengerPickUpProbabilityComplete;
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> passengerDestinationProbability;
-    private Set<Integer> timeIntervals;
+    private HashMap<Integer, HashMap<Integer, Double>> passengerDestinationProbabilityComplete;
 
+    private Set<Integer> timeIntervals;
 
 
     public ParameterEstimator(ArrayList<TaxiTrip> taxiTrips) {
@@ -35,7 +35,9 @@ public class ParameterEstimator {
     
     public void estimateParameters(){
         passengerPickUpProbability = passengerPickUpEstimator.estimatePickUpProbability();
-        passengerDestinationProbability = passengerDestinationEstimator.estimatePickUpProbability();
+        passengerPickUpProbabilityComplete = passengerPickUpEstimator.estimatePickUpProbabilityComplete();
+        passengerDestinationProbability = passengerDestinationEstimator.estimateDestinationProbability();
+        passengerDestinationProbabilityComplete = passengerDestinationEstimator.estimateDestinationProbabilityComplete();
 
         timeIntervals = passengerPickUpEstimator.getTimeIntervals();
     }
@@ -56,11 +58,29 @@ public class ParameterEstimator {
     }
 
     public double getPickUpProbabilityInNode(int nodeId, double timeStamp){
-        return passengerPickUpProbability.get(getIntervalStart(timeStamp)).get(nodeId);
+        Double result = passengerPickUpProbability.get(getIntervalStart(timeStamp)).get(nodeId);
+        if (result != null){
+            return result;
+        }
+        return 0;
     }
+
+
+    public double getPickUpProbabilityInNode(int nodeId){
+        Double result = passengerPickUpProbabilityComplete.get(nodeId);
+        if (result != null){
+            return result;
+        }
+        return 0;
+    }
+
 
     public HashMap<Integer, Double> getDestinationProbabilitiesInNode(int nodeId, double timeStamp){
         return passengerDestinationProbability.get(getIntervalStart(timeStamp)).get(nodeId);
+    }
+
+    public HashMap<Integer, Double> getDestinationProbabilitiesInNode(int nodeId){
+        return passengerDestinationProbabilityComplete.get(nodeId);
     }
 
 
@@ -74,7 +94,7 @@ public class ParameterEstimator {
     }
 
 
-    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> getTaxiTripConsumptions() {
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getTaxiTripConsumptions() {
         return taxiTripConsumptions;
     }
 
@@ -198,8 +218,8 @@ public class ParameterEstimator {
 
     }
 
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> computeTaxiTripsConsumptions(){
-        HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result = new HashMap<>();
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> computeTaxiTripsConsumptions(){
+        HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> result = new HashMap<>();
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums = new HashMap<>();
 
 
@@ -209,7 +229,7 @@ public class ParameterEstimator {
             if (result.containsKey(intervalStart)) {
                 if (result.get(intervalStart).containsKey(taxiTrip.getPickUpNode().getId())){
                     if (result.get(intervalStart).get(taxiTrip.getPickUpNode().getId()).containsKey(taxiTrip.getDestinationNode().getId())){
-                        double num = result.get(intervalStart).get(taxiTrip.getPickUpNode().getId()).get(taxiTrip.getDestinationNode().getId());
+                        int num = result.get(intervalStart).get(taxiTrip.getPickUpNode().getId()).get(taxiTrip.getDestinationNode().getId());
                         result.get(intervalStart).get(taxiTrip.getPickUpNode().getId()).replace(taxiTrip.getDestinationNode().getId(), num + taxiTrip.getTripEnergyConsumption());
 
                         int size = nums.get(intervalStart).get(taxiTrip.getPickUpNode().getId()).get(taxiTrip.getDestinationNode().getId());
@@ -220,7 +240,7 @@ public class ParameterEstimator {
                         nums.get(intervalStart).get(taxiTrip.getPickUpNode().getId()).put(taxiTrip.getDestinationNode().getId(), 1);
                     }
                 } else {
-                    HashMap<Integer, Double> consumptions = new HashMap<>();
+                    HashMap<Integer, Integer> consumptions = new HashMap<>();
                     consumptions.put(taxiTrip.getDestinationNode().getId(), taxiTrip.getTripEnergyConsumption());
                     result.get(intervalStart).put(taxiTrip.getPickUpNode().getId(), consumptions);
 
@@ -229,8 +249,8 @@ public class ParameterEstimator {
                     nums.get(intervalStart).put(taxiTrip.getPickUpNode().getId(), toDestNums);
                 }
             } else {
-                HashMap<Integer, Double> nodeTrips = new HashMap<>();
-                HashMap<Integer, HashMap<Integer, Double>> tripConsumptions = new HashMap<>();
+                HashMap<Integer, Integer> nodeTrips = new HashMap<>();
+                HashMap<Integer, HashMap<Integer, Integer>> tripConsumptions = new HashMap<>();
                 nodeTrips.put(taxiTrip.getDestinationNode().getId(), taxiTrip.getTripEnergyConsumption());
                 tripConsumptions.put(taxiTrip.getPickUpNode().getId(), nodeTrips);
                 result.put(intervalStart, tripConsumptions);
@@ -245,9 +265,9 @@ public class ParameterEstimator {
         }
 
 
-        for (Map.Entry<Integer, HashMap<Integer, HashMap<Integer, Double>>> timeInterval : result.entrySet()){
-            for (Map.Entry<Integer, HashMap<Integer, Double>> node : timeInterval.getValue().entrySet()){
-                for (Map.Entry<Integer, Double> consumption : node.getValue().entrySet()){
+        for (Map.Entry<Integer, HashMap<Integer, HashMap<Integer, Integer>>> timeInterval : result.entrySet()){
+            for (Map.Entry<Integer, HashMap<Integer, Integer>> node : timeInterval.getValue().entrySet()){
+                for (Map.Entry<Integer, Integer> consumption : node.getValue().entrySet()){
                     consumption.setValue(consumption.getValue()/nums.get(timeInterval.getKey()).get(node.getKey()).get(consumption.getKey()));
                 }
             }

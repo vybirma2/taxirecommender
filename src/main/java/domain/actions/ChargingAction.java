@@ -10,18 +10,18 @@ import java.util.Objects;
 
 public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction {
 
-    private double length;
+    private int length;
     private int stationId;
     private int connectionId;
-    private double energyProduction;
+    private int energyProduction;
 
 
-    public ChargingAction(int aId, double length, int stationId, int connectionId) {
+    public ChargingAction(int aId, int length, int stationId, int connectionId) {
         super(aId);
         this.length = length;
         this.stationId = stationId;
         this.connectionId = connectionId;
-        this.energyProduction = ChargingStationUtils.getChargingConnection(connectionId).getPowerKW()*(length/60);
+        this.energyProduction = (int)ChargingStationUtils.getChargingConnection(connectionId).getPowerKW()*(length/60);
     }
 
 
@@ -60,13 +60,13 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
 
 
     @Override
-    public double getActionTime(TaxiGraphState state) {
+    public int getActionTime(TaxiGraphState state) {
         return length;
     }
 
 
     @Override
-    public double getActionEnergyConsumption(TaxiGraphState state) {
+    public int getActionEnergyConsumption(TaxiGraphState state) {
         return energyProduction;
     }
 

@@ -75,7 +75,7 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
     }
 
 
-    public double getActionTime(TaxiGraphState state, int toNodeId) {
+    public int getActionTime(TaxiGraphState state, int toNodeId) {
         return getTripTime(state.getNodeId(), toNodeId);
     }
 

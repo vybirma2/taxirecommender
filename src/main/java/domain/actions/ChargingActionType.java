@@ -38,29 +38,32 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
 
         if (this.applicableInState(state)) {
             ChargingStation station = ChargingStationUtils.getChargingStation(((TaxiGraphState)state).getNodeId());
-            ChargingConnection connection = chooseBestChargingConnection(station.getAvailableConnections());
+            if (!station.getAvailableConnections().isEmpty()){
+                ChargingConnection connection = chooseBestChargingConnection(station.getAvailableConnections());
 
-            double timeToFullStateOfCharge = timeToFullStateOfCharge((TaxiGraphState)state, connection);
-            double chargingTimeUnit = timeToFullStateOfCharge/NUM_OF_CHARGING_LENGTH_POSSIBILITIES;
+                int timeToFullStateOfCharge = timeToFullStateOfCharge((TaxiGraphState)state, connection);
+                int chargingTimeUnit = timeToFullStateOfCharge/NUM_OF_CHARGING_LENGTH_POSSIBILITIES;
 
-            for(int i = 1; i <= NUM_OF_CHARGING_LENGTH_POSSIBILITIES; i++){
-                if (applicableInState(state, i * chargingTimeUnit, getEnergyCharged(connection, i * chargingTimeUnit))){
-                    actions.add(new ChargingAction(this.aId, i*chargingTimeUnit, station.getId(), connection.getId()));
+                for(int i = 1; i <= NUM_OF_CHARGING_LENGTH_POSSIBILITIES; i++){
+                    if (applicableInState(state, i * chargingTimeUnit, getEnergyCharged(connection, i * chargingTimeUnit))){
+                        actions.add(new ChargingAction(this.aId, i*chargingTimeUnit, station.getId(), connection.getId()));
+                    }
                 }
             }
+
         }
         return actions;
     }
 
 
-    private double getEnergyCharged(ChargingConnection connection, double chargingTime){
-        return ((connection.getPowerKW()*(chargingTime/60))/Utils.BATTERY_CAPACITY)*100;
+    private int getEnergyCharged(ChargingConnection connection, double chargingTime){
+        return (int)((connection.getPowerKW()*(chargingTime/60))/Utils.BATTERY_CAPACITY)*100;
     }
 
 
-    private double timeToFullStateOfCharge(TaxiGraphState state, ChargingConnection connection){
-        double currentStateOfChargeInKW = (state.getStateOfCharge()/100) * Utils.BATTERY_CAPACITY;
-        return ((Utils.BATTERY_CAPACITY - currentStateOfChargeInKW)/connection.getPowerKW())*60;
+    private int timeToFullStateOfCharge(TaxiGraphState state, ChargingConnection connection){
+        double currentStateOfChargeInKW = (state.getStateOfCharge()/100.) * Utils.BATTERY_CAPACITY;
+        return (int)((Utils.BATTERY_CAPACITY - currentStateOfChargeInKW)/connection.getPowerKW())*60;
     }
 
 

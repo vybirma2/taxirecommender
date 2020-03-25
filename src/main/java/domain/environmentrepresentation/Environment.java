@@ -6,6 +6,8 @@ import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.environmentrepresentation.gridenvironment.GridEnvironmentEdge;
 import domain.environmentrepresentation.gridenvironment.GridEnvironmentNode;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
@@ -15,7 +17,7 @@ public abstract class Environment<TNode extends EnvironmentNode, TEdge extends E
     protected EnvironmentGraph<TNode, TEdge> environmentGraph;
 
 
-    public void setOsmGraph(Graph<RoadNode, RoadEdge> osmGraph) {
+    public void setOsmGraph(Graph<RoadNode, RoadEdge> osmGraph) throws IOException, ClassNotFoundException {
         this.osmGraph = osmGraph;
         setEnvironmentGraph();
     }
@@ -34,7 +36,7 @@ public abstract class Environment<TNode extends EnvironmentNode, TEdge extends E
     }
 
 
-    protected abstract void setEnvironmentGraph();
+    protected abstract void setEnvironmentGraph() throws IOException, ClassNotFoundException;
 
 
 }

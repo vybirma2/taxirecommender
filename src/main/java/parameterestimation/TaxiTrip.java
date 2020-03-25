@@ -16,11 +16,10 @@ public class TaxiTrip implements Comparable, Serializable {
     private double destinationLatitude;
     private double distance;
     private long tripLength;
-    private double tripEnergyConsumption;
+    private int tripEnergyConsumption;
 
     private EnvironmentNode pickUpNode;
     private EnvironmentNode destinationNode;
-
 
 
     private Date startDate;
@@ -129,11 +128,11 @@ public class TaxiTrip implements Comparable, Serializable {
         return tripLength;
     }
 
-    public double getTripEnergyConsumption() {
+    public int getTripEnergyConsumption() {
         return tripEnergyConsumption;
     }
 
-    private double computeEnergyConsumption(){
+    private int computeEnergyConsumption(){
         return ActionUtils.getEnergyConsumption(this.distance);
     }
 

@@ -4,7 +4,7 @@ import domain.states.TaxiGraphState;
 
 public interface MeasurableAction {
 
-    double getActionTime(TaxiGraphState state);
+    int getActionTime(TaxiGraphState state);
 
-    double getActionEnergyConsumption(TaxiGraphState state);
+    int getActionEnergyConsumption(TaxiGraphState state);
 }

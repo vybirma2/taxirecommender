@@ -7,11 +7,12 @@ import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.environmentrepresentation.EnvironmentGraph;
 import utils.Utils;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static utils.DistanceGraphUtils.*;
 
-public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, GridEnvironmentEdge> {
+public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, GridEnvironmentEdge> implements Serializable {
 
 
     private double gridHeight;
@@ -48,6 +49,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         nodes = new HashMap<>();
         computeGridParameters();
         createGridWorld();
+        System.out.println(this);
     }
 
     @Override
@@ -56,12 +58,13 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
 
         for (Map.Entry<Integer, GridEnvironmentNode> entry : nodes.entrySet()){
             GridEnvironmentNode node = entry.getValue();
-            Set<Integer> neighbours = node.getNeighbours();
             HashMap<Integer, GridEnvironmentEdge> nodeEdges = new HashMap<>();
-            for (Integer neighbour : neighbours){
-                GridDistanceSpeedPair distanceSpeedPair = getDistancesAndSpeedBetweenNodesInGrid(node.getId(), neighbour);
-                nodeEdges.put(neighbour, new GridEnvironmentEdge(node.getId(), neighbour, (float) (distanceSpeedPair.getSpeed()/3.6),
-                        (int)(distanceSpeedPair.getDistance() * 1000) ));
+            for (Integer neighbour : nodes.get(entry.getKey()).getNeighbours()){
+                if (!entry.getKey().equals(neighbour)){
+                    GridDistanceSpeedPair distanceSpeedPair = getDistancesAndSpeedBetweenNodesInGrid(entry.getKey(), neighbour);
+                    nodeEdges.put(neighbour, new GridEnvironmentEdge(entry.getKey(), neighbour, (float) (distanceSpeedPair.getSpeed()/3.6),
+                            (int)(distanceSpeedPair.getDistance() * 1000) ));
+                }
             }
             edges.put(node.getId(), nodeEdges);
         }
@@ -476,4 +479,20 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         }
     }
 
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < this.numOfRows; i++){
+            for (int j = 0; j < this.numOfColumns; j++){
+                if (this.gridWorld[i][j] != null){
+                    result.append(this.gridWorld[i][j].getId()).append("   ");
+                } else {
+                    result.append("        ");
+                }
+
+            }
+            result.append("\n");
+        }
+        return result.toString();
+    }
 }

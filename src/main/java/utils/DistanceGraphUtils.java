@@ -186,9 +186,9 @@ public class DistanceGraphUtils {
     }
 
 
-    public static double getTripTime(int fromNodeId, int toNodeId){
-        return (getDistanceBetweenNodes(fromNodeId, toNodeId)/(getSpeedBetweenNodes(fromNodeId, toNodeId)*0.7))*60
-                + getDelay(fromNodeId, toNodeId);
+    public static int getTripTime(int fromNodeId, int toNodeId){
+        return (int)Math.ceil((getDistanceBetweenNodes(fromNodeId, toNodeId)/(getSpeedBetweenNodes(fromNodeId, toNodeId)*0.7))*60
+                + getDelay(fromNodeId, toNodeId));
     }
 
 
@@ -235,7 +235,7 @@ public class DistanceGraphUtils {
 
 
     // TODO - further development - delay function
-    public static double getDelay(int fromNodeId, int toNodeId){
+    public static int getDelay(int fromNodeId, int toNodeId){
         return 0;
     }
 

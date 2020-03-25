@@ -23,6 +23,7 @@ public class ChargingStationUtils {
     private static HashMap<Integer, ChargingConnection> chargingConnections = new HashMap<>();
 
 
+
     public static List<ChargingStation> readChargingStations(String sourceFile, String fileName)
             throws ParseException, IOException, ClassNotFoundException {
 

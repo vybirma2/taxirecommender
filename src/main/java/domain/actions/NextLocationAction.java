@@ -31,13 +31,13 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
 
 
     @Override
-    public double getActionTime(TaxiGraphState state) {
+    public int getActionTime(TaxiGraphState state) {
         return getTripTime(state.getNodeId(), toNodeId);
     }
 
 
     @Override
-    public double getActionEnergyConsumption(TaxiGraphState state) {
+    public int getActionEnergyConsumption(TaxiGraphState state) {
         return ActionUtils.getActionEnergyConsumption(state, toNodeId, getActionTime(state));
     }
 

@@ -40,10 +40,10 @@ public class Main {
             ((TaxiGraphRewardFunction)taxiRecommenderDomainGenerator.getRf()).computeRewardForStates(planner.getAllStates(), domain.getActionTypes());
 
 
-            Policy p = planner.planFromState(initialState);
+       //     Policy p = planner.planFromState(initialState);
 
 
-            PolicyUtils.rollout(p, initialState, domain.getModel()).write("vi");
+          //  PolicyUtils.rollout(p, initialState, domain.getModel()).write("vi");
 
 
         } catch (Exception e) {

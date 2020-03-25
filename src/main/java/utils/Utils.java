@@ -10,11 +10,11 @@ import parameterestimation.PragueDataSetReader;
 import java.util.Comparator;
 
 public class Utils {
-    public static final double SHIFT_LENGTH = 4 * 60;
-    public static final double STAYING_INTERVAL = 20;
+    public static final int SHIFT_LENGTH = 1 * 60;
+    public static final int STAYING_INTERVAL = 10;
 
     public static final String VAR_NODE = "node";
-    public static final String VAR_STATE_OF_CHARGE = "state_of_charge";
+    public static final String VAR_STATE_OF_CHARGE = "state_of_ciharge";
     public static final String VAR_TIMESTAMP = "timestamp";
     public static final String VAR_PREVIOUS_ACTION = "previous_action";
     public static final String VAR_PREVIOUS_STATE = "previous_node";
@@ -28,8 +28,8 @@ public class Utils {
 
     public static final int VISIT_INTERVAL = 30;
 
-    public static final int ONE_GRID_CELL_WIDTH = 20000;
-    public static final int ONE_GRID_CELL_HEIGHT = 15000;
+    public static final int ONE_GRID_CELL_WIDTH = 500;
+    public static final int ONE_GRID_CELL_HEIGHT = 500;
 
     public static final double MAX_NODE_FITTING_DISTANCE = 0.2;
 
@@ -41,11 +41,11 @@ public class Utils {
 
     public static final int CAR_FULL_BATTERY_DISTANCE = 300;
 
-    public static final int NUM_OF_CHARGING_LENGTH_POSSIBILITIES = 3;
+    public static final int NUM_OF_CHARGING_LENGTH_POSSIBILITIES = 5;
 
     public static Comparator<TripToChargingStation> tripToChargingStationComparator = new ClosestStationComparator();
 
     public static Comparator<ChargingConnection> chargingConnectionComparator = new ChargingConnectionComparator();
 
-    public static int NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO = 3;
+    public static int NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO = 5;
 }

@@ -1,14 +1,16 @@
 package domain.actions;
 
 import burlap.mdp.core.state.State;
+import utils.DistanceGraphUtils;
 import utils.Utils;
 import domain.states.TaxiGraphState;
 
 import static utils.DistanceGraphUtils.getDistanceBetweenNodes;
-import static utils.DistanceGraphUtils.getSpeedBetweenNodes;
 import static utils.Utils.*;
 
 public class ActionUtils {
+
+
 
 
     public static boolean notGoingToChargingPreviously(State state){
@@ -42,26 +44,58 @@ public class ActionUtils {
 
 
     // TODO - get some good energy consumption estimate
-    public static double getMovingEnergyConsumption(int fromNodeId, int toNodeId){
+    public static int getMovingEnergyConsumption(int fromNodeId, int toNodeId){
         double distance = getDistanceBetweenNodes(fromNodeId, toNodeId);
-        return - (distance/CAR_FULL_BATTERY_DISTANCE) * 100;
+        return - (int)Math.round((distance/CAR_FULL_BATTERY_DISTANCE) * 100);
     }
 
-    public static double getMovingEnergyConsumption(double distance){
-        return - (distance/CAR_FULL_BATTERY_DISTANCE) * 100;
+    public static int getMovingEnergyConsumption(double distance){
+        return - (int)Math.round((distance/CAR_FULL_BATTERY_DISTANCE) * 100);
     }
 
 
-    public static double getActionEnergyConsumption(TaxiGraphState state, int toNodeId, double actionTime) {
+    public static int getActionEnergyConsumption(TaxiGraphState state, int toNodeId, double actionTime) {
         return ActionUtils.getMovingEnergyConsumption(state.getNodeId(), toNodeId);
     }
 
-    public static double getEnergyConsumption(double distance) {
+    public static int getEnergyConsumption(double distance) {
         return ActionUtils.getMovingEnergyConsumption(distance);
     }
 
 
     public static boolean notRunOutOfBattery(State state, int toNodeId, double actionTime){
         return ((TaxiGraphState)state).getStateOfCharge() + getActionEnergyConsumption((TaxiGraphState) state, toNodeId, actionTime) > 0;
+    }
+
+    public static boolean notRunOutOfBattery(State state, int energyConsumption){
+        return ((TaxiGraphState)state).getStateOfCharge() + energyConsumption > 0;
+    }
+
+
+    public static boolean shiftOver(double timeStamp, double actionLength){
+        return timeStamp + actionLength >= Utils.SHIFT_LENGTH + Utils.SHIFT_START_TIME;
+    }
+
+
+    public static boolean runOutOfBattery(State state, double tripConsumption){
+        return ((TaxiGraphState)state).getStateOfCharge() + tripConsumption <= 0;
+    }
+
+    public static boolean notRecentlyVisited(TaxiGraphState taxiGraphState, int toNodeId){
+        int tripTime = DistanceGraphUtils.getTripTime(taxiGraphState.getNodeId(), toNodeId);
+
+        if (taxiGraphState.getRecentlyVisitedNodes().containsKey(toNodeId)){
+
+            if (taxiGraphState.getTimeStamp() + tripTime - taxiGraphState.getRecentlyVisitedNodes().get(toNodeId) < Utils.VISIT_INTERVAL &&
+                    taxiGraphState.getTimeStamp() + tripTime - taxiGraphState.getRecentlyVisitedNodes().get(toNodeId) != 0){
+                return false;
+            } else {
+                taxiGraphState.getRecentlyVisitedNodes().replace(toNodeId,
+                        taxiGraphState.getTimeStamp() + tripTime);
+            }
+        } else {
+            taxiGraphState.getRecentlyVisitedNodes().put(toNodeId, taxiGraphState.getTimeStamp() + tripTime);
+        }
+        return true;
     }
 }

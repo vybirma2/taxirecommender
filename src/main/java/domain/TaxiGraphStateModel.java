@@ -4,10 +4,7 @@ import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.StateTransitionProb;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
-import domain.actions.ActionTypes;
-import domain.actions.GoingToChargingStationAction;
-import domain.actions.MeasurableAction;
-import domain.actions.NextLocationAction;
+import domain.actions.*;
 import domain.states.TaxiGraphState;
 import utils.Utils;
 
@@ -35,11 +32,17 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
         Action newAction;
         if (actionId == ActionTypes.TO_NEXT_LOCATION.getValue()) {
             toNodeId = ((NextLocationAction)action).getToNodeId();
-            newAction = addToNextLocationTransition((NextLocationAction) action, (TaxiGraphState)state, toNodeId);
+            newAction = action.copy();
+        if (newAction == null){
+                return resultTransitions;
+            }
+        } else if (actionId == ActionTypes.PICK_UP_PASSENGER.getValue()) {
+            toNodeId = ((PickUpPassengerAction)action).getToNodeId();
+            newAction = action.copy();
             if (newAction == null){
                 return resultTransitions;
             }
-        } else if (actionId == ActionTypes.GOING_TO_CHARGING_STATION.getValue()){
+        }else if (actionId == ActionTypes.GOING_TO_CHARGING_STATION.getValue()){
             toNodeId = ((GoingToChargingStationAction)action).getToNodeId();
             if(!((GoingToChargingStationAction)action).applicableInState((TaxiGraphState) state)){
                 return resultTransitions;
@@ -60,6 +63,7 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
         }
 
         State ns = state.copy();
+
 
         ((TaxiGraphState) ns).set(VAR_NODE, toNodeId);
         ((TaxiGraphState) ns).set(Utils.VAR_TIMESTAMP, this.getResultTimeStamp(state, newAction));
@@ -98,7 +102,7 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
     }
 
 
-    private void setStateProperties(State state, Action action, int toNodeId, double resultTime, double resultStateOfCharge ,State previousState){
+    private void setStateProperties(State state, Action action, int toNodeId, int resultTime, int resultStateOfCharge ,State previousState){
         ((TaxiGraphState) state).set(VAR_NODE, toNodeId);
         ((TaxiGraphState) state).set(Utils.VAR_TIMESTAMP, resultTime);
         ((TaxiGraphState) state).set(Utils.VAR_STATE_OF_CHARGE, resultStateOfCharge);
@@ -107,35 +111,12 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
     }
 
 
-    private NextLocationAction addToNextLocationTransition(NextLocationAction action, TaxiGraphState state, int toNodeId){
-        NextLocationAction newAction = (NextLocationAction) action.copy();
-
-        if (state.getPreviousNode() == action.getToNodeId()){
-            return null;
-        }
-
-        if (state.getRecentlyVisitedNodes().containsKey(toNodeId)){
-
-            if (state.getTimeStamp() + newAction.getActionTime(state) - state.getRecentlyVisitedNodes().get(toNodeId) < Utils.VISIT_INTERVAL ){
-                return null;
-            } else {
-                state.getRecentlyVisitedNodes().replace(toNodeId, state.getRecentlyVisitedNodes().get(toNodeId), state.getTimeStamp() +
-                        (newAction).getActionTime(state));
-            }
-        } else {
-            state.getRecentlyVisitedNodes().put(toNodeId, newAction.getActionTime(state));
-        }
-
-        return newAction;
-    }
-
-
-    private double getResultTimeStamp(State state, Action action){
+    private int getResultTimeStamp(State state, Action action){
         return ((MeasurableAction)action).getActionTime((TaxiGraphState) state) + ((TaxiGraphState)state).getTimeStamp();
     }
 
 
-    private double getResultStateOfCharge(State state, Action action){
+    private int getResultStateOfCharge(State state, Action action){
         return ((MeasurableAction)action).getActionEnergyConsumption((TaxiGraphState)state) + ((TaxiGraphState)state).getStateOfCharge();
     }
 }

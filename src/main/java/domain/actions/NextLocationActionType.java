@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static domain.actions.ActionUtils.*;
-import static utils.DistanceGraphUtils.getEnvironmentNeighbours;
 import static utils.DistanceGraphUtils.getTripTime;
 
 public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
@@ -27,11 +26,6 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
         return ActionTypes.TO_NEXT_LOCATION.getName();
     }
 
-
-    @Override
-    public Action associatedAction(String strRep) {
-        return new NextLocationAction(this.aId, Integer.parseInt(strRep));
-    }
 
 
     @Override
@@ -60,7 +54,7 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
     }
 
 
-    public double getActionTime(TaxiGraphState state, int toNodeId) {
+    public int getActionTime(TaxiGraphState state, int toNodeId) {
         return getTripTime(state.getNodeId(), toNodeId);
     }
 
@@ -68,6 +62,7 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
     private boolean applicableInState(TaxiGraphState state, int toNodeId){
         return applicableInState(state) && notReturningBack(state, toNodeId) &&
                 shiftNotOver(state, this.getActionTime(state, toNodeId)) &&
-                notRunOutOfBattery(state, toNodeId, getActionTime(state, toNodeId));
+                notRunOutOfBattery(state, toNodeId, getActionTime(state, toNodeId)) &&
+                notRecentlyVisited(state, toNodeId);
     }
 }

@@ -39,6 +39,28 @@ public class ParameterEstimationUtils {
     }
 
 
+    public static HashMap<Integer, HashMap<Integer, Integer>> getNumberOfTripsToDestinationNodes(ArrayList<TaxiTrip> taxiTrips){
+        HashMap<Integer, HashMap<Integer, Integer>> tripsToDestinationNode = new HashMap<>();
+
+        for (TaxiTrip taxiTrip : taxiTrips){
+            if (tripsToDestinationNode.containsKey(taxiTrip.getPickUpNode().getId())){
+                HashMap<Integer, Integer> tripsFromNode = tripsToDestinationNode.get(taxiTrip.getPickUpNode().getId());
+                if (tripsFromNode.containsKey(taxiTrip.getDestinationNode().getId())){
+                    tripsFromNode.replace(taxiTrip.getDestinationNode().getId(), tripsFromNode.get(taxiTrip.getDestinationNode().getId()) + 1);
+                } else {
+                    tripsFromNode.put(taxiTrip.getDestinationNode().getId(), 1);
+                }
+            } else {
+                HashMap<Integer, Integer> toNodeTrips = new HashMap<>();
+                toNodeTrips.put(taxiTrip.getDestinationNode().getId(), 1);
+                tripsToDestinationNode.put(taxiTrip.getPickUpNode().getId(), toNodeTrips);
+            }
+        }
+
+        return tripsToDestinationNode;
+    }
+
+
     public static void addSurroundingsNodesTripsToDestination(HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> tripsToDestination){
 
         for (Map.Entry<Integer, HashMap<Integer, HashMap<Integer, Integer>>> timeInterval : tripsToDestination.entrySet()){
@@ -101,6 +123,35 @@ public class ParameterEstimationUtils {
         }
 
         return pickupsInOSMNodes;
+    }
+
+    public static HashMap<Integer, Integer> getPickUpsInNodes(ArrayList<TaxiTrip> taxiTrips){
+       HashMap<Integer, Integer> pickupsInOSMNodes = new HashMap<>();
+
+        for (TaxiTrip taxiTrip : taxiTrips){
+            if (pickupsInOSMNodes.containsKey(taxiTrip.getPickUpNode().getId())){
+                pickupsInOSMNodes.replace(taxiTrip.getPickUpNode().getId(), pickupsInOSMNodes.get(taxiTrip.getPickUpNode().getId()) + 1 );
+            } else {
+                pickupsInOSMNodes.put(taxiTrip.getPickUpNode().getId(), 1);
+            }
+        }
+
+        return pickupsInOSMNodes;
+    }
+
+    public static HashMap<Integer, Integer> getDropOffsInNodes(ArrayList<TaxiTrip> taxiTrips){
+        HashMap<Integer, Integer> dropOffsInOSMNodes = new HashMap<>();
+
+
+        for (TaxiTrip taxiTrip : taxiTrips){
+            if (dropOffsInOSMNodes.containsKey(taxiTrip.getDestinationNode().getId())){
+                dropOffsInOSMNodes.replace(taxiTrip.getDestinationNode().getId(), dropOffsInOSMNodes.get(taxiTrip.getDestinationNode().getId()) + 1 );
+            } else {
+                dropOffsInOSMNodes.put(taxiTrip.getDestinationNode().getId(), 1);
+            }
+        }
+
+        return dropOffsInOSMNodes;
     }
 
 

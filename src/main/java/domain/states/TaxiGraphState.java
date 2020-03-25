@@ -9,6 +9,7 @@ import utils.Utils;
 
 
 import java.util.HashMap;
+import java.util.Objects;
 
 
 import static utils.Utils.*;
@@ -16,8 +17,8 @@ import static utils.Utils.*;
 public class TaxiGraphState extends GraphStateNode implements Comparable {
 
     private int nodeId;
-    private double stateOfCharge;
-    private double timeStamp;
+    private int stateOfCharge;
+    private int timeStamp;
 
     private int previousActionId = Integer.MAX_VALUE;
     private int previousNode = Integer.MAX_VALUE;
@@ -25,15 +26,13 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
     private TaxiGraphState previousState = null;
     private Action previousAction = null;
 
-    private HashMap<Integer, Double> recentlyVisitedNodes = new HashMap<>();
-
-    private HashMap<Action, Double> rewards = new HashMap<>();
+    private HashMap<Integer, Integer> recentlyVisitedNodes = new HashMap<>();
 
     private Action maxRewardAction = null;
 
     private double maxReward = Double.MIN_VALUE;
 
-    public TaxiGraphState(int nodeId, double stateOfCharge, double timeStamp) {
+    public TaxiGraphState(int nodeId, int stateOfCharge, int timeStamp) {
         super(nodeId);
         keys.add(VAR_NODE);
         keys.add(VAR_STATE_OF_CHARGE);
@@ -57,15 +56,15 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
                     this.nodeId = (int)value;
                     return this;
                 case VAR_STATE_OF_CHARGE:
-                    if (value instanceof Double){
-                        this.stateOfCharge = (double)value;
+                    if (value instanceof Integer){
+                        this.stateOfCharge = (int)value;
                         return this;
                     } else {
                         throw new RuntimeException("Invalid value data type " + value.getClass());
                     }
                 case VAR_TIMESTAMP:
-                    if (value instanceof Double){
-                        this.timeStamp = (double)value;
+                    if (value instanceof Integer){
+                        this.timeStamp = (int)value;
                         return this;
                     } else {
                         throw new RuntimeException("Invalid value data type " + value.getClass());
@@ -112,20 +111,20 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
         return state;
     }
 
-    public HashMap<Integer, Double> getRecentlyVisitedNodes() {
+    public HashMap<Integer, Integer> getRecentlyVisitedNodes() {
         return recentlyVisitedNodes;
     }
 
-    public void setRecentlyVisitedNodes(HashMap<Integer, Double> recentlyVisitedNodes) {
+    public void setRecentlyVisitedNodes(HashMap<Integer, Integer> recentlyVisitedNodes) {
         this.recentlyVisitedNodes = recentlyVisitedNodes;
     }
 
-    public double getStateOfCharge() {
+    public int getStateOfCharge() {
         return stateOfCharge;
     }
 
 
-    public double getTimeStamp() {
+    public int getTimeStamp() {
         return timeStamp;
     }
 
@@ -162,10 +161,11 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
     }
 
     public void setReward(Action action, Double reward) {
-        if (maxRewardAction == null || rewards.get(maxRewardAction) < reward){
+        if (maxRewardAction == null || this.maxReward < reward){
             this.maxRewardAction = action;
             this.maxReward = reward;
         }
+
     }
 
     @Override
@@ -178,8 +178,23 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaxiGraphState that = (TaxiGraphState) o;
+        return nodeId == that.nodeId &&
+                stateOfCharge == that.stateOfCharge &&
+                timeStamp == that.timeStamp;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nodeId, stateOfCharge, timeStamp);
+    }
+
+    @Override
     public int compareTo(Object o) {
         TaxiGraphState state = (TaxiGraphState)o;
-        return Double.compare(state.timeStamp, this.timeStamp);
+        return Integer.compare(state.timeStamp, this.timeStamp);
     }
 }

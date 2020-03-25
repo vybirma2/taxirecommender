@@ -15,7 +15,7 @@ public class PassengerDestinationEstimator {
     }
 
 
-    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> estimatePickUpProbability(){
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> estimateDestinationProbability(){
         HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips = getTimeSortedTrips(taxiTrips);
         HashMap<Integer, HashMap<Integer, Integer>> pickupsInNodes = getPickUpsInNodes(timeSortedTaxiTrips);
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> numberOfTripsToDestinationNodes
@@ -28,6 +28,16 @@ public class PassengerDestinationEstimator {
 
         return passengerDestinationProbability;
     }
+
+
+    public HashMap<Integer, HashMap<Integer, Double>> estimateDestinationProbabilityComplete(){
+        HashMap<Integer, Integer> pickupsInNodes = getPickUpsInNodes(taxiTrips);
+        HashMap<Integer, HashMap<Integer, Integer>> numberOfTripsToDestinationNodes = getNumberOfTripsToDestinationNodes(taxiTrips);
+
+
+        return getPassengerDestinationProbabilityComplete(pickupsInNodes, numberOfTripsToDestinationNodes);
+    }
+
 
 
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> getPassengerDestinationProbability(
@@ -52,6 +62,28 @@ public class PassengerDestinationEstimator {
 
             result.put(timeInterval.getKey(), timeIntervalProbabilities);
         }
+        return result;
+    }
+
+
+
+
+    private HashMap<Integer, HashMap<Integer, Double>> getPassengerDestinationProbabilityComplete(
+            HashMap<Integer, Integer> pickupsInOSMNodes, HashMap<Integer, HashMap<Integer, Integer>> numberOfTripsToDestinationNodes
+    ){
+        HashMap<Integer, HashMap<Integer, Double>> result = new HashMap<>();
+
+        for (Map.Entry<Integer, HashMap<Integer, Integer>> node : numberOfTripsToDestinationNodes.entrySet()){
+            HashMap<Integer, Double> nodeProbabilities = new HashMap<>();
+
+            for (Map.Entry<Integer, Integer> entry : node.getValue().entrySet()){
+                nodeProbabilities.put(entry.getKey(), getProbability(entry.getValue(),
+                        pickupsInOSMNodes.get(node.getKey())));
+            }
+
+            result.put(node.getKey(), nodeProbabilities);
+        }
+
         return result;
     }
 

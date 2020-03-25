@@ -20,11 +20,8 @@ public class TaxiGraphHashableState extends IISimpleHashableState {
         HashCodeBuilder hashCodeBuilder = new HashCodeBuilder(17, 31);
 
         this.appendHashCodeForValue(hashCodeBuilder, VAR_NODE, ((TaxiGraphState)s).getNodeId());
-        this.appendHashCodeForValue(hashCodeBuilder, VAR_PREVIOUS_ACTION, ((TaxiGraphState)s).getPreviousActionId());
         this.appendHashCodeForValue(hashCodeBuilder, VAR_TIMESTAMP, ((TaxiGraphState)s).getTimeStamp());
         this.appendHashCodeForValue(hashCodeBuilder, VAR_STATE_OF_CHARGE, ((TaxiGraphState)s).getStateOfCharge());
-        this.appendHashCodeForValue(hashCodeBuilder, VAR_PREVIOUS_STATE, ((TaxiGraphState)s).getPreviousNode());
-
 
         return hashCodeBuilder.toHashCode();
     }
@@ -42,11 +39,9 @@ public class TaxiGraphHashableState extends IISimpleHashableState {
         TaxiGraphState state1 = (TaxiGraphState) s1;
         TaxiGraphState state2 = (TaxiGraphState) s2;
 
-        return state1.getPreviousActionId() == state2.getPreviousActionId()
-                && state1.getStateOfCharge() == state2.getStateOfCharge()
+        return  state1.getStateOfCharge() == state2.getStateOfCharge()
                 && state1.getNodeId() == state2.getNodeId()
-                && state1.getTimeStamp() == state2.getTimeStamp()
-                && state1.getPreviousNode() == state2.getPreviousNode();
+                && state1.getTimeStamp() == state2.getTimeStamp();
     }
 
 

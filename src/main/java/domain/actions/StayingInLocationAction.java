@@ -8,15 +8,15 @@ import java.util.Objects;
 
 public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction {
 
-    private double length;
+    private int length;
 
-    public StayingInLocationAction(int aId, double length) {
+    public StayingInLocationAction(int aId, int length) {
         super(aId);
         this.length = length;
     }
 
 
-    public double getLength() {
+    public int getLength() {
         return length;
     }
 
@@ -40,13 +40,13 @@ public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.
 
 
     @Override
-    public double getActionTime(TaxiGraphState state) {
+    public int getActionTime(TaxiGraphState state) {
         return length;
     }
 
 
     @Override
-    public double getActionEnergyConsumption(TaxiGraphState state) {
+    public int getActionEnergyConsumption(TaxiGraphState state) {
         return 0;
     }
 

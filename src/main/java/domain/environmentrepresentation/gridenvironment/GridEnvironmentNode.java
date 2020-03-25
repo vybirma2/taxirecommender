@@ -4,10 +4,11 @@ import cz.agents.basestructures.GPSLocation;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.environmentrepresentation.EnvironmentNode;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GridEnvironmentNode extends EnvironmentNode {
+public class GridEnvironmentNode extends EnvironmentNode implements Serializable {
 
     private Set<RoadNode> osmNodes;
 
