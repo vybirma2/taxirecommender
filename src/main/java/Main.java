@@ -34,16 +34,16 @@ public class Main {
             TaxiGraphHashableFactory hashingFactory = new TaxiGraphHashableFactory();
             SADomain domain = taxiRecommenderDomainGenerator.getDomain();
             ValueIteration planner = new ValueIteration(domain, 0.99, hashingFactory, 0.001, 100);
-            TaxiGraphState initialState = new TaxiGraphState(taxiRecommenderDomainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getId(), 100, Utils.SHIFT_START_TIME);
+            TaxiGraphState initialState = new TaxiGraphState(++TaxiGraphState.id, taxiRecommenderDomainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getId(), 100, Utils.SHIFT_START_TIME);
             planner.performReachabilityFrom(initialState);
 
             ((TaxiGraphRewardFunction)taxiRecommenderDomainGenerator.getRf()).computeRewardForStates(planner.getAllStates(), domain.getActionTypes());
 
 
-       //     Policy p = planner.planFromState(initialState);
+            Policy p = planner.planFromState(initialState);
 
 
-          //  PolicyUtils.rollout(p, initialState, domain.getModel()).write("vi");
+            PolicyUtils.rollout(p, initialState, domain.getModel()).write("vi");
 
 
         } catch (Exception e) {

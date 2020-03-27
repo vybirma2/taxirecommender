@@ -14,17 +14,31 @@ public class ActionUtils {
 
 
     public static boolean notGoingToChargingPreviously(State state){
+        if (((TaxiGraphState)state).getPreviousActionId() == null){
+            return true;
+        }
         return !(((TaxiGraphState)state).getPreviousActionId() == ActionTypes.GOING_TO_CHARGING_STATION.getValue());
     }
 
 
     public static boolean notChargingInARow(State state){
+        if (((TaxiGraphState)state).getPreviousActionId() == null){
+            return true;
+        }
         return !(((TaxiGraphState)state).getPreviousActionId() == ActionTypes.CHARGING_IN_CHARGING_STATION.getValue());
     }
 
 
     public static boolean shiftNotOver(State state, double actionTime){
         return ((TaxiGraphState)state).getTimeStamp() + actionTime < Utils.SHIFT_LENGTH + SHIFT_START_TIME;
+    }
+
+
+    public static boolean notPickUpPrevious(State state){
+        if (((TaxiGraphState)state).getPreviousActionId() == null){
+            return true;
+        }
+        return ((TaxiGraphState)state).getPreviousActionId() !=  ActionTypes.PICK_UP_PASSENGER.getValue();
     }
 
 
@@ -38,19 +52,22 @@ public class ActionUtils {
     }
 
 
-    public static boolean notReturningBack(TaxiGraphState state, int toNodeId){
-        return state.getPreviousNode() != toNodeId;
+    public static boolean notReturningBack(TaxiGraphState state, Integer toNodeId){
+        if (state.getPreviousNode() == null){
+            return true;
+        }
+        return !state.getPreviousNode().equals(toNodeId);
     }
 
 
     // TODO - get some good energy consumption estimate
     public static int getMovingEnergyConsumption(int fromNodeId, int toNodeId){
         double distance = getDistanceBetweenNodes(fromNodeId, toNodeId);
-        return - (int)Math.round((distance/CAR_FULL_BATTERY_DISTANCE) * 100);
+        return - (int)Math.ceil((distance/CAR_FULL_BATTERY_DISTANCE) * 100);
     }
 
     public static int getMovingEnergyConsumption(double distance){
-        return - (int)Math.round((distance/CAR_FULL_BATTERY_DISTANCE) * 100);
+        return - (int)Math.ceil((distance/CAR_FULL_BATTERY_DISTANCE) * 100);
     }
 
 
@@ -71,15 +88,6 @@ public class ActionUtils {
         return ((TaxiGraphState)state).getStateOfCharge() + energyConsumption > 0;
     }
 
-
-    public static boolean shiftOver(double timeStamp, double actionLength){
-        return timeStamp + actionLength >= Utils.SHIFT_LENGTH + Utils.SHIFT_START_TIME;
-    }
-
-
-    public static boolean runOutOfBattery(State state, double tripConsumption){
-        return ((TaxiGraphState)state).getStateOfCharge() + tripConsumption <= 0;
-    }
 
     public static boolean notRecentlyVisited(TaxiGraphState taxiGraphState, int toNodeId){
         int tripTime = DistanceGraphUtils.getTripTime(taxiGraphState.getNodeId(), toNodeId);

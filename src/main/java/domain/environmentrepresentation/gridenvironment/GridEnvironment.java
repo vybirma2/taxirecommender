@@ -28,6 +28,7 @@ public class GridEnvironment extends Environment<GridEnvironmentNode, GridEnviro
             this.environmentGraph = (GridEnvironmentGraph) in.readObject();
             in.close();
         }
+        System.out.println(this.environmentGraph);
     }
 
 }

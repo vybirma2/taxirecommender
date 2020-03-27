@@ -36,6 +36,11 @@ public abstract class Environment<TNode extends EnvironmentNode, TEdge extends E
     }
 
 
+    public Set<Integer> getNodes() {
+        return this.environmentGraph.getNodeIds();
+    }
+
+
     protected abstract void setEnvironmentGraph() throws IOException, ClassNotFoundException;
 
 

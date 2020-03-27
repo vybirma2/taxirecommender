@@ -16,12 +16,16 @@ import static utils.Utils.*;
 
 public class TaxiGraphState extends GraphStateNode implements Comparable {
 
+    public static int id = 0;
+
+    private int stateId;
+
     private int nodeId;
     private int stateOfCharge;
     private int timeStamp;
 
-    private int previousActionId = Integer.MAX_VALUE;
-    private int previousNode = Integer.MAX_VALUE;
+    private Integer previousActionId = null;
+    private Integer previousNode = null;
 
     private TaxiGraphState previousState = null;
     private Action previousAction = null;
@@ -29,10 +33,10 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
     private HashMap<Integer, Integer> recentlyVisitedNodes = new HashMap<>();
 
     private Action maxRewardAction = null;
+    private Double maxReward = null;
+    private HashMap<Integer, Double> afterTaxiTripStateRewards = new HashMap<>();
 
-    private double maxReward = Double.MIN_VALUE;
-
-    public TaxiGraphState(int nodeId, int stateOfCharge, int timeStamp) {
+    public TaxiGraphState(int stateId, int nodeId, int stateOfCharge, int timeStamp) {
         super(nodeId);
         keys.add(VAR_NODE);
         keys.add(VAR_STATE_OF_CHARGE);
@@ -40,7 +44,8 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
         keys.add(VAR_PREVIOUS_ACTION);
         keys.add(VAR_PREVIOUS_STATE);
 
-        this.nodeId = id;
+        this.stateId = stateId;
+        this.nodeId = nodeId;
         this.stateOfCharge = stateOfCharge;
         this.timeStamp = timeStamp;
     }
@@ -104,7 +109,7 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
 
     @Override
     public State copy() {
-        TaxiGraphState state = new TaxiGraphState(this.nodeId, this.stateOfCharge, this.timeStamp);
+        TaxiGraphState state = new TaxiGraphState(this.stateId, this.nodeId, this.stateOfCharge, this.timeStamp);
         state.set(Utils.VAR_PREVIOUS_ACTION, this.previousAction);
         state.set(Utils.VAR_PREVIOUS_STATE, this.previousState);
         state.setRecentlyVisitedNodes(new HashMap<>(recentlyVisitedNodes));
@@ -134,12 +139,12 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
     }
 
 
-    public int getPreviousActionId() {
+    public Integer getPreviousActionId() {
         return previousActionId;
     }
 
 
-    public int getPreviousNode() {
+    public Integer getPreviousNode() {
         return previousNode;
     }
 
@@ -160,12 +165,33 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
         }
     }
 
-    public void setReward(Action action, Double reward) {
+    public void setActionReward(Action action, Double reward) {
         if (maxRewardAction == null || this.maxReward < reward){
             this.maxRewardAction = action;
             this.maxReward = reward;
         }
 
+    }
+
+
+    public int getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(int stateId) {
+        this.stateId = stateId;
+    }
+
+    public void addAfterTaxiTripStateReward(int toNodeId, double reward){
+        this.afterTaxiTripStateRewards.put(toNodeId, reward);
+    }
+
+    public Double getAfterTaxiTripStateReward(int toNodeId){
+        return this.afterTaxiTripStateRewards.get(toNodeId);
+    }
+
+    public Action getMaxRewardAction() {
+        return maxRewardAction;
     }
 
     @Override
@@ -186,6 +212,7 @@ public class TaxiGraphState extends GraphStateNode implements Comparable {
                 stateOfCharge == that.stateOfCharge &&
                 timeStamp == that.timeStamp;
     }
+
 
     @Override
     public int hashCode() {

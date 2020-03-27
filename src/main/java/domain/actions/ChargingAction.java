@@ -5,6 +5,8 @@ import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
 import charging.ChargingStationUtils;
 import domain.states.TaxiGraphState;
+import utils.DistanceGraphUtils;
+import utils.Utils;
 
 import java.util.Objects;
 
@@ -14,6 +16,7 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
     private int stationId;
     private int connectionId;
     private int energyProduction;
+    private double cost;
 
 
     public ChargingAction(int aId, int length, int stationId, int connectionId) {
@@ -21,7 +24,8 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
         this.length = length;
         this.stationId = stationId;
         this.connectionId = connectionId;
-        this.energyProduction = (int)ChargingStationUtils.getChargingConnection(connectionId).getPowerKW()*(length/60);
+        this.energyProduction = (int)(ChargingStationUtils.getChargingConnection(connectionId).getPowerKW()*(length/60));
+        this.cost = ChargingStationUtils.getChargingConnection(connectionId).getPrizeForKW() * energyProduction;
     }
 
 
@@ -37,8 +41,8 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
         return connectionId;
     }
 
-    public double getEnergyProduction() {
-        return energyProduction;
+    public double getChargingCost(){
+        return -cost;
     }
 
     @Override
@@ -55,7 +59,7 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getLength(), getStationId(), getConnectionId(), getEnergyProduction());
+        return Objects.hash(super.hashCode(), getLength(), getStationId(), getConnectionId(), energyProduction);
     }
 
 
@@ -67,7 +71,7 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
 
     @Override
     public int getActionEnergyConsumption(TaxiGraphState state) {
-        return energyProduction;
+        return (int)((energyProduction/Utils.BATTERY_CAPACITY) * 100);
     }
 
 

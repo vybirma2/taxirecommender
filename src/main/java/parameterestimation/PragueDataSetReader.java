@@ -4,6 +4,7 @@ import domain.environmentrepresentation.EnvironmentNode;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
 import utils.DistanceGraphUtils;
+import utils.Utils;
 
 import java.io.*;
 import java.text.ParseException;
@@ -20,7 +21,7 @@ public class PragueDataSetReader implements DataSetReader {
     @Override
     public ArrayList<TaxiTrip> readDataSet() throws IOException, ClassNotFoundException {
 
-        File file = new File("data/programdata/liftago_prague.fst");
+        File file = new File("data/programdata/" + Utils.ONE_GRID_CELL_WIDTH+ "x"+ Utils.ONE_GRID_CELL_HEIGHT + "liftago_prague.fst");
 
         ArrayList<TaxiTrip> taxiTrips = null;
 

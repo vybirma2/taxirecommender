@@ -41,12 +41,12 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
         Set<GraphDefinedDomain.NodeTransitionProbability> transitions = this.transitionDynamics.get(nodeId).get(this.aId);
 
         if (transitions != null){
-            List<ChargingStation> stations = chooseBestChargingStation(Utils.NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO,
+            List<Integer> stations = chooseBestChargingStation(Utils.NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO,
                     (TaxiGraphState) state, transitions);
 
-            for (ChargingStation chargingStation : stations){
-                if (this.applicableInState((TaxiGraphState) state, chargingStation.getRoadNode().getId())){
-                    actions.add(new GoingToChargingStationAction(this.aId, chargingStation.getRoadNode().getId()));
+            for (Integer chargingStation : stations){
+                if (this.applicableInState((TaxiGraphState) state, chargingStation)){
+                    actions.add(new GoingToChargingStationAction(this.aId, chargingStation));
                 }
             }
         }
@@ -55,17 +55,22 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
     }
 
 
-    private List<ChargingStation> chooseBestChargingStation(int numOfStations, TaxiGraphState state,
+    private List<Integer> chooseBestChargingStation(int numOfStations, TaxiGraphState state,
                                                             Set<GraphDefinedDomain.NodeTransitionProbability> transitions){
 
-        return transitions
-                .stream()
-                .map(trans -> ChargingStationUtils.getChargingStation(trans.transitionTo))
-                .map(station -> new TripToChargingStation(state, station))
-                .sorted(Utils.tripToChargingStationComparator)
-                .limit(numOfStations)
-                .map(TripToChargingStation::getChargingStation)
-                .collect(Collectors.toList());
+        if (Utils.CHARGING_STATION_STATE_ORDER == null){
+            return transitions
+                    .stream()
+                    .map(trans -> ChargingStationUtils.getChargingStation(trans.transitionTo))
+                    .map(station -> new TripToChargingStation(state.getNodeId(), station.getRoadNode().getId()))
+                    .sorted(Utils.tripToChargingStationComparator)
+                    .limit(numOfStations)
+                    .map(TripToChargingStation::getChargingStation)
+                    .collect(Collectors.toList());
+        } else {
+            return Utils.CHARGING_STATION_STATE_ORDER.get(state, numOfStations);
+        }
+
     }
 
 

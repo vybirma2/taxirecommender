@@ -1,27 +1,26 @@
 package charging;
 
-import domain.states.TaxiGraphState;
 import utils.DistanceGraphUtils;
-
-import javax.crypto.spec.PSource;
 
 public class TripToChargingStation {
 
-    private TaxiGraphState state;
-    private ChargingStation chargingStation;
+    private int fromNode;
+    private int chargingStation;
     private double distance;
 
-    public TripToChargingStation(TaxiGraphState state, ChargingStation chargingStation) {
-        this.state = state;
+    public TripToChargingStation(Integer state, Integer chargingStation) {
+        this.fromNode = state;
         this.chargingStation = chargingStation;
-        this.distance = DistanceGraphUtils.getDistanceBetweenNodes(state.getNodeId(), chargingStation.getRoadNode().getId());
+        this.distance = DistanceGraphUtils.getDistanceBetweenNodes(fromNode, chargingStation);
     }
 
-    public TaxiGraphState getState() {
-        return state;
+
+
+    public Integer getState() {
+        return fromNode;
     }
 
-    public ChargingStation getChargingStation() {
+    public Integer getChargingStation() {
         return chargingStation;
     }
 

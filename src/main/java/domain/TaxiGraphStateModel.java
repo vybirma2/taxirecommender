@@ -49,13 +49,13 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
             }
             newAction = action.copy();
         } else if (actionId == ActionTypes.CHARGING_IN_CHARGING_STATION.getValue()){
-            if (((TaxiGraphState)state).getPreviousActionId() == ActionTypes.CHARGING_IN_CHARGING_STATION.getValue()){
+            if (((TaxiGraphState)state).getPreviousActionId() == null || ((TaxiGraphState)state).getPreviousActionId() == ActionTypes.CHARGING_IN_CHARGING_STATION.getValue()){
                 return resultTransitions;
             }
             toNodeId = nodeId;
             newAction = action.copy();
         } else {
-            if (((TaxiGraphState)state).getPreviousActionId() == ActionTypes.CHARGING_IN_CHARGING_STATION.getValue()){
+            if (((TaxiGraphState)state).getPreviousActionId() == null || ((TaxiGraphState)state).getPreviousActionId() == ActionTypes.CHARGING_IN_CHARGING_STATION.getValue()){
                 return resultTransitions;
             }
             toNodeId = nodeId;
@@ -70,6 +70,9 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
         ((TaxiGraphState) ns).set(Utils.VAR_STATE_OF_CHARGE, this.getResultStateOfCharge(state, newAction));
         ((TaxiGraphState) ns).set(Utils.VAR_PREVIOUS_ACTION, action);
         ((TaxiGraphState) ns).set(Utils.VAR_PREVIOUS_STATE, state);
+        ((TaxiGraphState) ns).setStateId(++TaxiGraphState.id);
+
+
 
         StateTransitionProb tp = new StateTransitionProb(ns, 1.);
         resultTransitions.add(tp);

@@ -63,7 +63,7 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
 
     private int timeToFullStateOfCharge(TaxiGraphState state, ChargingConnection connection){
         double currentStateOfChargeInKW = (state.getStateOfCharge()/100.) * Utils.BATTERY_CAPACITY;
-        return (int)((Utils.BATTERY_CAPACITY - currentStateOfChargeInKW)/connection.getPowerKW())*60;
+        return (int)((Utils.BATTERY_CAPACITY - currentStateOfChargeInKW)/connection.getPowerKW()*60);
     }
 
 

@@ -5,16 +5,15 @@ import burlap.mdp.core.action.Action;
 import burlap.mdp.core.action.ActionType;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.model.RewardFunction;
-import domain.actions.ActionUtils;
+import domain.actions.ChargingAction;
 import domain.states.TaxiGraphState;
+import domain.states.TaxiGraphStateComparator;
 import parameterestimation.ParameterEstimator;
-import utils.DistanceGraphUtils;
 import utils.Utils;
 
 import java.util.*;
 
-import static domain.actions.ActionUtils.runOutOfBattery;
-import static domain.actions.ActionUtils.shiftOver;
+import static domain.actions.ActionUtils.*;
 import static utils.DistanceGraphUtils.getIntervalStart;
 
 
@@ -35,44 +34,68 @@ public class TaxiGraphRewardFunction implements RewardFunction {
 
     public void computeRewardForStates(List<State> states, List<ActionType> actionTypes){
 
-        List<TaxiGraphState> terminalStates = new ArrayList<>();
-        for (State state : states){
-            if (terminalFunction.isTerminal(state)){
-                terminalStates.add((TaxiGraphState)state);
-                ((TaxiGraphState)state).getPreviousState().setReward(((TaxiGraphState)state).getPreviousAction(), getTerminalStateReward((TaxiGraphState)state));
+        PriorityQueue<TaxiGraphState> openedSet = getSortedTerminalStates(states);
+        HashSet<TaxiGraphState> visited = new HashSet<>(openedSet);
+
+        while (!openedSet.isEmpty()){
+            TaxiGraphState state = openedSet.poll();
+            TaxiGraphState previousState = setPreviousStateReward(state);
+            if (previousState != null && !visited.contains(previousState)){
+                openedSet.add(previousState);
+                visited.add(previousState);
             }
         }
-
-        List<TaxiGraphState> taxiGraphStates = new ArrayList<>();
-        for (State state : states){
-            taxiGraphStates.add((TaxiGraphState)state);
-        }
-        Collections.sort(taxiGraphStates);
 
         System.out.println("ddd");
 
     }
 
 
-    private double getTerminalStateReward(TaxiGraphState state){
+    private PriorityQueue<TaxiGraphState> getSortedTerminalStates(List<State> states){
+        PriorityQueue<TaxiGraphState> terminalStates = new PriorityQueue<>(new TaxiGraphStateComparator());
+        for (State state : states){
+            if (((TaxiGraphState)state).getStateOfCharge() == 78 && ((TaxiGraphState)state).getTimeStamp() == 649 && ((TaxiGraphState)state).getNodeId() == 69739 && ((TaxiGraphState)state).getPreviousNode() == 92162){
+                System.out.println("shgvd");
+            }
+            if (terminalFunction.isTerminal(state)){
+                terminalStates.add((TaxiGraphState)state);
+            }
+
+        }
+
+        return terminalStates;
+    }
+
+
+    private TaxiGraphState setPreviousStateReward(TaxiGraphState state){
+        if (state.getStateOfCharge() == 79 && state.getTimeStamp() == 658 && state.getNodeId() == 92162){
+            System.out.println("shgvd");
+        }
+        if (state.getPreviousActionId() == null){
+            return null;
+        }
+
         switch (state.getPreviousActionId()){
             case 0:
-                return getNextLocationReward(state);
             case 1:
-                return getStayingInLocationLocationReward(state);
+                state.getPreviousState().setActionReward(state.getPreviousAction(), getStayingAndNextLocationReward(state));
+                return state.getPreviousState();
             case 2:
-                return getGoingToChargingStationReward(state);
+                state.getPreviousState().setActionReward(state.getPreviousAction(), getGoingToChargingStationReward(state));
+                return state.getPreviousState();
             case 3:
-                return getChargingReward(state);
+                state.getPreviousState().setActionReward(state.getPreviousAction(), getChargingReward(state));
+                return state.getPreviousState();
             case 4:
-                return getPickUpReward(state);
+                state.getPreviousState().addAfterTaxiTripStateReward(state.getNodeId(), state.getReward());
+                return state.getPreviousState();
             default:
                 throw new IllegalStateException("Unexpected value: " + state.getPreviousActionId());
         }
     }
 
 
-    private double getNextLocationReward(TaxiGraphState state){
+    private double getStayingAndNextLocationReward(TaxiGraphState state){
         HashMap<Integer, Double> destinationProbabilities = parameterEstimator.getDestinationProbabilitiesInNode(state.getNodeId(), state.getTimeStamp());
         Set<Double> outOfChargeTimeDestinationProbabilities = getOutOfChargeTimeProbabilities(state, destinationProbabilities);
 
@@ -82,42 +105,31 @@ public class TaxiGraphRewardFunction implements RewardFunction {
         double notPickingPassengerReward = state.getReward() * (1 - pickUpProbability + pickUpProbability * sumOutOfChargeTimeProbabilities) ;
         double pickUpPassengerReward = getPickupPassengerReward(state, destinationProbabilities, pickUpProbability);
 
-        double tripEnergyCost = Utils.COST_FOR_KW * ActionUtils
-                .getEnergyConsumption(DistanceGraphUtils.getDistanceBetweenNodes(state.getPreviousNode(), state.getNodeId()));
-
-        return notPickingPassengerReward + pickUpPassengerReward + tripEnergyCost;
+        return notPickingPassengerReward + pickUpPassengerReward;
     }
 
-    private double getStayingInLocationLocationReward(TaxiGraphState state){
-        return 0;
+
+    private double getGoingToChargingStationReward(TaxiGraphState state) {
+        return state.getReward();
     }
 
-    private double getGoingToChargingStationReward(TaxiGraphState state){
-        return 0;
+    private double getChargingReward(TaxiGraphState state) {
+        return state.getReward() + ((ChargingAction)state.getPreviousAction()).getChargingCost();
     }
-
-    private double getChargingReward(TaxiGraphState state){
-        return 0;
-    }
-
-    private double getPickUpReward(TaxiGraphState state){
-        return 0;
-    }
-
 
     private double getPickupPassengerReward(TaxiGraphState state, HashMap<Integer, Double> destinationProbabilities,
                                             double pickUpProbability){
         SuccessfulPickUpParameters successfulPickUpParameters = getSuccessfulPickUpParameters(state, destinationProbabilities);
 
         ArrayList<Double> probabilities = successfulPickUpParameters.getProbabilities();
-        ArrayList<Double> energyConsumptionCost = successfulPickUpParameters.getEnergyConsumptionCost();
         ArrayList<Double> tripReward = successfulPickUpParameters.getTripReward();
         ArrayList<Double> futureStateReward = successfulPickUpParameters.getFutureStateReward();
+
 
         double resultReward = 0;
 
         for (int i = 0; i < probabilities.size(); i++){
-            resultReward += probabilities.get(i) * (energyConsumptionCost.get(i) + tripReward.get(i) + futureStateReward.get(i));
+            resultReward += probabilities.get(i) * (tripReward.get(i) + futureStateReward.get(i));
         }
 
         return resultReward * pickUpProbability;
@@ -133,20 +145,18 @@ public class TaxiGraphRewardFunction implements RewardFunction {
 
         if (destinationProbabilities != null){
             for (Map.Entry<Integer, Double> entry : destinationProbabilities.entrySet()){
-                if (shiftOver(state.getTimeStamp(), tripLengths.get(startInterval).get(state.getNodeId()).get(entry.getKey()))
-                        || runOutOfBattery(state, tripConsumptions.get(startInterval).get(state.getNodeId()).get(entry.getKey()))) {
+                if (!shiftNotOver(state, tripLengths.get(startInterval).get(state.getNodeId()).get(entry.getKey()))
+                        || !notRunOutOfBattery(state, tripConsumptions.get(startInterval).get(state.getNodeId()).get(entry.getKey()))) {
                     result.add(entry.getValue());
                 }
             }
         }
-
 
         return result;
     }
 
     private SuccessfulPickUpParameters getSuccessfulPickUpParameters(TaxiGraphState state , HashMap<Integer, Double> destinationProbabilities){
         ArrayList<Double> probabilities = new ArrayList<>();
-        ArrayList<Double> energyConsumptionCost = new ArrayList<>();
         ArrayList<Double> tripReward = new ArrayList<>();
         ArrayList<Double> futureStateReward = new ArrayList<>();
 
@@ -158,19 +168,18 @@ public class TaxiGraphRewardFunction implements RewardFunction {
 
         if (destinationProbabilities != null){
             for (Map.Entry<Integer, Double> entry : destinationProbabilities.entrySet()){
-                double consumption = tripConsumptions.get(startInterval).get(state.getNodeId()).get(entry.getKey());
-                double tripLength = tripLengths.get(startInterval).get(state.getNodeId()).get(entry.getKey());
+                int consumption = tripConsumptions.get(startInterval).get(state.getNodeId()).get(entry.getKey());
+                long tripLength = tripLengths.get(startInterval).get(state.getNodeId()).get(entry.getKey());
 
-                if (!shiftOver(state.getTimeStamp(), tripLength) && !runOutOfBattery(state, consumption)){
+                if (shiftNotOver(state, tripLength) && notRunOutOfBattery(state, consumption)){
                     probabilities.add(entry.getValue());
-                    energyConsumptionCost.add(consumption * Utils.COST_FOR_KW);
                     tripReward.add(getTripReward(tripDistances.get(startInterval).get(state.getNodeId()).get(entry.getKey())));
-                    futureStateReward.add(getFutureStateReward(state, entry.getKey(),tripLength, consumption));
+                    futureStateReward.add(getAfterPickUpStateReward(state, entry.getKey()));
                 }
             }
         }
 
-        return new SuccessfulPickUpParameters(probabilities, energyConsumptionCost, tripReward, futureStateReward);
+        return new SuccessfulPickUpParameters(probabilities, tripReward, futureStateReward);
     }
 
 
@@ -178,8 +187,13 @@ public class TaxiGraphRewardFunction implements RewardFunction {
         return distance * Utils.TAXI_COST_FOR_KM + Utils.TAXI_START_JOURNEY_FEE;
     }
 
-    private double getFutureStateReward(TaxiGraphState state, Integer toNodeId, double tripLength, double consumption){
-        return 0;
+
+    private double getAfterPickUpStateReward(TaxiGraphState state, Integer toNodeId){
+        if (state.getAfterTaxiTripStateReward(toNodeId) == null){
+            System.out.println("sjfjes");
+
+        }
+        return state.getAfterTaxiTripStateReward(toNodeId);
     }
 
 

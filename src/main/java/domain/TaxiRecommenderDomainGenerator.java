@@ -5,6 +5,7 @@ import burlap.mdp.singleagent.SADomain;
 import burlap.mdp.singleagent.model.FactoredModel;
 import charging.ChargingStation;
 import charging.ChargingStationUtils;
+import charging.DistanceChargingStationStateOrder;
 import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
@@ -29,9 +30,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static domain.actions.ActionUtils.runOutOfBattery;
-import static domain.actions.ActionUtils.shiftOver;
-import static utils.DistanceGraphUtils.getIntervalStart;
 
 public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
@@ -164,6 +162,8 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         DistanceSpeedPair distanceSpeedPair = getChargingStationDistancesAndSpeed("distance_speed_" + roadGraphInputFile);
         DistanceGraphUtils.setChargingStationDistances(distanceSpeedPair.getDistances());
         DistanceGraphUtils.setChargingStationSpeeds(distanceSpeedPair.getSpeeds());
+        Utils.setChargingStationStateOrder(new DistanceChargingStationStateOrder(distanceSpeedPair.getDistances(), this
+        .environment.getNodes()));
         stopTime  = System.nanoTime();
         LOGGER.log(Level.INFO, "Computing finished in " + (stopTime - startTime)/1000000000. + "s.");
     }

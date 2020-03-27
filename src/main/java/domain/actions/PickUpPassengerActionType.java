@@ -35,21 +35,23 @@ public class PickUpPassengerActionType  extends GraphDefinedDomain.GraphActionTy
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
 
+        if (notPickUpPrevious(state)){
+            int n = (Integer)state.get("node");
+            Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>> actionMap = this.transitionDynamics.get(n);
+            Set<GraphDefinedDomain.NodeTransitionProbability> transitions = actionMap.get(this.aId);
 
-        int n = (Integer)state.get("node");
-        Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>> actionMap = this.transitionDynamics.get(n);
-        Set<GraphDefinedDomain.NodeTransitionProbability> transitions = actionMap.get(this.aId);
-
-        if (transitions != null){
-            for (GraphDefinedDomain.NodeTransitionProbability neighbour : transitions){
-                if (this.applicableInState((TaxiGraphState) state, neighbour.transitionTo)){
-                    int startInterval = getIntervalStart(((TaxiGraphState)state).getTimeStamp());
-                    actions.add(new PickUpPassengerAction(this.aId, neighbour.transitionTo,
-                            taxiTripLengths.get(startInterval).get(((TaxiGraphState)state).getNodeId()).get(neighbour.transitionTo),
-                            taxiTripConsumptions.get(startInterval).get(((TaxiGraphState)state).getNodeId()).get(neighbour.transitionTo)));
+            if (transitions != null){
+                for (GraphDefinedDomain.NodeTransitionProbability neighbour : transitions){
+                    if (this.applicableInState((TaxiGraphState) state, neighbour.transitionTo)){
+                        int startInterval = getIntervalStart(((TaxiGraphState)state).getTimeStamp());
+                        actions.add(new PickUpPassengerAction(this.aId, neighbour.transitionTo,
+                                taxiTripLengths.get(startInterval).get(((TaxiGraphState)state).getNodeId()).get(neighbour.transitionTo),
+                                taxiTripConsumptions.get(startInterval).get(((TaxiGraphState)state).getNodeId()).get(neighbour.transitionTo)));
+                    }
                 }
             }
         }
+
 
         return actions;
     }
