@@ -21,6 +21,7 @@ public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.
     }
 
 
+
     @Override
     public String actionName() {
         return ActionTypes.STAYING_IN_LOCATION.getName();
@@ -30,12 +31,6 @@ public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.
     @Override
     public Action copy() {
         return new StayingInLocationAction(this.aId, length);
-    }
-
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), getLength());
     }
 
 
@@ -51,14 +46,17 @@ public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.
     }
 
 
+    @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        } else if (o != null && this.getClass() == o.getClass()) {
-            StayingInLocationAction that = (StayingInLocationAction) o;
-            return this.aId == that.aId && this.length == that.length;
-        } else {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        StayingInLocationAction that = (StayingInLocationAction) o;
+        return length == that.length;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), length);
     }
 }

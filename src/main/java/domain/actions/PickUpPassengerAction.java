@@ -4,19 +4,25 @@ import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
 import domain.states.TaxiGraphState;
 
+import java.util.Objects;
+
 
 public class PickUpPassengerAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction  {
 
+    private int timeStamp;
+    private int fromNodeId;
     private int toNodeId;
     private long actionTime;
     private int energyConsumption;
 
 
-    public PickUpPassengerAction(int aId, int toNodeId, long actionTime, int energyConsumption) {
+    public PickUpPassengerAction(int aId, int fromNodeId, int toNodeId, long actionTime, int energyConsumption, int timeStamp) {
         super(aId);
+        this.fromNodeId = fromNodeId;
         this.toNodeId = toNodeId;
         this.actionTime = actionTime;
         this.energyConsumption = energyConsumption;
+        this.timeStamp = timeStamp;
     }
 
 
@@ -28,7 +34,7 @@ public class PickUpPassengerAction extends GraphDefinedDomain.GraphActionType.Gr
 
     @Override
     public Action copy() {
-        return new PickUpPassengerAction(this.aId, toNodeId, actionTime, energyConsumption);
+        return new PickUpPassengerAction(this.aId, fromNodeId, toNodeId, actionTime, energyConsumption, timeStamp);
     }
 
 
@@ -49,13 +55,22 @@ public class PickUpPassengerAction extends GraphDefinedDomain.GraphActionType.Gr
     }
 
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), fromNodeId, toNodeId, actionTime, energyConsumption, timeStamp);
+    }
+
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         } else if (o != null && this.getClass() == o.getClass()) {
             PickUpPassengerAction that = (PickUpPassengerAction)o;
-            return (this.aId == that.aId) && this.actionTime == that.actionTime && this.toNodeId == that.toNodeId
-                    && this.energyConsumption == that.energyConsumption;
+            return (this.aId == that.aId)
+                    && this.actionTime == that.actionTime
+                    && this.toNodeId == that.toNodeId
+                    && this.energyConsumption == that.energyConsumption
+                    && this.fromNodeId == that.fromNodeId
+                    && this.timeStamp == that.timeStamp;
         } else {
             return false;
         }

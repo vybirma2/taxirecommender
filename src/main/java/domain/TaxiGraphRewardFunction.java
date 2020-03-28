@@ -39,11 +39,18 @@ public class TaxiGraphRewardFunction implements RewardFunction {
 
         while (!openedSet.isEmpty()){
             TaxiGraphState state = openedSet.poll();
-            TaxiGraphState previousState = setPreviousStateReward(state);
-            if (previousState != null && !visited.contains(previousState)){
-                openedSet.add(previousState);
-                visited.add(previousState);
+            Set<TaxiGraphState> previousState = setPreviousStateReward(state);
+
+            if (previousState == null){
+                continue;
             }
+            for (TaxiGraphState taxiGraphState : previousState){
+                if (!visited.contains(taxiGraphState)){
+                    openedSet.add(taxiGraphState);
+                    visited.add(taxiGraphState);
+                }
+            }
+
         }
 
         System.out.println("ddd");
@@ -54,9 +61,6 @@ public class TaxiGraphRewardFunction implements RewardFunction {
     private PriorityQueue<TaxiGraphState> getSortedTerminalStates(List<State> states){
         PriorityQueue<TaxiGraphState> terminalStates = new PriorityQueue<>(new TaxiGraphStateComparator());
         for (State state : states){
-            if (((TaxiGraphState)state).getStateOfCharge() == 78 && ((TaxiGraphState)state).getTimeStamp() == 649 && ((TaxiGraphState)state).getNodeId() == 69739 && ((TaxiGraphState)state).getPreviousNode() == 92162){
-                System.out.println("shgvd");
-            }
             if (terminalFunction.isTerminal(state)){
                 terminalStates.add((TaxiGraphState)state);
             }
@@ -67,31 +71,41 @@ public class TaxiGraphRewardFunction implements RewardFunction {
     }
 
 
-    private TaxiGraphState setPreviousStateReward(TaxiGraphState state){
-        if (state.getStateOfCharge() == 79 && state.getTimeStamp() == 658 && state.getNodeId() == 92162){
-            System.out.println("shgvd");
-        }
-        if (state.getPreviousActionId() == null){
+    private Set<TaxiGraphState> setPreviousStateReward(TaxiGraphState state){
+
+        if (state.isStartingState()){
             return null;
         }
+        HashSet<TaxiGraphState> visitedStates = new HashSet<>();
 
-        switch (state.getPreviousActionId()){
-            case 0:
-            case 1:
-                state.getPreviousState().setActionReward(state.getPreviousAction(), getStayingAndNextLocationReward(state));
-                return state.getPreviousState();
-            case 2:
-                state.getPreviousState().setActionReward(state.getPreviousAction(), getGoingToChargingStationReward(state));
-                return state.getPreviousState();
-            case 3:
-                state.getPreviousState().setActionReward(state.getPreviousAction(), getChargingReward(state));
-                return state.getPreviousState();
-            case 4:
-                state.getPreviousState().addAfterTaxiTripStateReward(state.getNodeId(), state.getReward());
-                return state.getPreviousState();
-            default:
-                throw new IllegalStateException("Unexpected value: " + state.getPreviousActionId());
+
+        for (Integer actionId : state.getPreviousActions()){
+            for (Map.Entry<Action, TaxiGraphState> entry : state.getPreviousStatesOfAction(actionId).entrySet()){
+                switch (actionId){
+                    case 0:
+                    case 1:
+                        entry.getValue().setActionReward(entry.getKey(), getStayingAndNextLocationReward(state));
+                        visitedStates.add(entry.getValue());
+                        break;
+                    case 2:
+                        entry.getValue().setActionReward(entry.getKey(), getGoingToChargingStationReward(state));
+                        visitedStates.add(entry.getValue());
+                        break;
+                    case 3:
+                        entry.getValue().setActionReward(entry.getKey(), getChargingReward(state, (ChargingAction)entry.getKey()));
+                        visitedStates.add(entry.getValue());
+                        break;
+                    case 4:
+                        entry.getValue().addAfterTaxiTripStateReward(state.getNodeId(), state.getReward());
+                        visitedStates.add(entry.getValue());
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + actionId);
+                }
+            }
+
         }
+        return visitedStates;
     }
 
 
@@ -113,8 +127,8 @@ public class TaxiGraphRewardFunction implements RewardFunction {
         return state.getReward();
     }
 
-    private double getChargingReward(TaxiGraphState state) {
-        return state.getReward() + ((ChargingAction)state.getPreviousAction()).getChargingCost();
+    private double getChargingReward(TaxiGraphState state, ChargingAction action) {
+        return state.getReward() + action.getChargingCost();
     }
 
     private double getPickupPassengerReward(TaxiGraphState state, HashMap<Integer, Double> destinationProbabilities,
@@ -189,10 +203,6 @@ public class TaxiGraphRewardFunction implements RewardFunction {
 
 
     private double getAfterPickUpStateReward(TaxiGraphState state, Integer toNodeId){
-        if (state.getAfterTaxiTripStateReward(toNodeId) == null){
-            System.out.println("sjfjes");
-
-        }
         return state.getAfterTaxiTripStateReward(toNodeId);
     }
 

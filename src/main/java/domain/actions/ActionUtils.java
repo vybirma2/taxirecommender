@@ -1,7 +1,6 @@
 package domain.actions;
 
 import burlap.mdp.core.state.State;
-import utils.DistanceGraphUtils;
 import utils.Utils;
 import domain.states.TaxiGraphState;
 
@@ -11,21 +10,13 @@ import static utils.Utils.*;
 public class ActionUtils {
 
 
-
-
     public static boolean notGoingToChargingPreviously(State state){
-        if (((TaxiGraphState)state).getPreviousActionId() == null){
-            return true;
-        }
-        return !(((TaxiGraphState)state).getPreviousActionId() == ActionTypes.GOING_TO_CHARGING_STATION.getValue());
+        return ((TaxiGraphState)state).isPossibleToDoAction(ActionTypes.GOING_TO_CHARGING_STATION.getValue());
     }
 
 
     public static boolean notChargingInARow(State state){
-        if (((TaxiGraphState)state).getPreviousActionId() == null){
-            return true;
-        }
-        return !(((TaxiGraphState)state).getPreviousActionId() == ActionTypes.CHARGING_IN_CHARGING_STATION.getValue());
+        return ((TaxiGraphState)state).isPossibleToDoAction(ActionTypes.CHARGING_IN_CHARGING_STATION.getValue());
     }
 
 
@@ -35,10 +26,7 @@ public class ActionUtils {
 
 
     public static boolean notPickUpPrevious(State state){
-        if (((TaxiGraphState)state).getPreviousActionId() == null){
-            return true;
-        }
-        return ((TaxiGraphState)state).getPreviousActionId() !=  ActionTypes.PICK_UP_PASSENGER.getValue();
+        return ((TaxiGraphState)state).isPossibleToDoAction(ActionTypes.PICK_UP_PASSENGER.getValue())  ;
     }
 
 
@@ -51,14 +39,14 @@ public class ActionUtils {
         return ((TaxiGraphState)state).getStateOfCharge() < MINIMAL_CHARGING_STATE_OF_CHARGE;
     }
 
-
+/*
     public static boolean notReturningBack(TaxiGraphState state, Integer toNodeId){
         if (state.getPreviousNode() == null){
             return true;
         }
         return !state.getPreviousNode().equals(toNodeId);
     }
-
+*/
 
     // TODO - get some good energy consumption estimate
     public static int getMovingEnergyConsumption(int fromNodeId, int toNodeId){
@@ -88,7 +76,7 @@ public class ActionUtils {
         return ((TaxiGraphState)state).getStateOfCharge() + energyConsumption > 0;
     }
 
-
+/*
     public static boolean notRecentlyVisited(TaxiGraphState taxiGraphState, int toNodeId){
         int tripTime = DistanceGraphUtils.getTripTime(taxiGraphState.getNodeId(), toNodeId);
 
@@ -106,4 +94,7 @@ public class ActionUtils {
         }
         return true;
     }
+
+
+ */
 }

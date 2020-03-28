@@ -41,6 +41,6 @@ public class StayingInLocationActionType extends GraphDefinedDomain.GraphActionT
 
     @Override
     protected boolean applicableInState(State s) {
-        return notGoingToChargingPreviously(s) && shiftNotOver(s, STAYING_INTERVAL) && super.applicableInState(s);
+        return shiftNotOver(s, STAYING_INTERVAL) && super.applicableInState(s);
     }
 }

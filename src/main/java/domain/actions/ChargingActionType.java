@@ -76,7 +76,7 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
 
     @Override
     protected boolean applicableInState(State s) {
-        return notChargingInARow(s) && super.applicableInState(s);
+        return super.applicableInState(s);
     }
 
 

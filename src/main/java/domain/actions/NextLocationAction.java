@@ -5,16 +5,22 @@ import burlap.mdp.core.action.Action;
 import domain.TaxiRecommenderDomainGenerator;
 import domain.states.TaxiGraphState;
 
+import java.util.Objects;
+
 import static utils.DistanceGraphUtils.getTripTime;
 
 public class NextLocationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction {
 
+    private int fromNodeId;
     private int toNodeId;
+    private int timeStamp;
 
 
-    public NextLocationAction(int aId, int toNodeId) {
+    public NextLocationAction(int aId, int fromNodeId, int toNodeId, int timeStamp) {
         super(aId);
         this.toNodeId = toNodeId;
+        this.fromNodeId = fromNodeId;
+        this.timeStamp = timeStamp;
     }
 
 
@@ -26,7 +32,7 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
 
     @Override
     public Action copy() {
-        return new NextLocationAction(this.aId, toNodeId);
+        return new NextLocationAction(this.aId,fromNodeId, toNodeId, timeStamp);
     }
 
 
@@ -42,6 +48,11 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
     }
 
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(),fromNodeId, toNodeId, timeStamp);
+    }
+
     public int getToNodeId() {
         return toNodeId;
     }
@@ -52,7 +63,10 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
             return true;
         } else if (o != null && this.getClass() == o.getClass()) {
             NextLocationAction that = (NextLocationAction)o;
-            return this.aId == that.aId;
+            return this.aId == that.aId
+                    && this.timeStamp == that.timeStamp
+                    && this.fromNodeId == that.fromNodeId
+                    && this.toNodeId == that.toNodeId;
         } else {
             return false;
         }

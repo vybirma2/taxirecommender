@@ -6,6 +6,8 @@ import burlap.mdp.core.action.Action;
 import domain.TaxiRecommenderDomainGenerator;
 import domain.states.TaxiGraphState;
 
+import java.util.Objects;
+
 import static domain.actions.ActionUtils.notGoingToChargingPreviously;
 import static domain.actions.ActionUtils.shiftNotOver;
 import static utils.DistanceGraphUtils.getTripTime;
@@ -13,11 +15,14 @@ import static utils.DistanceGraphUtils.getTripTime;
 public class GoingToChargingStationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction  {
 
     private int toNodeId;
+    private int fromNodeId;
+    private int timeStamp;
 
-
-    public GoingToChargingStationAction(int aId, int toNodeId) {
+    public GoingToChargingStationAction(int aId, int fromNodeId, int toNodeId, int timeStamp) {
         super(aId);
         this.toNodeId = toNodeId;
+        this.fromNodeId = fromNodeId;
+        this.timeStamp = timeStamp;
     }
 
 
@@ -29,7 +34,7 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
 
     @Override
     public Action copy() {
-        return new GoingToChargingStationAction(this.aId, this.toNodeId);
+        return new GoingToChargingStationAction(this.aId, this.fromNodeId, this.toNodeId, this.timeStamp);
     }
 
 
@@ -55,12 +60,20 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
     }
 
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), fromNodeId, toNodeId, timeStamp);
+    }
+
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         } else if (o != null && this.getClass() == o.getClass()) {
             GoingToChargingStationAction that = (GoingToChargingStationAction)o;
-            return this.aId == that.aId;
+            return this.aId == that.aId
+                    && this.timeStamp == that.timeStamp
+                    && this.fromNodeId == that.fromNodeId
+                    && this.toNodeId == that.toNodeId;
         } else {
             return false;
         }

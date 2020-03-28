@@ -46,7 +46,7 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
 
             for (Integer chargingStation : stations){
                 if (this.applicableInState((TaxiGraphState) state, chargingStation)){
-                    actions.add(new GoingToChargingStationAction(this.aId, chargingStation));
+                    actions.add(new GoingToChargingStationAction(this.aId,nodeId, chargingStation, ((TaxiGraphState)state).getTimeStamp()));
                 }
             }
         }
@@ -76,7 +76,7 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
 
     @Override
     protected boolean applicableInState(State s) {
-        return notChargingInARow(s) && notGoingToChargingPreviously(s) && notChargedALot(s) && super.applicableInState(s);
+        return notChargedALot(s) && super.applicableInState(s);
     }
 
 
@@ -86,8 +86,7 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
 
 
     private boolean applicableInState(TaxiGraphState state, int toNodeId){
-        return applicableInState(state) && notReturningBack(state, toNodeId) &&
-                notRunOutOfBattery(state, toNodeId, getActionTime(state, toNodeId))
+        return applicableInState(state) &&  notRunOutOfBattery(state, toNodeId, getActionTime(state, toNodeId))
                 && shiftNotOver(state, this.getActionTime(state, toNodeId));
     }
 

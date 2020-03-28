@@ -32,14 +32,14 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
 
-        int n = (Integer)state.get("node");
-        Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>> actionMap = this.transitionDynamics.get(n);
+        int node = (Integer)state.get("node");
+        Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>> actionMap = this.transitionDynamics.get(node);
         Set<GraphDefinedDomain.NodeTransitionProbability> transitions = actionMap.get(this.aId);
 
         if (transitions != null){
             for (GraphDefinedDomain.NodeTransitionProbability neighbour : transitions){
                 if (this.applicableInState((TaxiGraphState) state, neighbour.transitionTo)){
-                    actions.add(new NextLocationAction(this.aId, neighbour.transitionTo));
+                    actions.add(new NextLocationAction(this.aId, node, neighbour.transitionTo, ((TaxiGraphState)state).getTimeStamp()));
                 }
             }
         }
@@ -50,7 +50,7 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
 
     @Override
     protected boolean applicableInState(State state) {
-        return notGoingToChargingPreviously(state) && super.applicableInState(state);
+        return super.applicableInState(state);
     }
 
 
@@ -60,9 +60,8 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
 
 
     private boolean applicableInState(TaxiGraphState state, int toNodeId){
-        return applicableInState(state) && notReturningBack(state, toNodeId) &&
+        return applicableInState(state) &&
                 shiftNotOver(state, this.getActionTime(state, toNodeId)) &&
-                notRunOutOfBattery(state, toNodeId, getActionTime(state, toNodeId)) &&
-                notRecentlyVisited(state, toNodeId);
+                notRunOutOfBattery(state, toNodeId, getActionTime(state, toNodeId));
     }
 }
