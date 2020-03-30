@@ -5,6 +5,7 @@ import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
 import domain.TaxiRecommenderDomainGenerator;
 import domain.states.TaxiGraphState;
+import parameterestimation.EnergyConsumptionEstimator;
 
 import java.util.Objects;
 
@@ -12,11 +13,15 @@ import static domain.actions.ActionUtils.notGoingToChargingPreviously;
 import static domain.actions.ActionUtils.shiftNotOver;
 import static utils.DistanceGraphUtils.getTripTime;
 
+/**
+ * Action of going to charging station from some node in the Environment
+ */
 public class GoingToChargingStationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction  {
 
     private int toNodeId;
     private int fromNodeId;
     private int timeStamp;
+
 
     public GoingToChargingStationAction(int aId, int fromNodeId, int toNodeId, int timeStamp) {
         super(aId);
@@ -45,11 +50,18 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
 
 
     @Override
-    public int getActionEnergyConsumption(TaxiGraphState state) {
-        return ActionUtils.getActionEnergyConsumption(state, toNodeId, getActionTime(state));
+    public int getActionId() {
+        return this.aId;
     }
 
 
+    @Override
+    public int getActionEnergyConsumption(TaxiGraphState state) {
+        return EnergyConsumptionEstimator.getActionEnergyConsumption(state, toNodeId, getActionTime(state));
+    }
+
+
+    @Override
     public int getToNodeId() {
         return toNodeId;
     }
@@ -64,6 +76,7 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
     public int hashCode() {
         return Objects.hash(super.hashCode(), fromNodeId, toNodeId, timeStamp);
     }
+
 
     public boolean equals(Object o) {
         if (this == o) {

@@ -13,9 +13,12 @@ import domain.environmentrepresentation.EnvironmentNode;
 
 import java.util.*;
 
+/**
+ * Util functions computing time, distance...
+ */
 public class DistanceGraphUtils {
 
-    private static Collection<? extends EnvironmentNode> nodes;
+    private static Collection<? extends RoadNode> nodes;
     private static Collection<RoadNode> osmNodes;
     private static EnvironmentGraph<? extends EnvironmentNode, ? extends EnvironmentEdge> graph;
     private static Graph<RoadNode, RoadEdge> osmGraph;
@@ -32,6 +35,7 @@ public class DistanceGraphUtils {
     public static void setOsmGraph(Graph<RoadNode, RoadEdge> osmGraph) {
         DistanceGraphUtils.osmGraph = osmGraph;
     }
+
 
     public static void setNodes(Collection<? extends EnvironmentNode> nodes) {
         DistanceGraphUtils.nodes = nodes;
@@ -58,7 +62,13 @@ public class DistanceGraphUtils {
     }
 
 
-    public static RoadNode chooseRoadNode(Set<RoadNode> nodes, double longitude, double latitude){
+    /**
+     * @param nodes
+     * @param longitude
+     * @param latitude
+     * @return the closest node to given longitude/latitude in set of given nodes
+     */
+    public static RoadNode chooseRoadNode(Collection<? extends  RoadNode> nodes, double longitude, double latitude){
         double min = Double.MAX_VALUE;
         RoadNode roadNode = null;
 
@@ -75,41 +85,23 @@ public class DistanceGraphUtils {
     }
 
 
-
     public static RoadNode chooseRoadNode(double longitude, double latitude){
-        double min = Double.MAX_VALUE;
-        RoadNode roadNode = null;
-
-        for (RoadNode node : osmNodes){
-            double distance = getDistance(longitude, latitude, node.getLongitude(), node.getLatitude());
-
-            if (distance < Utils.MAX_NODE_FITTING_DISTANCE && distance < min){
-                min = distance;
-                roadNode = node;
-            }
-        }
-
-        return roadNode;
+        return chooseRoadNode(osmNodes, longitude, latitude);
     }
 
 
     public static EnvironmentNode chooseEnvironmentNode(double longitude, double latitude){
-        double min = Double.MAX_VALUE;
-        EnvironmentNode environmentNode = null;
-
-        for (EnvironmentNode node : nodes){
-            double distance = getDistance(longitude, latitude, node.getLongitude(), node.getLatitude());
-
-            if (distance < Math.max(Utils.ONE_GRID_CELL_WIDTH, Utils.ONE_GRID_CELL_HEIGHT) && distance < min){
-                min = distance;
-                environmentNode = node;
-            }
-        }
-
-        return environmentNode;
+        return (EnvironmentNode) chooseRoadNode(nodes, longitude, latitude);
     }
 
 
+    /**
+     * @param longitude1
+     * @param latitude1
+     * @param longitude2
+     * @param latitude2
+     * @return euclidean distance of two longitude latitude defined points
+     */
     public static double getDistance(double longitude1, double latitude1, double longitude2, double latitude2){
         longitude1 = Math.toRadians(longitude1);
         latitude1 = Math.toRadians(latitude1);
@@ -123,50 +115,6 @@ public class DistanceGraphUtils {
         double radius = 6371;
 
         return (c * radius);
-    }
-
-
-    public static HashSet<Integer> getSurroundingNodesToLevel(int node, int numOfLevels) {
-
-        HashMap<Integer, Integer> levels = new HashMap<>();
-        HashSet<Integer> visited = new HashSet<>();
-        Queue<Integer> que = new LinkedList<>();
-
-        que.add(node);
-        visited.add(node);
-        levels.put(node, 0);
-
-        int current;
-
-        while (que.size() > 0){
-
-            current = que.peek();
-            que.remove();
-
-            Set<Integer> neighbours = getEnvironmentNeighbours(current);
-
-            for (Integer neighbour : neighbours) {
-                if (!visited.contains(neighbour) && levels.get(current) + 1 <= numOfLevels) {
-                    que.add(neighbour);
-                    levels.put(neighbour, levels.get(current) + 1);
-                    visited.add(neighbour);
-                }
-            }
-        }
-
-        visited.remove(node);
-
-        return visited;
-    }
-
-
-    public static Set<Integer> getEnvironmentNeighbours(int node){
-        EnvironmentNode environmentNode = graph.getNode(node);
-
-        if (environmentNode == null){
-            return graph.getNodeIds();
-        }
-        return environmentNode.getNeighbours();
     }
 
 
@@ -192,25 +140,34 @@ public class DistanceGraphUtils {
     }
 
 
+    /**
+     * @param fromNodeId
+     * @param toNodeId
+     * @return distance between two points in environment graph or environment node and charging station
+     */
     public static double getDistanceBetweenNodes(int fromNodeId, int toNodeId){
         if (fromNodeId == toNodeId){
             return 0;
         }
-
         EnvironmentEdge edge = graph.getEdge(fromNodeId, toNodeId);
 
         if (edge != null) {
             return edge.getLength()/1000.;
         } else {
-            if (chargingStationDistances.containsKey(toNodeId)){
-                HashMap<Integer, Double> nodes = chargingStationDistances.get(toNodeId);
-                return nodes.get(fromNodeId);
-            } else if (chargingStationDistances.containsKey(fromNodeId)){
-                HashMap<Integer, Double> nodes = chargingStationDistances.get(fromNodeId);
-                return nodes.get(toNodeId);
-            } else {
-                throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
-            }
+            return getChargingStationParameters(fromNodeId, toNodeId, chargingStationDistances);
+        }
+    }
+
+
+    private static double getChargingStationParameters(int fromNodeId, int toNodeId, HashMap<Integer, HashMap<Integer, Double>> parameters){
+        if (parameters.containsKey(toNodeId)){
+            HashMap<Integer, Double> nodes = parameters.get(toNodeId);
+            return nodes.get(fromNodeId);
+        } else if (parameters.containsKey(fromNodeId)){
+            HashMap<Integer, Double> nodes = parameters.get(fromNodeId);
+            return nodes.get(toNodeId);
+        } else {
+            throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
         }
     }
 
@@ -250,6 +207,11 @@ public class DistanceGraphUtils {
     }
 
 
+    /**
+     * @param fromNodeId
+     * @param toNodeId
+     * @return speed between two points in environment graph or environment node and charging station
+     */
     public static double getSpeedBetweenNodes(int fromNodeId, int toNodeId){
         if (fromNodeId == toNodeId){
             return 0;
@@ -258,18 +220,17 @@ public class DistanceGraphUtils {
         EnvironmentEdge edge = graph.getEdge(fromNodeId, toNodeId);
         if (edge != null){
             return edge.getAllowedMaxSpeedInMpS() * 3.6;
-        } else if (chargingStationSpeeds.containsKey(toNodeId)){
-            HashMap<Integer, Double> nodes = chargingStationSpeeds.get(toNodeId);
-            return nodes.get(fromNodeId);
-        }  else if (chargingStationSpeeds.containsKey(fromNodeId)){
-            HashMap<Integer, Double> nodes = chargingStationSpeeds.get(fromNodeId);
-            return nodes.get(toNodeId);
         } else {
-            throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
+            return getChargingStationParameters(fromNodeId, toNodeId, chargingStationSpeeds);
         }
     }
 
 
+    /**
+     * @param start start node id
+     * @param goal destination node id
+     * @return linked list of the shortest path from start to destination node
+     */
     public static LinkedList<Integer> aStar(Integer start, Integer goal){
         AStarNode fromNode = new AStarNode(start, 0., getEuclideanDistanceBetweenOsmNodes(start, goal));
         AStarNode toNode = new AStarNode(goal, Double.MAX_VALUE, 0.);
@@ -339,5 +300,20 @@ public class DistanceGraphUtils {
         int intTime = (int)timeStamp;
         int rest = intTime % Utils.ESTIMATION_EPISODE_LENGTH;
         return intTime - rest;
+    }
+
+
+    public static DistanceSpeedPair getDistanceSpeedPairOfPath(LinkedList<Integer> nodePath){
+        double distance = 0;
+        double speed = 0;
+        Integer current = nodePath.getFirst();
+
+        for (Integer node : nodePath){
+            distance += getDistanceBetweenOsmNodes(current, node);
+            speed += getSpeedBetweenOsmNodes(current, node);
+            current = node;
+        }
+
+        return new DistanceSpeedPair(distance, speed/(nodePath.size() - 1));
     }
 }

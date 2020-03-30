@@ -4,11 +4,15 @@ import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
 import domain.TaxiRecommenderDomainGenerator;
 import domain.states.TaxiGraphState;
+import parameterestimation.EnergyConsumptionEstimator;
 
 import java.util.Objects;
 
 import static utils.DistanceGraphUtils.getTripTime;
 
+/**
+ * Action of going to nex location
+ */
 public class NextLocationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction {
 
     private int fromNodeId;
@@ -21,6 +25,12 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
         this.toNodeId = toNodeId;
         this.fromNodeId = fromNodeId;
         this.timeStamp = timeStamp;
+    }
+
+
+    @Override
+    public int getActionId() {
+        return this.aId;
     }
 
 
@@ -44,7 +54,7 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
 
     @Override
     public int getActionEnergyConsumption(TaxiGraphState state) {
-        return ActionUtils.getActionEnergyConsumption(state, toNodeId, getActionTime(state));
+        return EnergyConsumptionEstimator.getActionEnergyConsumption(state, toNodeId, getActionTime(state));
     }
 
 
@@ -53,6 +63,8 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
         return Objects.hash(super.hashCode(),fromNodeId, toNodeId, timeStamp);
     }
 
+
+    @Override
     public int getToNodeId() {
         return toNodeId;
     }

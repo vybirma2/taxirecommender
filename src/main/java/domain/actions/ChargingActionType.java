@@ -5,7 +5,7 @@ import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
 import charging.ChargingConnection;
 import charging.ChargingStation;
-import charging.ChargingStationUtils;
+import charging.ChargingStationReader;
 import domain.states.TaxiGraphState;
 import utils.Utils;
 
@@ -17,6 +17,9 @@ import java.util.Set;
 import static domain.actions.ActionUtils.*;
 import static utils.Utils.NUM_OF_CHARGING_LENGTH_POSSIBILITIES;
 
+/**
+ * Class with the main purpose of returning the best available charging actions in given state.
+ */
 public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
 
 
@@ -31,13 +34,19 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
     }
 
 
-
+    /**
+     * Choosing the best available connection and producing charging actions of different length.
+     * @param state current state to be charging done in
+     * @return charging actions available in current state - equally divided into NUM_OF_CHARGING_LENGTH_POSSIBILITIES
+     * intervals.
+     */
     @Override
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
 
         if (this.applicableInState(state)) {
-            ChargingStation station = ChargingStationUtils.getChargingStation(((TaxiGraphState)state).getNodeId());
+            ChargingStation station = ChargingStationReader.getChargingStation(((TaxiGraphState)state).getNodeId());
+
             if (!station.getAvailableConnections().isEmpty()){
                 ChargingConnection connection = chooseBestChargingConnection(station.getAvailableConnections());
 
@@ -46,11 +55,10 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
 
                 for(int i = 1; i <= NUM_OF_CHARGING_LENGTH_POSSIBILITIES; i++){
                     if (applicableInState(state, i * chargingTimeUnit, getEnergyCharged(connection, i * chargingTimeUnit))){
-                        actions.add(new ChargingAction(this.aId, i*chargingTimeUnit, station.getId(), connection.getId()));
+                        actions.add(new ChargingAction(this.aId, i*chargingTimeUnit, station.getId(), connection.getId(), ((TaxiGraphState)state).getNodeId()));
                     }
                 }
             }
-
         }
         return actions;
     }

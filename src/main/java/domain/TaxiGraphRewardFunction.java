@@ -17,22 +17,35 @@ import static domain.actions.ActionUtils.*;
 import static utils.DistanceGraphUtils.getIntervalStart;
 
 
+/**
+ * Reward function containing functions to compute state rewards after generating all reachable states by
+ * dynamic programing i.e. by starting with the last terminal states - the end of the shift - and continuing
+ * to its start.
+ */
 public class TaxiGraphRewardFunction implements RewardFunction {
 
     private TerminalFunction terminalFunction;
     private ParameterEstimator parameterEstimator;
+
 
     public TaxiGraphRewardFunction(TerminalFunction terminalFunction, ParameterEstimator parameterEstimator) {
         this.terminalFunction = terminalFunction;
         this.parameterEstimator = parameterEstimator;
     }
 
+
     @Override
     public double reward(State state, Action action, State state1) {
         return 0;
     }
 
-    public void computeRewardForStates(List<State> states, List<ActionType> actionTypes){
+
+    /**
+     * Performs dynamic programing by starting with terminal states added to priority queue where priority is timestamp
+     * of state. Setting reward for all reachable states till the first one.
+     * @param states all reachable states
+     */
+    public void computeRewardForStates(List<State> states){
 
         PriorityQueue<TaxiGraphState> openedSet = getSortedTerminalStates(states);
         HashSet<TaxiGraphState> visited = new HashSet<>(openedSet);
@@ -52,9 +65,6 @@ public class TaxiGraphRewardFunction implements RewardFunction {
             }
 
         }
-
-        System.out.println("ddd");
-
     }
 
 
@@ -71,44 +81,75 @@ public class TaxiGraphRewardFunction implements RewardFunction {
     }
 
 
+    /**
+     * Passes through all actions through which it is possible to reach given state, gets their reward and tries
+     * to offer it to the corresponding previous state
+     * @param state
+     * @return set of visited states to add to openSet
+     */
     private Set<TaxiGraphState> setPreviousStateReward(TaxiGraphState state){
 
         if (state.isStartingState()){
             return null;
         }
-        HashSet<TaxiGraphState> visitedStates = new HashSet<>();
 
+        HashSet<TaxiGraphState> visitedStates = new HashSet<>();
 
         for (Integer actionId : state.getPreviousActions()){
             for (Map.Entry<Action, TaxiGraphState> entry : state.getPreviousStatesOfAction(actionId).entrySet()){
-                switch (actionId){
-                    case 0:
-                    case 1:
-                        entry.getValue().setActionReward(entry.getKey(), getStayingAndNextLocationReward(state));
-                        visitedStates.add(entry.getValue());
-                        break;
-                    case 2:
-                        entry.getValue().setActionReward(entry.getKey(), getGoingToChargingStationReward(state));
-                        visitedStates.add(entry.getValue());
-                        break;
-                    case 3:
-                        entry.getValue().setActionReward(entry.getKey(), getChargingReward(state, (ChargingAction)entry.getKey()));
-                        visitedStates.add(entry.getValue());
-                        break;
-                    case 4:
-                        entry.getValue().addAfterTaxiTripStateReward(state.getNodeId(), state.getReward());
-                        visitedStates.add(entry.getValue());
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + actionId);
-                }
+                setPreviousStateReward(actionId, visitedStates, entry.getKey(), entry.getValue(), state);
             }
-
         }
         return visitedStates;
     }
 
 
+    /**
+     * Tries to set maximalReward to previous state according to the given action done. If action of picking up passenger
+     * it sets reward of the current state as reward received after picking up passenger in previous node and transferring
+     * to the current one.
+     * @param actionId
+     * @param visitedStates
+     * @param action
+     * @param previousState
+     * @param currentState
+     */
+    private void setPreviousStateReward(int actionId,
+                                        HashSet<TaxiGraphState> visitedStates, Action action, TaxiGraphState previousState,
+                                        TaxiGraphState currentState){
+        switch (actionId){
+            case 0:
+            case 1:
+                previousState.setActionReward(action, getStayingAndNextLocationReward(currentState));
+                visitedStates.add(previousState);
+                break;
+            case 2:
+                previousState.setActionReward(action, getGoingToChargingStationReward(currentState));
+                visitedStates.add(previousState);
+                break;
+            case 3:
+                previousState.setActionReward(action, getChargingReward(currentState, (ChargingAction) action));
+                visitedStates.add(previousState);
+                break;
+            case 4:
+                previousState.addAfterTaxiTripStateReward(currentState.getNodeId(), currentState.getReward());
+                visitedStates.add(previousState);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + actionId);
+        }
+    }
+
+
+    /**
+     * Reward is computed as: reward_for_not_picking_passenger + reward_for_picking_passenger where:
+     *
+     * reward_for_not_picking_passenger = current_state_reward * (not_pick_up_probability + pick_up_probability * sum_of_probabilities_of_not_doable_trips)
+     * reward_for_picking_passenger = reward_for_all_doable_trips * pick_up_probability
+     *
+     * @param state
+     * @return reward for going to next location and staying in current node
+     */
     private double getStayingAndNextLocationReward(TaxiGraphState state){
         HashMap<Integer, Double> destinationProbabilities = parameterEstimator.getDestinationProbabilitiesInNode(state.getNodeId(), state.getTimeStamp());
         Set<Double> outOfChargeTimeDestinationProbabilities = getOutOfChargeTimeProbabilities(state, destinationProbabilities);
@@ -127,10 +168,18 @@ public class TaxiGraphRewardFunction implements RewardFunction {
         return state.getReward();
     }
 
+
     private double getChargingReward(TaxiGraphState state, ChargingAction action) {
         return state.getReward() + action.getChargingCost();
     }
 
+
+    /**
+     * @param state
+     * @param destinationProbabilities probabilities of passenger commuting to some location received from parameterEstimator
+     * @param pickUpProbability probability of picking up passenger
+     * @return reward for picking up passenger computed as sum of rewards for trips from dataset multiplied by pickup probability
+     */
     private double getPickupPassengerReward(TaxiGraphState state, HashMap<Integer, Double> destinationProbabilities,
                                             double pickUpProbability){
         SuccessfulPickUpParameters successfulPickUpParameters = getSuccessfulPickUpParameters(state, destinationProbabilities);
@@ -150,17 +199,22 @@ public class TaxiGraphRewardFunction implements RewardFunction {
     }
 
 
+    /**
+     * @param state
+     * @param destinationProbabilities
+     * @return probability of trips which are not possible to do in current state because of time or state of charge
+     */
     private Set<Double> getOutOfChargeTimeProbabilities(TaxiGraphState state , HashMap<Integer, Double> destinationProbabilities){
         HashSet<Double> result = new HashSet<>();
-        HashMap<Integer, HashMap<Integer, HashMap<Integer, Long>>> tripLengths = parameterEstimator.getTaxiTripLengths();
-        HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> tripConsumptions = parameterEstimator.getTaxiTripConsumptions();
+        HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> tripLengths = parameterEstimator.getTaxiTripLengths();
+        HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> tripConsumptions = parameterEstimator.getTaxiTripConsumptions();
 
         int startInterval = getIntervalStart(state.getTimeStamp());
 
         if (destinationProbabilities != null){
             for (Map.Entry<Integer, Double> entry : destinationProbabilities.entrySet()){
                 if (!shiftNotOver(state, tripLengths.get(startInterval).get(state.getNodeId()).get(entry.getKey()))
-                        || !notRunOutOfBattery(state, tripConsumptions.get(startInterval).get(state.getNodeId()).get(entry.getKey()))) {
+                        || !notRunOutOfBattery(state, tripConsumptions.get(startInterval).get(state.getNodeId()).get(entry.getKey()).intValue())) {
                     result.add(entry.getValue());
                 }
             }
@@ -169,21 +223,27 @@ public class TaxiGraphRewardFunction implements RewardFunction {
         return result;
     }
 
+
+    /**
+     * @param state
+     * @param destinationProbabilities
+     * @return probability of doable trips from current state
+     */
     private SuccessfulPickUpParameters getSuccessfulPickUpParameters(TaxiGraphState state , HashMap<Integer, Double> destinationProbabilities){
         ArrayList<Double> probabilities = new ArrayList<>();
         ArrayList<Double> tripReward = new ArrayList<>();
         ArrayList<Double> futureStateReward = new ArrayList<>();
 
-        HashMap<Integer, HashMap<Integer, HashMap<Integer, Long>>> tripLengths = parameterEstimator.getTaxiTripLengths();
-        HashMap<Integer,  HashMap<Integer, HashMap<Integer, Integer>>> tripConsumptions = parameterEstimator.getTaxiTripConsumptions();
+        HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> tripLengths = parameterEstimator.getTaxiTripLengths();
+        HashMap<Integer,  HashMap<Integer, HashMap<Integer, Double>>> tripConsumptions = parameterEstimator.getTaxiTripConsumptions();
         HashMap<Integer,  HashMap<Integer, HashMap<Integer, Double>>> tripDistances = parameterEstimator.getTaxiTripDistances();
 
         int startInterval = getIntervalStart(state.getTimeStamp());
 
         if (destinationProbabilities != null){
             for (Map.Entry<Integer, Double> entry : destinationProbabilities.entrySet()){
-                int consumption = tripConsumptions.get(startInterval).get(state.getNodeId()).get(entry.getKey());
-                long tripLength = tripLengths.get(startInterval).get(state.getNodeId()).get(entry.getKey());
+                int consumption = tripConsumptions.get(startInterval).get(state.getNodeId()).get(entry.getKey()).intValue();
+                long tripLength = tripLengths.get(startInterval).get(state.getNodeId()).get(entry.getKey()).longValue();
 
                 if (shiftNotOver(state, tripLength) && notRunOutOfBattery(state, consumption)){
                     probabilities.add(entry.getValue());
@@ -205,6 +265,4 @@ public class TaxiGraphRewardFunction implements RewardFunction {
     private double getAfterPickUpStateReward(TaxiGraphState state, Integer toNodeId){
         return state.getAfterTaxiTripStateReward(toNodeId);
     }
-
-
 }

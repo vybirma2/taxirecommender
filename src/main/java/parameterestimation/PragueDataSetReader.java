@@ -18,48 +18,63 @@ public class PragueDataSetReader implements DataSetReader {
     String inputFile = "data\\taxitrips\\prague\\liftago_prague.csv";
 
 
+    /**
+     * @return Arraylist of all parsed taxi trips with set parameters
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     @Override
     public ArrayList<TaxiTrip> readDataSet() throws IOException, ClassNotFoundException {
-
         File file = new File("data/programdata/" + Utils.ONE_GRID_CELL_WIDTH+ "x"+ Utils.ONE_GRID_CELL_HEIGHT + "liftago_prague.fst");
-
         ArrayList<TaxiTrip> taxiTrips = null;
 
         if(!file.exists()) {
-            File csvFile = new File(inputFile);
-            if (csvFile.isFile()) {
-                BufferedReader csvReader;
-                String row;
-                try {
-                    int numOfRows = 0;
-                    csvReader = new BufferedReader(new FileReader(inputFile));
-                    taxiTrips = new ArrayList<>();
-
-                    while ((row = csvReader.readLine()) != null) {
-                        if (numOfRows > 0){
-                            TaxiTrip taxiTrip = parseTaxiTrip(row.split(","));
-                            if (taxiTrip != null){
-                                taxiTrips.add(taxiTrip);
-                            }
-                        }
-                        numOfRows++;
-                    }
-
-                    csvReader.close();
-
-                    FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));
-                    out.writeObject(taxiTrips);
-                    out.close();
-                } catch (IOException | ParseException e) {
-                    e.printStackTrace();
-                }
-            }
+            taxiTrips = parseTaxiTripsFromOriginalDataFileAndSerialize(file);
         } else {
-            FSTObjectInput in = new FSTObjectInput(new FileInputStream(file));
-            taxiTrips = (ArrayList<TaxiTrip>) in.readObject();
-            in.close();
+            taxiTrips = readSerializedFile(file);
         }
 
+        return taxiTrips;
+    }
+
+
+    private ArrayList<TaxiTrip> parseTaxiTripsFromOriginalDataFileAndSerialize(File file){
+        ArrayList<TaxiTrip> taxiTrips = null;
+        BufferedReader csvReader;
+        String row;
+
+        try {
+            int numOfRows = 0;
+            csvReader = new BufferedReader(new FileReader(inputFile));
+            taxiTrips = new ArrayList<>();
+
+            while ((row = csvReader.readLine()) != null) {
+                if (numOfRows > 0){
+                    TaxiTrip taxiTrip = parseTaxiTrip(row.split(","));
+                    if (taxiTrip != null){
+                        taxiTrips.add(taxiTrip);
+                    }
+                }
+                numOfRows++;
+            }
+
+            csvReader.close();
+
+            FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));
+            out.writeObject(taxiTrips);
+            out.close();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        return taxiTrips;
+    }
+
+
+    private ArrayList<TaxiTrip> readSerializedFile(File file) throws IOException, ClassNotFoundException {
+        FSTObjectInput in = new FSTObjectInput(new FileInputStream(file));
+        ArrayList<TaxiTrip> taxiTrips = (ArrayList<TaxiTrip>) in.readObject();
+        in.close();
         return taxiTrips;
     }
 
@@ -67,12 +82,10 @@ public class PragueDataSetReader implements DataSetReader {
     private TaxiTrip parseTaxiTrip(String [] trip) throws ParseException {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
         String orderId = trip[0];
 
         double pickUpLatitude = Double.parseDouble(trip[1]);
         double pickUpLongitude = Double.parseDouble(trip[2]);
-
         double destinationLatitude = Double.parseDouble(trip[3]);
         double destinationLongitude = Double.parseDouble(trip[4]);
 
@@ -94,5 +107,4 @@ public class PragueDataSetReader implements DataSetReader {
         return new TaxiTrip(orderId, pickUpLongitude, pickUpLatitude, destinationLongitude,
                 destinationLatitude, distance,tripLengthMinutes , pickUpNode, destinationNode, startDate, finishDate);
     }
-
 }

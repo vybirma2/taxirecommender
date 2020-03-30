@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 public abstract class EnvironmentNode extends RoadNode implements Serializable {
+
     protected Set<Integer> neighbours;
 
 

@@ -10,6 +10,9 @@ import utils.Utils;
 
 import java.util.List;
 
+/**
+ * Terminal function defining conditions of marking state as a terminal.
+ */
 public class TaxiGraphTerminalFunction implements TerminalFunction {
 
     private List<ActionType> actionTypes;

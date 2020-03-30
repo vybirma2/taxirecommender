@@ -5,6 +5,7 @@ import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.environmentrepresentation.EnvironmentGraph;
+import utils.DistanceSpeedPair;
 import utils.Utils;
 
 import java.io.Serializable;
@@ -12,11 +13,17 @@ import java.util.*;
 
 import static utils.DistanceGraphUtils.*;
 
+/**
+ * Grid world environment consisting of grid which cell consists of grid node to which original road nodes are fitted
+ * each cell is defined by the most centric node
+ */
 public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, GridEnvironmentEdge> implements Serializable {
-
 
     private double gridHeight;
     private double gridWidth;
+
+    private double cellHeight;
+    private double cellWidth;
 
     private double topLatitude;
     private double bottomLatitude;
@@ -28,30 +35,35 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
 
     private ArrayList<Double> longitudeGridBorders;
     private ArrayList<Double> latitudeGridBorders;
-
     private GridEnvironmentNode[][] gridWorld;
-
-    private double cellHeight;
-    private double cellWidth;
 
 
     public GridEnvironmentGraph(Graph<RoadNode, RoadEdge> osmGraph) {
         super(osmGraph);
     }
 
-    @Override
-    public Set<Integer> getNeighbours(int nodeId) {
-        return null;
-    }
 
+    /**
+     * Computing grid parameters according to the given osmGraph - heights, widths, grid borders...
+     * fitting of nodes to grid cells, defining cell neighbours
+     */
     @Override
     protected void setNodes() {
         nodes = new HashMap<>();
         computeGridParameters();
         createGridWorld();
-        System.out.println(this);
     }
 
+
+    private void computeGridParameters(){
+        setBoundingBox();
+        setCellProperties();
+    }
+
+
+    /**
+     * Setting edges between neighbouring nodes in the grid world
+     */
     @Override
     protected void setEdges() {
         edges = new HashMap<>();
@@ -59,9 +71,11 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         for (Map.Entry<Integer, GridEnvironmentNode> entry : nodes.entrySet()){
             GridEnvironmentNode node = entry.getValue();
             HashMap<Integer, GridEnvironmentEdge> nodeEdges = new HashMap<>();
+
             for (Integer neighbour : nodes.get(entry.getKey()).getNeighbours()){
+
                 if (!entry.getKey().equals(neighbour)){
-                    GridDistanceSpeedPair distanceSpeedPair = getDistancesAndSpeedBetweenNodesInGrid(entry.getKey(), neighbour);
+                    DistanceSpeedPair distanceSpeedPair = getDistancesAndSpeedBetweenNodesInGrid(entry.getKey(), neighbour);
                     nodeEdges.put(neighbour, new GridEnvironmentEdge(entry.getKey(), neighbour, (float) (distanceSpeedPair.getSpeed()/3.6),
                             (int)(distanceSpeedPair.getDistance() * 1000) ));
                 }
@@ -71,41 +85,19 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
     }
 
 
-
-    private GridDistanceSpeedPair getDistancesAndSpeedBetweenNodesInGrid(int fromNodeId, int toNodeId){
-        double resultDistance;
-        double resultSpeed;
-
+    private DistanceSpeedPair getDistancesAndSpeedBetweenNodesInGrid(int fromNodeId, int toNodeId){
         LinkedList<Integer> nodePath = aStar(fromNodeId, toNodeId);
 
-
         if (nodePath != null){
-
-            double distance = 0;
-            double speed = 0;
-            Integer current = nodePath.getFirst();
-
-            for (Integer node : nodePath){
-                distance += getDistanceBetweenOsmNodes(current, node);
-                speed += getSpeedBetweenOsmNodes(current, node);
-                current = node;
-            }
-
-            resultDistance = distance;
-            resultSpeed = speed/(nodePath.size() - 1);
-
+            return getDistanceSpeedPairOfPath(nodePath);
         } else {
             throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
         }
-
-
-        return new GridDistanceSpeedPair(resultDistance, resultSpeed);
     }
 
 
     private void createGridWorld(){
         this.gridWorld = new GridEnvironmentNode[numOfRows][numOfColumns];
-
         Set<RoadNode>[][] gridWorldRoadNodes = prepareRoadNodeSets();
 
         for (int row = 0; row < numOfRows; row++){
@@ -118,32 +110,39 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
     }
 
 
+    /**
+     * Adding neighbours in all 8 directions top, bottom, left, right and diagonals
+     */
     private void setNeighbours(){
         for (int row = 0; row < numOfRows; row++){
             for (int column = 0; column < numOfColumns; column++){
                 if (gridWorld[row][column] != null){
-                    if (insideGrid(row, column)){
-                        addAllNeighbours(row, column);
-                    } else if (topInside(row, column)){
-                        addBottomInsideNeighbours(row, column);
-                    } else if (leftInside(row, column)){
-                        addRightInsideNeighbours(row, column);
-                    } else if (rightInside(row, column)){
-                        addLeftInsideNeighbours(row, column);
-                    } else if (bottomInside(row, column)){
-                        addTopInsideNeighbours(row, column);
-                    } else if (topLeft(row, column)){
-                        addTopLeftCornerNeighbours(row, column);
-                    } else if (topRight(row, column)){
-                        addTopRightCornerNeighbours(row, column);
-                    } else if (bottomLeft(row, column)){
-                        addBottomLeftCornerNeighbours(row, column);
-                    } else if (bottomRight(row, column)){
-                        addBottomRightCornerNeighbours(row, column);
-                    }
+                    addNeighbours(row, column);
                 }
-
             }
+        }
+    }
+
+
+    private void addNeighbours(int row, int column){
+        if (insideGrid(row, column)){
+            addAllNeighbours(row, column);
+        } else if (topInside(row, column)){
+            addBottomInsideNeighbours(row, column);
+        } else if (leftInside(row, column)){
+            addRightInsideNeighbours(row, column);
+        } else if (rightInside(row, column)){
+            addLeftInsideNeighbours(row, column);
+        } else if (bottomInside(row, column)){
+            addTopInsideNeighbours(row, column);
+        } else if (topLeft(row, column)){
+            addTopLeftCornerNeighbours(row, column);
+        } else if (topRight(row, column)){
+            addTopRightCornerNeighbours(row, column);
+        } else if (bottomLeft(row, column)){
+            addBottomLeftCornerNeighbours(row, column);
+        } else if (bottomRight(row, column)){
+            addBottomRightCornerNeighbours(row, column);
         }
     }
 
@@ -186,6 +185,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         }
     }
 
+
     private void addBottomRightCornerNeighbours(int row, int column){
         if (numOfColumns > 1 && numOfRows > 1){
             addLeftNeighbour(row, column);
@@ -197,6 +197,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
             addTopNeighbour(row, column);
         }
     }
+
 
     private void addRightInsideNeighbours(int row, int column){
         addRightNeighbour(row, column);
@@ -215,6 +216,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         addBottomLeftNeighbour(row, column);
     }
 
+
     private void addTopInsideNeighbours(int row, int column){
         addLeftNeighbour(row, column);
         addRightNeighbour(row, column);
@@ -232,6 +234,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         addBottomRightNeighbour(row, column);
     }
 
+
     private void addAllNeighbours(int row, int column){
         addTopNeighbour(row, column);
         addBottomNeighbour(row, column);
@@ -242,6 +245,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         addBottomLeftNeighbour(row, column);
         addBottomRightNeighbour(row, column);
     }
+
 
     private void addTopNeighbour(int row, int column){
         int i = row - 1;
@@ -290,6 +294,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         }
     }
 
+
     private void addTopLeftNeighbour(int row, int column){
         int i = column - 1;
         int j = row - 1;
@@ -302,6 +307,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
             j--;
         }
     }
+
 
     private void addTopRightNeighbour(int row, int column){
         int i = column + 1;
@@ -316,6 +322,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         }
     }
 
+
     private void addBottomLeftNeighbour(int row, int column){
         int i = column - 1;
         int j = row + 1;
@@ -328,6 +335,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
             j++;
         }
     }
+
 
     private void addBottomRightNeighbour(int row, int column){
         int i = column + 1;
@@ -342,21 +350,26 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         }
     }
 
+
     private boolean topLeft(int row, int column){
         return row == 0 && column == 0;
     }
+
 
     private boolean topRight(int row, int column){
         return row == 0 && column == numOfColumns - 1;
     }
 
+
     private boolean bottomLeft(int row, int column){
         return row == numOfRows - 1 && column == 0;
     }
 
+
     private boolean bottomRight(int row, int column){
         return row == numOfRows -1 && column == numOfColumns - 1;
     }
+
 
     private boolean topInside(int row, int column){
         return row == 0 && column > 0 && column < numOfColumns - 1 && numOfRows > 1;
@@ -367,18 +380,28 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         return column == 0 && row > 0 && row < numOfRows - 1 && numOfColumns > 1;
     }
 
+
     private boolean rightInside(int row, int column){
         return column == numOfColumns - 1 && row > 0 && row < numOfRows - 1 && numOfColumns > 1;
     }
+
 
     private boolean bottomInside(int row, int column){
         return row == numOfRows - 1 && column > 0 && column < numOfColumns - 1 && numOfRows > 1;
     }
 
+
     private boolean insideGrid(int row, int column){
         return row > 0 && row < numOfRows - 1 && column > 0 && column < numOfColumns - 1;
     }
 
+
+    /**
+     * Choosing center node from given inside nodes
+     * @param nodes nodes fitted to grid cell
+     * @param row
+     * @param column
+     */
     private void setGridCell(Set<RoadNode> nodes, int row, int column){
         double left = longitudeGridBorders.get(column);
         double right = left + cellWidth;
@@ -400,6 +423,9 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
     }
 
 
+    /**
+     * @return 2d array of fitted nodes into individual cells of the grid world
+     */
     private Set<RoadNode>[][] prepareRoadNodeSets(){
         Set<RoadNode>[][] gridWorldRoadNodes = new Set[numOfRows][numOfColumns];
 
@@ -422,6 +448,10 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
     }
 
 
+    /**
+     * @param node
+     * @return row coordinate of node corresponding to grid latitude borders
+     */
     private Integer getRowCoordinate(RoadNode node){
         for (int i = numOfRows - 1; i >= 0; i--){
             if (node.getLatitude() >= latitudeGridBorders.get(i) ){
@@ -432,6 +462,10 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
     }
 
 
+    /**
+     * @param node
+     * @return column coordinate of node corresponding to grid longitude borders
+     */
     private Integer getColumnCoordinate(RoadNode node){
         for (int i = numOfColumns - 1; i >= 0; i--){
             if (node.getLongitude() >= longitudeGridBorders.get(i) ){
@@ -442,12 +476,9 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
     }
 
 
-    private void computeGridParameters(){
-        setBoundingBox();
-        setCellProperties();
-    }
-
-
+    /**
+     * Choosing corner nodes and setting bounding box for grid world
+     */
     private void setBoundingBox(){
         leftLongitude = osmGraph.getAllNodes().parallelStream().map(GPSLocation::getLongitude).min(Double::compareTo).get();
         bottomLatitude = osmGraph.getAllNodes().parallelStream().map(GPSLocation::getLatitude).min(Double::compareTo).get();
@@ -456,6 +487,9 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
     }
 
 
+    /**
+     * computing and setting properties for cells in the grid world according to the set parameters
+     */
     private void setCellProperties(){
         gridHeight = getDistance(leftLongitude, topLatitude, leftLongitude, bottomLatitude) * 1000;
         gridWidth = getDistance(leftLongitude, topLatitude, rightLongitude, topLatitude) * 1000;
@@ -473,11 +507,11 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
             longitudeGridBorders.add(leftLongitude + i * cellWidth);
         }
 
-
         for (int i = 0; i <= numOfRows; i++){
             latitudeGridBorders.add(bottomLatitude + i * cellHeight);
         }
     }
+
 
     @Override
     public String toString() {

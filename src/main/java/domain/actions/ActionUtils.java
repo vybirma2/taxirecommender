@@ -4,9 +4,13 @@ import burlap.mdp.core.state.State;
 import utils.Utils;
 import domain.states.TaxiGraphState;
 
+import static parameterestimation.EnergyConsumptionEstimator.getActionEnergyConsumption;
 import static utils.DistanceGraphUtils.getDistanceBetweenNodes;
 import static utils.Utils.*;
 
+/**
+ * Class containing functions controlling whether concrete action is possible to do in given state
+ */
 public class ActionUtils {
 
 
@@ -39,6 +43,17 @@ public class ActionUtils {
         return ((TaxiGraphState)state).getStateOfCharge() < MINIMAL_CHARGING_STATE_OF_CHARGE;
     }
 
+
+    public static boolean notRunOutOfBattery(State state, int toNodeId, double actionTime){
+        return ((TaxiGraphState)state).getStateOfCharge() + getActionEnergyConsumption((TaxiGraphState) state, toNodeId, actionTime) > 0;
+    }
+
+
+    public static boolean notRunOutOfBattery(State state, int energyConsumption){
+        return ((TaxiGraphState)state).getStateOfCharge() + energyConsumption > 0;
+    }
+
+
 /*
     public static boolean notReturningBack(TaxiGraphState state, Integer toNodeId){
         if (state.getPreviousNode() == null){
@@ -47,34 +62,6 @@ public class ActionUtils {
         return !state.getPreviousNode().equals(toNodeId);
     }
 */
-
-    // TODO - get some good energy consumption estimate
-    public static int getMovingEnergyConsumption(int fromNodeId, int toNodeId){
-        double distance = getDistanceBetweenNodes(fromNodeId, toNodeId);
-        return - (int)Math.ceil((distance/CAR_FULL_BATTERY_DISTANCE) * 100);
-    }
-
-    public static int getMovingEnergyConsumption(double distance){
-        return - (int)Math.ceil((distance/CAR_FULL_BATTERY_DISTANCE) * 100);
-    }
-
-
-    public static int getActionEnergyConsumption(TaxiGraphState state, int toNodeId, double actionTime) {
-        return ActionUtils.getMovingEnergyConsumption(state.getNodeId(), toNodeId);
-    }
-
-    public static int getEnergyConsumption(double distance) {
-        return ActionUtils.getMovingEnergyConsumption(distance);
-    }
-
-
-    public static boolean notRunOutOfBattery(State state, int toNodeId, double actionTime){
-        return ((TaxiGraphState)state).getStateOfCharge() + getActionEnergyConsumption((TaxiGraphState) state, toNodeId, actionTime) > 0;
-    }
-
-    public static boolean notRunOutOfBattery(State state, int energyConsumption){
-        return ((TaxiGraphState)state).getStateOfCharge() + energyConsumption > 0;
-    }
 
 /*
     public static boolean notRecentlyVisited(TaxiGraphState taxiGraphState, int toNodeId){
@@ -94,7 +81,5 @@ public class ActionUtils {
         }
         return true;
     }
-
-
  */
 }

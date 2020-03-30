@@ -7,7 +7,11 @@ import domain.environmentrepresentation.EnvironmentNode;
 import java.io.Serializable;
 import java.util.Date;
 
-public class TaxiTrip implements Comparable, Serializable {
+/**
+ * Class representing taxi trip parsed from historical trip data
+ */
+public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
+
     private String orderId;
 
     private double pickUpLongitude;
@@ -20,7 +24,6 @@ public class TaxiTrip implements Comparable, Serializable {
 
     private EnvironmentNode pickUpNode;
     private EnvironmentNode destinationNode;
-
 
     private Date startDate;
     private Date finishDate;
@@ -48,93 +51,116 @@ public class TaxiTrip implements Comparable, Serializable {
         return orderId;
     }
 
+
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
+
 
     public double getPickUpLongitude() {
         return pickUpLongitude;
     }
 
+
     public void setPickUpLongitude(double pickUpLongitude) {
         this.pickUpLongitude = pickUpLongitude;
     }
+
 
     public double getPickUpLatitude() {
         return pickUpLatitude;
     }
 
+
     public void setPickUpLatitude(double pickUpLatitude) {
         this.pickUpLatitude = pickUpLatitude;
     }
+
 
     public double getDestinationLongitude() {
         return destinationLongitude;
     }
 
+
     public void setDestinationLongitude(double destinationLongitude) {
         this.destinationLongitude = destinationLongitude;
     }
+
 
     public double getDestinationLatitude() {
         return destinationLatitude;
     }
 
+
     public void setDestinationLatitude(double destinationLatitude) {
         this.destinationLatitude = destinationLatitude;
     }
+
 
     public double getDistance() {
         return distance;
     }
 
+
     public void setDistance(double distance) {
         this.distance = distance;
     }
+
 
     public RoadNode getPickUpNode() {
         return pickUpNode;
     }
 
+
     public void setPickUpNode(EnvironmentNode pickUpNode) {
         this.pickUpNode = pickUpNode;
     }
+
 
     public RoadNode getDestinationNode() {
         return destinationNode;
     }
 
+
     public void setDestinationNode(EnvironmentNode destinationNode) {
         this.destinationNode = destinationNode;
     }
+
 
     public Date getStartDate() {
         return startDate;
     }
 
+
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
+
 
     public Date getFinishDate() {
         return finishDate;
     }
 
+
     public void setFinishDate(Date finishDate) {
         this.finishDate = finishDate;
     }
+
 
     public long getTripLength() {
         return tripLength;
     }
 
+
     public int getTripEnergyConsumption() {
         return tripEnergyConsumption;
     }
 
+
     private int computeEnergyConsumption(){
-        return ActionUtils.getEnergyConsumption(this.distance);
+        return EnergyConsumptionEstimator.getEnergyConsumption(this.distance);
     }
+
 
     @Override
     public String toString() {
@@ -150,11 +176,11 @@ public class TaxiTrip implements Comparable, Serializable {
                 '}';
     }
 
+
     @Override
-    public int compareTo(Object o) {
-        TaxiTrip otherTrip = (TaxiTrip) o;
+    public int compareTo(TaxiTrip o) {
         return Integer.compare(this.startDate.getHours() * 60 + this.startDate.getMinutes(),
-                otherTrip.startDate.getHours()*60 + otherTrip.startDate.getMinutes());
+                o.startDate.getHours()*60 + o.startDate.getMinutes());
     }
 }
 

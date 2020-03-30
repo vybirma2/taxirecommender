@@ -4,11 +4,15 @@ import java.util.*;
 
 import static parameterestimation.ParameterEstimationUtils.*;
 
+/**
+ * Class responsible for estimation of passenger pickup location parameters
+ */
 public class PassengerPickUpEstimator {
 
     private HashMap<Integer, HashMap<Integer, Double>> passengerPickUpProbability;
     private Set<Integer> timeIntervals;
     private ArrayList<TaxiTrip> taxiTrips;
+
 
     public PassengerPickUpEstimator(ArrayList<TaxiTrip> taxiTrips) {
         this.taxiTrips = taxiTrips;
@@ -17,9 +21,8 @@ public class PassengerPickUpEstimator {
 
     public HashMap<Integer, HashMap<Integer, Double>> estimatePickUpProbability(){
         HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips = getTimeSortedTrips(taxiTrips);
-        HashMap<Integer, HashMap<Integer, Integer>> pickupsInNodes = getPickUpsInNodes(timeSortedTaxiTrips);
-        HashMap<Integer, HashMap<Integer, Integer>> dropOffsInNodes = getDropOffsInNodes(timeSortedTaxiTrips);
-
+        HashMap<Integer, HashMap<Integer, Integer>> pickupsInNodes = getPickUpsInNodesInEstimationIntervals(timeSortedTaxiTrips);
+        HashMap<Integer, HashMap<Integer, Integer>> dropOffsInNodes = getDropOffsInNodesInEstimationIntervals(timeSortedTaxiTrips);
 
         passengerPickUpProbability = getPassengerPickUpProbability(pickupsInNodes, dropOffsInNodes);
         timeIntervals = passengerPickUpProbability.keySet();
@@ -41,14 +44,8 @@ public class PassengerPickUpEstimator {
         HashMap<Integer, HashMap<Integer, Double>> result = new  HashMap<>();
 
         for (Map.Entry<Integer, HashMap<Integer, Integer>> timeInterval : pickupsInNodes.entrySet()){
-            HashMap<Integer, Double> nodeProbabilities = new HashMap<>();
-
-            for (Map.Entry<Integer, Integer> node : timeInterval.getValue().entrySet()){
-
-                nodeProbabilities.put(node.getKey(), getProbability(node.getValue(),
-                        dropOffsInNodes.get(timeInterval.getKey()).getOrDefault(node.getKey(), 0)));
-
-            }
+            HashMap<Integer, Double> nodeProbabilities =
+                    getPassengerPickUpProbabilityComplete(timeInterval.getValue(), dropOffsInNodes.get(timeInterval.getKey()));
             result.put(timeInterval.getKey(), nodeProbabilities);
         }
 
@@ -71,8 +68,6 @@ public class PassengerPickUpEstimator {
     }
 
 
-
-
     private Double getProbability(double numOfPickUps, double numOfDropOffs){
         return numOfPickUps/(numOfPickUps + numOfDropOffs);
     }
@@ -81,6 +76,7 @@ public class PassengerPickUpEstimator {
     public HashMap<Integer, HashMap<Integer, Double>> getPassengerPickUpProbability() {
         return passengerPickUpProbability;
     }
+
 
     public Set<Integer> getTimeIntervals() {
         return timeIntervals;

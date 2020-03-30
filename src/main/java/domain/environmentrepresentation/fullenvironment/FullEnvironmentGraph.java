@@ -10,6 +10,9 @@ import utils.DistanceGraphUtils;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Graph for FullEnvironment which copies the structure of the original graph parsed from OSM data
+ */
 public class FullEnvironmentGraph extends EnvironmentGraph<FullEnvironmentNode, FullEnvironmentEdge> {
 
 
@@ -17,12 +20,10 @@ public class FullEnvironmentGraph extends EnvironmentGraph<FullEnvironmentNode, 
         super(osmGraph);
     }
 
-    @Override
-    public Set<Integer> getNeighbours(int nodeId) {
-        return nodes.get(nodeId).getNeighbours();
-    }
 
-
+    /**
+     * Copying all nodes from given osmGraph to FullEnvironmentGraph
+     */
     @Override
     protected void setNodes(){
         nodes = new HashMap<>();
@@ -37,6 +38,9 @@ public class FullEnvironmentGraph extends EnvironmentGraph<FullEnvironmentNode, 
     }
 
 
+    /**
+     * Copying all edges from given osmGraph to FullEnvironmentGraph
+     */
     @Override
     protected void setEdges(){
         edges = new HashMap<>();

@@ -4,41 +4,28 @@ import utils.Utils;
 
 import java.util.*;
 
-import static utils.DistanceGraphUtils.getSurroundingNodesToLevel;
-
 public class ParameterEstimationUtils {
 
 
-    public static final int NUM_OF_LEVELS_IN_DROP_OFF_SEARCH = 3;
-
-
-    public static HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getNumberOfTripsToDestinationNodes(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
+    /**
+     * @param timeSortedTaxiTrips taxi trips sorted into defined estimation intervals
+     * @return number of trips from to some node sorted in estimation intervals
+     */
+    public static HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getNumberOfTripsToDestinationNodesPerInterval(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> tripsToDestinationNode = new HashMap<>();
 
         for (Map.Entry<Integer, ArrayList<TaxiTrip>> entry : timeSortedTaxiTrips.entrySet()){
-            HashMap<Integer, HashMap<Integer, Integer>> intervalTripsToDestination = new HashMap<>();
-
-            for (TaxiTrip taxiTrip : entry.getValue()){
-                if (intervalTripsToDestination.containsKey(taxiTrip.getPickUpNode().getId())){
-                    HashMap<Integer, Integer> tripsFromNode = intervalTripsToDestination.get(taxiTrip.getPickUpNode().getId());
-                    if (tripsFromNode.containsKey(taxiTrip.getDestinationNode().getId())){
-                        tripsFromNode.replace(taxiTrip.getDestinationNode().getId(), tripsFromNode.get(taxiTrip.getDestinationNode().getId()) + 1);
-                    } else {
-                        tripsFromNode.put(taxiTrip.getDestinationNode().getId(), 1);
-                    }
-                } else {
-                    HashMap<Integer, Integer> toNodeTrips = new HashMap<>();
-                    toNodeTrips.put(taxiTrip.getDestinationNode().getId(), 1);
-                    intervalTripsToDestination.put(taxiTrip.getPickUpNode().getId(), toNodeTrips);
-                }
-            }
-            tripsToDestinationNode.put(entry.getKey(), intervalTripsToDestination);
+            tripsToDestinationNode.put(entry.getKey(), getNumberOfTripsToDestinationNodes(entry.getValue()));
         }
 
         return tripsToDestinationNode;
     }
 
 
+    /**
+     * @param taxiTrips
+     * @return number of trips from starting to some destination node
+     */
     public static HashMap<Integer, HashMap<Integer, Integer>> getNumberOfTripsToDestinationNodes(ArrayList<TaxiTrip> taxiTrips){
         HashMap<Integer, HashMap<Integer, Integer>> tripsToDestinationNode = new HashMap<>();
 
@@ -61,70 +48,25 @@ public class ParameterEstimationUtils {
     }
 
 
-    public static void addSurroundingsNodesTripsToDestination(HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> tripsToDestination){
-
-        for (Map.Entry<Integer, HashMap<Integer, HashMap<Integer, Integer>>> timeInterval : tripsToDestination.entrySet()){
-
-            for (Map.Entry<Integer, HashMap<Integer, Integer>> node : timeInterval.getValue().entrySet()){
-                Set<Integer> surroundingNodes = getSurroundingNodesToLevel(node.getKey(), ParameterEstimationUtils.NUM_OF_LEVELS_IN_DROP_OFF_SEARCH);
-                HashMap<Integer, Integer> summedTripsToDestination = new HashMap<>();
-
-                for (Map.Entry<Integer, Integer> entry : node.getValue().entrySet()){
-                    int sumOfDropOffs = entry.getValue();
-
-                    for(Integer neighbour : surroundingNodes){
-                        if (timeInterval.getValue().containsKey(neighbour) && timeInterval.getValue().get(neighbour).containsKey(entry.getKey())){
-                            sumOfDropOffs += 1;
-                        }
-                    }
-                    summedTripsToDestination.put(entry.getKey(), sumOfDropOffs);
-                }
-                tripsToDestination.get(timeInterval.getKey()).replace(node.getKey(), summedTripsToDestination);
-            }
-        }
-    }
-
-
-    public static void addSurroundingNodeActions(HashMap<Integer, HashMap<Integer, Integer>> actionsInOSMNodes){
-
-        for (Map.Entry<Integer, HashMap<Integer, Integer>> timeInterval : actionsInOSMNodes.entrySet()){
-            HashMap<Integer, Integer> summedPickups = new HashMap<>();
-
-            for (Map.Entry<Integer, Integer> node : timeInterval.getValue().entrySet()){
-                Set<Integer> neighbours = getSurroundingNodesToLevel(node.getKey(), ParameterEstimationUtils.NUM_OF_LEVELS_IN_DROP_OFF_SEARCH);
-                int sumOfPickUps = node.getValue();
-
-                for(Integer neighbour : neighbours){
-                    if (timeInterval.getValue().containsKey(neighbour)){
-                        sumOfPickUps += timeInterval.getValue().get(neighbour);
-                    }
-                }
-                summedPickups.put(node.getKey(), sumOfPickUps);
-            }
-            actionsInOSMNodes.replace(timeInterval.getKey(), summedPickups);
-        }
-    }
-
-
-    public static HashMap<Integer, HashMap<Integer, Integer>> getPickUpsInNodes(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
+    /**
+     * @param timeSortedTaxiTrips
+     * @return number of pickups in given nodes in estimation time intervals
+     */
+    public static HashMap<Integer, HashMap<Integer, Integer>> getPickUpsInNodesInEstimationIntervals(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
         HashMap<Integer, HashMap<Integer, Integer>> pickupsInOSMNodes = new HashMap<>();
 
         for (Map.Entry<Integer, ArrayList<TaxiTrip>> entry : timeSortedTaxiTrips.entrySet()){
-            HashMap<Integer, Integer> intervalPickUps = new HashMap<>();
-
-            for (TaxiTrip taxiTrip : entry.getValue()){
-                if (intervalPickUps.containsKey(taxiTrip.getPickUpNode().getId())){
-                    intervalPickUps.replace(taxiTrip.getPickUpNode().getId(), intervalPickUps.get(taxiTrip.getPickUpNode().getId()) + 1 );
-                } else {
-                    intervalPickUps.put(taxiTrip.getPickUpNode().getId(), 1);
-                }
-            }
-            pickupsInOSMNodes.put(entry.getKey(), intervalPickUps);
+            pickupsInOSMNodes.put(entry.getKey(), getPickUpsInNodes(entry.getValue()));
         }
 
         return pickupsInOSMNodes;
     }
 
+
+    /**
+     * @param taxiTrips
+     * @return number of pickups in given nodes in one estimation time interval
+     */
     public static HashMap<Integer, Integer> getPickUpsInNodes(ArrayList<TaxiTrip> taxiTrips){
        HashMap<Integer, Integer> pickupsInOSMNodes = new HashMap<>();
 
@@ -139,9 +81,13 @@ public class ParameterEstimationUtils {
         return pickupsInOSMNodes;
     }
 
+
+    /**
+     * @param taxiTrips
+     * @return number of drop offs in given nodes in one estimation interval
+     */
     public static HashMap<Integer, Integer> getDropOffsInNodes(ArrayList<TaxiTrip> taxiTrips){
         HashMap<Integer, Integer> dropOffsInOSMNodes = new HashMap<>();
-
 
         for (TaxiTrip taxiTrip : taxiTrips){
             if (dropOffsInOSMNodes.containsKey(taxiTrip.getDestinationNode().getId())){
@@ -155,26 +101,25 @@ public class ParameterEstimationUtils {
     }
 
 
-    public static HashMap<Integer, HashMap<Integer, Integer>> getDropOffsInNodes(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
+    /**
+     * @param timeSortedTaxiTrips
+     * @return number of drop offs in given nodes in estimation intervals
+     */
+    public static HashMap<Integer, HashMap<Integer, Integer>> getDropOffsInNodesInEstimationIntervals(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
         HashMap<Integer, HashMap<Integer, Integer>> dropOffsInOSMNodes = new HashMap<>();
 
         for (Map.Entry<Integer, ArrayList<TaxiTrip>> entry : timeSortedTaxiTrips.entrySet()){
-            HashMap<Integer, Integer> intervalDropOffs = new HashMap<>();
-
-            for (TaxiTrip taxiTrip : entry.getValue()){
-                if (intervalDropOffs.containsKey(taxiTrip.getDestinationNode().getId())){
-                    intervalDropOffs.replace(taxiTrip.getDestinationNode().getId(), intervalDropOffs.get(taxiTrip.getDestinationNode().getId()) + 1 );
-                } else {
-                    intervalDropOffs.put(taxiTrip.getDestinationNode().getId(), 1);
-                }
-            }
-            dropOffsInOSMNodes.put(entry.getKey(), intervalDropOffs);
+            dropOffsInOSMNodes.put(entry.getKey(), getDropOffsInNodes(entry.getValue()));
         }
 
         return dropOffsInOSMNodes;
     }
 
 
+    /**
+     * @param taxiTrips
+     * @return taxi trips sorted into estimation intervals according to the estimation_interval_length
+     */
     public static HashMap<Integer, ArrayList<TaxiTrip>> getTimeSortedTrips(ArrayList<TaxiTrip> taxiTrips){
         int estimationTime = Utils.SHIFT_START_TIME;
         HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips = new HashMap<>();

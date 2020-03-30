@@ -13,6 +13,9 @@ import java.util.Set;
 import static domain.actions.ActionUtils.*;
 import static utils.DistanceGraphUtils.getTripTime;
 
+/**
+ * Class with the main purpose of returning all available actions of moving to the neighbouring node in the environment.
+ */
 public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
 
 
@@ -27,7 +30,11 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
     }
 
 
-
+    /**
+     * @param state
+     * @return list of all possible actions of moving to the neighbouring node defined by transitions set
+     * in TaxiRecommenderDomainGenerator - check on applicability - not running out of time/battery...
+     */
     @Override
     public List<Action> allApplicableActions(State state) {
         List<Action> actions = new ArrayList<>();
@@ -60,8 +67,7 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
 
 
     private boolean applicableInState(TaxiGraphState state, int toNodeId){
-        return applicableInState(state) &&
-                shiftNotOver(state, this.getActionTime(state, toNodeId)) &&
+        return applicableInState(state) && shiftNotOver(state, this.getActionTime(state, toNodeId)) &&
                 notRunOutOfBattery(state, toNodeId, getActionTime(state, toNodeId));
     }
 }

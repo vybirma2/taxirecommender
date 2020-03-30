@@ -8,6 +8,9 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Grid wold node/cell with its bounding box coordinates and set of fitted nodes
+ */
 public class GridEnvironmentNode extends EnvironmentNode implements Serializable {
 
     private Set<RoadNode> osmNodes;
@@ -33,42 +36,51 @@ public class GridEnvironmentNode extends EnvironmentNode implements Serializable
         return osmNodes;
     }
 
+
     public void setOsmNodes(Set<RoadNode> osmNodes) {
         this.osmNodes = osmNodes;
     }
+
 
     public double getTopLatitude() {
         return topLatitude;
     }
 
+
     public void setTopLatitude(double topLatitude) {
         this.topLatitude = topLatitude;
     }
+
 
     public double getBottomLatitude() {
         return bottomLatitude;
     }
 
+
     public void setBottomLatitude(double bottomLatitude) {
         this.bottomLatitude = bottomLatitude;
     }
+
 
     public double getLeftLongitude() {
         return leftLongitude;
     }
 
+
     public void setLeftLongitude(double leftLongitude) {
         this.leftLongitude = leftLongitude;
     }
+
 
     public double getRightLongitude() {
         return rightLongitude;
     }
 
+
     public void setRightLongitude(double rightLongitude) {
         this.rightLongitude = rightLongitude;
     }
 
-    public void setNeighbours(Set<Integer> neighbours) { this.neighbours = neighbours; }
 
+    public void setNeighbours(Set<Integer> neighbours) { this.neighbours = neighbours; }
 }

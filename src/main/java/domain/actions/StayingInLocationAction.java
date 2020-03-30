@@ -6,20 +6,31 @@ import domain.states.TaxiGraphState;
 
 import java.util.Objects;
 
+/**
+ * Action of staying in location
+ */
 public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction {
 
     private int length;
+    private int nodeId;
 
-    public StayingInLocationAction(int aId, int length) {
+
+    public StayingInLocationAction(int aId, int length, int nodeId) {
         super(aId);
         this.length = length;
+        this.nodeId = nodeId;
+    }
+
+
+    @Override
+    public int getActionId() {
+        return this.aId;
     }
 
 
     public int getLength() {
         return length;
     }
-
 
 
     @Override
@@ -30,7 +41,7 @@ public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.
 
     @Override
     public Action copy() {
-        return new StayingInLocationAction(this.aId, length);
+        return new StayingInLocationAction(this.aId, length, getToNodeId());
     }
 
 
@@ -45,6 +56,11 @@ public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.
         return 0;
     }
 
+    @Override
+    public int getToNodeId() {
+        return nodeId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -54,6 +70,7 @@ public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.
         StayingInLocationAction that = (StayingInLocationAction) o;
         return length == that.length;
     }
+
 
     @Override
     public int hashCode() {

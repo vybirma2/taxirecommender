@@ -8,6 +8,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import static utils.Utils.*;
 
+/**
+ * Container for TaxiGraphState used in search for reachable states
+ */
 public class TaxiGraphHashableState extends IISimpleHashableState {
 
 
@@ -35,6 +38,7 @@ public class TaxiGraphHashableState extends IISimpleHashableState {
         }
     }
 
+
     protected boolean statesEqual(State s1, State s2) {
         TaxiGraphState state1 = (TaxiGraphState) s1;
         TaxiGraphState state2 = (TaxiGraphState) s2;
@@ -43,6 +47,4 @@ public class TaxiGraphHashableState extends IISimpleHashableState {
                 && state1.getNodeId() == state2.getNodeId()
                 && state1.getTimeStamp() == state2.getTimeStamp();
     }
-
-
 }

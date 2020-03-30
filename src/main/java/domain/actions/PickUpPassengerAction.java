@@ -6,7 +6,9 @@ import domain.states.TaxiGraphState;
 
 import java.util.Objects;
 
-
+/**
+ * Action of picking up passenger
+ */
 public class PickUpPassengerAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction  {
 
     private int timeStamp;
@@ -23,6 +25,12 @@ public class PickUpPassengerAction extends GraphDefinedDomain.GraphActionType.Gr
         this.actionTime = actionTime;
         this.energyConsumption = energyConsumption;
         this.timeStamp = timeStamp;
+    }
+
+
+    @Override
+    public int getActionId() {
+        return this.aId;
     }
 
 
@@ -50,6 +58,7 @@ public class PickUpPassengerAction extends GraphDefinedDomain.GraphActionType.Gr
     }
 
 
+    @Override
     public int getToNodeId() {
         return toNodeId;
     }

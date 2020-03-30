@@ -6,5 +6,12 @@ public interface MeasurableAction {
 
     int getActionTime(TaxiGraphState state);
 
+
     int getActionEnergyConsumption(TaxiGraphState state);
+
+
+    int getToNodeId();
+
+
+    int getActionId();
 }

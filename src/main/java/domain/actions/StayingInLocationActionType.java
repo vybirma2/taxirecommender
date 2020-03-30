@@ -3,6 +3,7 @@ package domain.actions;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.State;
+import domain.states.TaxiGraphState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,9 @@ import static utils.Utils.STAYING_INTERVAL;
 import static domain.actions.ActionUtils.notGoingToChargingPreviously;
 import static domain.actions.ActionUtils.shiftNotOver;
 
+/**
+ * Class with the main purpose of returning all available actions of staying in some node in the environment.
+ */
 public class StayingInLocationActionType extends GraphDefinedDomain.GraphActionType {
 
 
@@ -32,7 +36,7 @@ public class StayingInLocationActionType extends GraphDefinedDomain.GraphActionT
         List<Action> actions = new ArrayList<>();
 
         if (this.applicableInState(state)) {
-            actions.add(new StayingInLocationAction(this.aId, STAYING_INTERVAL));
+            actions.add(new StayingInLocationAction(this.aId, STAYING_INTERVAL, ((TaxiGraphState) state).getNodeId()));
         }
 
         return actions;

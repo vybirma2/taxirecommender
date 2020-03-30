@@ -1,6 +1,10 @@
 package domain;
 
-public class AStarNode implements Comparable {
+/**
+ * Node used in AStar algorithm
+ */
+public class AStarNode implements Comparable<AStarNode> {
+
     private int nodeId;
     private double distanceToStart;
     private double predictedDistanceToGoal;
@@ -11,6 +15,7 @@ public class AStarNode implements Comparable {
         this.distanceToStart = distanceToStart;
         this.predictedDistanceToGoal = predictedDistanceToGoal;
     }
+
 
     public void increaseDistance(int increment){
         this.distanceToStart += increment;
@@ -36,21 +41,26 @@ public class AStarNode implements Comparable {
         this.distanceToStart = distanceToStart;
     }
 
+
     public void setDistanceToStart(double distanceToStart) {
         this.distanceToStart = distanceToStart;
     }
+
 
     public double getPredictedDistanceToGoal() {
         return predictedDistanceToGoal;
     }
 
+
     public void setPredictedDistanceToGoal(double predictedDistanceToGoal) {
         this.predictedDistanceToGoal = predictedDistanceToGoal;
     }
 
+
     @Override
-    public int compareTo(Object o) {
-        AStarNode node = (AStarNode)o;
-        return Double.compare(this.getDistanceToStart() + this.predictedDistanceToGoal, node.getDistanceToStart() + node.getPredictedDistanceToGoal());
+    public int compareTo(AStarNode o) {
+        return Double.compare(this.getDistanceToStart() +
+                this.predictedDistanceToGoal, o.getDistanceToStart() +
+                o.getPredictedDistanceToGoal());
     }
 }
