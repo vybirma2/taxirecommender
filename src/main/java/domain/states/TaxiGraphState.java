@@ -21,6 +21,7 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
     private HashMap<Integer, HashMap<Action, TaxiGraphState>> previousActionStatePairs = new HashMap<>();
 
     private Action maxRewardAction = null;
+    private TaxiGraphState maxNextState = null;
     private Double maxReward = null;
     private HashMap<Integer, Double> afterTaxiTripStateRewards = new HashMap<>();
 
@@ -107,12 +108,12 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
      * @param action action to do to receive given reward
      * @param reward potentially received reward
      */
-    public void setActionReward(Action action, Double reward) {
+    public void setActionReward(Action action, Double reward, TaxiGraphState maxNextState) {
         if (maxRewardAction == null || this.maxReward < reward){
             this.maxRewardAction = action;
             this.maxReward = reward;
+            this.maxNextState = maxNextState;
         }
-
     }
 
 
@@ -165,6 +166,10 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
         return previousActionStatePairs.isEmpty();
     }
 
+
+    public TaxiGraphState getMaxNextState() {
+        return maxNextState;
+    }
 
     @Override
     public String toString() {

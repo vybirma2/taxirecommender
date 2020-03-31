@@ -7,14 +7,12 @@ import parameterestimation.PragueDataSetReader;
 import java.util.Comparator;
 
 public class Utils {
-    public static final int SHIFT_LENGTH = 2 * 60;
+    public static final int SHIFT_LENGTH = 6 * 60;
     public static final int STAYING_INTERVAL = 10;
 
     public static final String VAR_NODE = "node";
-    public static final String VAR_STATE_OF_CHARGE = "state_of_ciharge";
+    public static final String VAR_STATE_OF_CHARGE = "state_of_charge";
     public static final String VAR_TIMESTAMP = "timestamp";
-    public static final String VAR_PREVIOUS_ACTION = "previous_action";
-    public static final String VAR_PREVIOUS_STATE = "previous_node";
 
     public static final double COST_FOR_KW = 5.5;
     public static final double BATTERY_CAPACITY = 40;
@@ -32,9 +30,9 @@ public class Utils {
 
     public static final DataSetReader DATA_SET_READER = new PragueDataSetReader();
 
-    public static final int ESTIMATION_EPISODE_LENGTH = 60;
+    public static final int ESTIMATION_EPISODE_LENGTH = 30;
 
-    public static final int SHIFT_START_TIME = 8*60;
+    public static final int SHIFT_START_TIME = 7*60;
 
     public static final int CAR_FULL_BATTERY_DISTANCE = 300;
 

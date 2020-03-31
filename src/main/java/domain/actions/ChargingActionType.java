@@ -54,8 +54,10 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
                 int chargingTimeUnit = timeToFullStateOfCharge/NUM_OF_CHARGING_LENGTH_POSSIBILITIES;
 
                 for(int i = 1; i <= NUM_OF_CHARGING_LENGTH_POSSIBILITIES; i++){
-                    if (applicableInState(state, i * chargingTimeUnit, getEnergyCharged(connection, i * chargingTimeUnit))){
-                        actions.add(new ChargingAction(this.aId, i*chargingTimeUnit, station.getId(), connection.getId(), ((TaxiGraphState)state).getNodeId()));
+                    int energyCharged = getEnergyCharged(connection, i * chargingTimeUnit);
+                    if (applicableInState(state, i * chargingTimeUnit, energyCharged)){
+                        actions.add(new ChargingAction(this.aId, i*chargingTimeUnit, station.getId(),
+                                connection.getId(), ((TaxiGraphState)state).getNodeId(), energyCharged));
                     }
                 }
             }
@@ -65,7 +67,7 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
 
 
     private int getEnergyCharged(ChargingConnection connection, double chargingTime){
-        return (int)((connection.getPowerKW()*(chargingTime/60))/Utils.BATTERY_CAPACITY)*100;
+        return (int)(((connection.getPowerKW()*(chargingTime/60))/Utils.BATTERY_CAPACITY)*100);
     }
 
 
@@ -89,6 +91,6 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
 
 
     protected boolean applicableInState(State s, double chargingTime, double energyCharged) {
-        return shiftNotOver(s, chargingTime) && notOverCharging(s, energyCharged);
+        return shiftNotOver(s, chargingTime) && notOverCharging(s, energyCharged) && energyCharged > 0;
     }
 }

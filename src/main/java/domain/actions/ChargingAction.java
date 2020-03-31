@@ -22,13 +22,13 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
     private double cost;
 
 
-    public ChargingAction(int aId, int length, int stationId, int connectionId, int nodeId) {
+    public ChargingAction(int aId, int length, int stationId, int connectionId, int nodeId, int energyProduction) {
         super(aId);
         this.length = length;
         this.stationId = stationId;
         this.connectionId = connectionId;
         this.nodeId = nodeId;
-        this.energyProduction = (int)(ChargingStationReader.getChargingConnection(connectionId).getPowerKW()*(length/60));
+        this.energyProduction = energyProduction;
         this.cost = ChargingStationReader.getChargingConnection(connectionId).getPrizeForKW() * energyProduction;
     }
 
@@ -61,7 +61,7 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
 
     @Override
     public Action copy() {
-        return new ChargingAction(this.aId, length, stationId, connectionId, nodeId);
+        return new ChargingAction(this.aId, length, stationId, connectionId, nodeId, energyProduction);
     }
 
 

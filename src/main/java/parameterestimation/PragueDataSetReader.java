@@ -51,7 +51,7 @@ public class PragueDataSetReader implements DataSetReader {
             while ((row = csvReader.readLine()) != null) {
                 if (numOfRows > 0){
                     TaxiTrip taxiTrip = parseTaxiTrip(row.split(","));
-                    if (taxiTrip != null){
+                    if (taxiTrip != null && taxiTrip.getTripLength() != 0){
                         taxiTrips.add(taxiTrip);
                     }
                 }

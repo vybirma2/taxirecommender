@@ -219,13 +219,13 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         Set<Integer> neighbours = node.getNeighbours();
 
         for (Integer neighbour : neighbours) {
-            HashMap<Integer, Double> destinationProbabilities = parameterEstimator.getDestinationProbabilitiesInNode(neighbour);
             this.setTransition(node.getId(), ActionTypes.TO_NEXT_LOCATION.getValue(), neighbour, 1.);
+        }
 
-            if (destinationProbabilities != null){
-                for (Map.Entry<Integer, Double> destination : destinationProbabilities.entrySet()){
-                    this.setTransition(node.getId(), ActionTypes.PICK_UP_PASSENGER.getValue(), destination.getKey(), 1.);
-                }
+        HashMap<Integer, Double> destinationProbabilities = parameterEstimator.getDestinationProbabilitiesInNode(node.getId());
+        if (destinationProbabilities != null){
+            for (Map.Entry<Integer, Double> destination : destinationProbabilities.entrySet()){
+                this.setTransition(node.getId(), ActionTypes.PICK_UP_PASSENGER.getValue(), destination.getKey(), 1.);
             }
         }
     }

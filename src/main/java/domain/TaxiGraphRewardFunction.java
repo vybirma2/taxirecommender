@@ -5,6 +5,7 @@ import burlap.mdp.core.action.Action;
 import burlap.mdp.core.action.ActionType;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.model.RewardFunction;
+import domain.actions.ActionUtils;
 import domain.actions.ChargingAction;
 import domain.states.TaxiGraphState;
 import domain.states.TaxiGraphStateComparator;
@@ -120,15 +121,15 @@ public class TaxiGraphRewardFunction implements RewardFunction {
         switch (actionId){
             case 0:
             case 1:
-                previousState.setActionReward(action, getStayingAndNextLocationReward(currentState));
+                previousState.setActionReward(action, getStayingAndNextLocationReward(currentState), currentState);
                 visitedStates.add(previousState);
                 break;
             case 2:
-                previousState.setActionReward(action, getGoingToChargingStationReward(currentState));
+                previousState.setActionReward(action, getGoingToChargingStationReward(currentState), currentState);
                 visitedStates.add(previousState);
                 break;
             case 3:
-                previousState.setActionReward(action, getChargingReward(currentState, (ChargingAction) action));
+                previousState.setActionReward(action, getChargingReward(currentState, (ChargingAction) action), currentState);
                 visitedStates.add(previousState);
                 break;
             case 4:
@@ -213,7 +214,7 @@ public class TaxiGraphRewardFunction implements RewardFunction {
 
         if (destinationProbabilities != null){
             for (Map.Entry<Integer, Double> entry : destinationProbabilities.entrySet()){
-                if (!shiftNotOver(state, tripLengths.get(startInterval).get(state.getNodeId()).get(entry.getKey()))
+                if (!shiftNotOver(state, tripLengths.get(startInterval).get(state.getNodeId()).get(entry.getKey()).longValue())
                         || !notRunOutOfBattery(state, tripConsumptions.get(startInterval).get(state.getNodeId()).get(entry.getKey()).intValue())) {
                     result.add(entry.getValue());
                 }
@@ -263,6 +264,11 @@ public class TaxiGraphRewardFunction implements RewardFunction {
 
 
     private double getAfterPickUpStateReward(TaxiGraphState state, Integer toNodeId){
+        if (state.getAfterTaxiTripStateReward(toNodeId) == null){
+            System.out.println("esds");
+            burlap.mdp.core.action.ActionUtils.allApplicableActionsForTypes(((TaxiGraphTerminalFunction)terminalFunction).getActionTypes(), state);
+        }
+
         return state.getAfterTaxiTripStateReward(toNodeId);
     }
 }

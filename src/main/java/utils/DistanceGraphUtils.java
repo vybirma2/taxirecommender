@@ -160,12 +160,10 @@ public class DistanceGraphUtils {
 
 
     private static double getChargingStationParameters(int fromNodeId, int toNodeId, HashMap<Integer, HashMap<Integer, Double>> parameters){
-        if (parameters.containsKey(toNodeId)){
-            HashMap<Integer, Double> nodes = parameters.get(toNodeId);
-            return nodes.get(fromNodeId);
-        } else if (parameters.containsKey(fromNodeId)){
-            HashMap<Integer, Double> nodes = parameters.get(fromNodeId);
-            return nodes.get(toNodeId);
+        if (parameters.containsKey(toNodeId) && parameters.get(toNodeId).containsKey(fromNodeId)){
+            return parameters.get(toNodeId).get(fromNodeId);
+        } else if (parameters.containsKey(fromNodeId) && parameters.get(fromNodeId).containsKey(toNodeId)){
+            return parameters.get(fromNodeId).get(toNodeId);
         } else {
             throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
         }

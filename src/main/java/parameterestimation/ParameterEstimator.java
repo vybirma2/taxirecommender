@@ -114,7 +114,9 @@ public class ParameterEstimator {
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums = new HashMap<>();
 
         for (TaxiTrip taxiTrip : taxiTrips) {
-            addTripParameter(taxiTrip, result, nums, (double)taxiTrip.getTripLength());
+            if (taxiTrip.getTripLength() != 0){
+                addTripParameter(taxiTrip, result, nums, (double)taxiTrip.getTripLength());
+            }
         }
 
         computeMean(result, nums);
@@ -128,7 +130,9 @@ public class ParameterEstimator {
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums = new HashMap<>();
 
         for (TaxiTrip taxiTrip : taxiTrips){
-            addTripParameter(taxiTrip, result, nums, taxiTrip.getDistance());
+            if (taxiTrip.getTripLength() != 0){
+                addTripParameter(taxiTrip, result, nums, taxiTrip.getDistance());
+            }
         }
 
         computeMean(result, nums);
@@ -143,7 +147,9 @@ public class ParameterEstimator {
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums = new HashMap<>();
 
         for (TaxiTrip taxiTrip : taxiTrips){
-            addTripParameter(taxiTrip, result, nums, (double)taxiTrip.getTripEnergyConsumption());
+            if (taxiTrip.getTripLength() != 0){
+                addTripParameter(taxiTrip, result, nums, (double)taxiTrip.getTripEnergyConsumption());
+            }
         }
 
         computeMean(result, nums);

@@ -143,10 +143,12 @@ public class ParameterEstimationUtils {
                     return timeSortedTaxiTrips;
                 }
 
-                trips.add(taxiTrip);
+                if (afterTripTime(taxiTrip, estimationTime) && beforeTripTime(taxiTrip, estimationTime + Utils.ESTIMATION_EPISODE_LENGTH)){
+                    trips.add(taxiTrip);
+                }
 
             }
-            if (afterTripTime(taxiTrip, Utils.SHIFT_START_TIME + Utils.SHIFT_LENGTH + 1)) {
+            if (afterTripTime(taxiTrip, Utils.SHIFT_START_TIME + Utils.SHIFT_LENGTH)) {
                 break;
             }
         }
@@ -155,12 +157,12 @@ public class ParameterEstimationUtils {
     }
 
 
-    public static boolean beforeTripTime(TaxiTrip taxiTrip, double time){
-        return taxiTrip.getStartDate().getHours() * 60 + taxiTrip.getStartDate().getMinutes() <= time;
+    public static boolean beforeTripTime(TaxiTrip taxiTrip, int time){
+        return taxiTrip.getStartDate().getHours() * 60 + taxiTrip.getStartDate().getMinutes() < time;
     }
 
 
-    public static boolean afterTripTime(TaxiTrip taxiTrip, double time){
+    public static boolean afterTripTime(TaxiTrip taxiTrip, int time){
         return taxiTrip.getStartDate().getHours() * 60 + taxiTrip.getStartDate().getMinutes() >= time;
     }
 }

@@ -82,7 +82,7 @@ public class PickUpPassengerActionType  extends GraphDefinedDomain.GraphActionTy
 
         if (taxiTripLengths.get(startInterval).containsKey(state.getNodeId())){
             if (taxiTripLengths.get(startInterval).get(state.getNodeId()).containsKey(toNodeId)){
-                return applicableInState(state) && shiftNotOver(state, taxiTripLengths.get(startInterval).get(state.getNodeId()).get(toNodeId)) &&
+                return applicableInState(state) && shiftNotOver(state, taxiTripLengths.get(startInterval).get(state.getNodeId()).get(toNodeId).longValue()) &&
                         notRunOutOfBattery(state, taxiTripConsumptions.get(startInterval).get(state.getNodeId()).get(toNodeId).intValue());
             }
         }

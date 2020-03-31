@@ -3,14 +3,9 @@ package domain.actions;
 
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.mdp.core.action.Action;
-import domain.TaxiRecommenderDomainGenerator;
 import domain.states.TaxiGraphState;
 import parameterestimation.EnergyConsumptionEstimator;
-
 import java.util.Objects;
-
-import static domain.actions.ActionUtils.notGoingToChargingPreviously;
-import static domain.actions.ActionUtils.shiftNotOver;
 import static utils.DistanceGraphUtils.getTripTime;
 
 /**
@@ -64,11 +59,6 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
     @Override
     public int getToNodeId() {
         return toNodeId;
-    }
-
-
-    public boolean applicableInState(TaxiGraphState state){
-        return shiftNotOver(state, this.getActionTime(state)) && notGoingToChargingPreviously(state);
     }
 
 

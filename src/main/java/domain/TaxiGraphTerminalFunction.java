@@ -43,4 +43,9 @@ public class TaxiGraphTerminalFunction implements TerminalFunction {
         List<Action> actions = ActionUtils.allApplicableActionsForTypes(this.actionTypes, state);
         return actions.isEmpty();
     }
+
+
+    public List<ActionType> getActionTypes() {
+        return actionTypes;
+    }
 }

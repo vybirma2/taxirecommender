@@ -46,9 +46,9 @@ public class DataSerialization {
         HashMap<Integer, Double> stationDistances = new HashMap<>();
         HashMap<Integer, Double> stationSpeeds = new HashMap<>();
 
-        Set<LinkedList<Integer>> paths = nodes.parallelStream().map(node -> aStar(node.getId(), chargingStation.getRoadNode().getId())).collect(Collectors.toSet());
+        Set<LinkedList<Integer>> paths = nodes.stream().map(node -> aStar(node.getId(), chargingStation.getRoadNode().getId())).collect(Collectors.toSet());
 
-        for (LinkedList<Integer> path :paths){
+        for (LinkedList<Integer> path : paths){
             if (path != null){
                 DistanceSpeedPair distanceSpeedPair = getDistanceSpeedPairOfPath(path);
 

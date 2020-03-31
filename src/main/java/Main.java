@@ -34,13 +34,19 @@ public class Main {
             TaxiGraphHashableFactory hashingFactory = new TaxiGraphHashableFactory();
             SADomain domain = taxiRecommenderDomainGenerator.getDomain();
             ValueIteration planner = new ValueIteration(domain, 0.99, hashingFactory, 0.001, 100);
-            TaxiGraphState initialState = new TaxiGraphState(taxiRecommenderDomainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getId(), 100, Utils.SHIFT_START_TIME);
+            TaxiGraphState initialState = new TaxiGraphState(taxiRecommenderDomainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getId(), 10, Utils.SHIFT_START_TIME);
             planner.performReachabilityFrom(initialState);
 
             ((TaxiGraphRewardFunction)taxiRecommenderDomainGenerator.getRf()).computeRewardForStates(planner.getAllStates());
 
 
-            System.out.println("hgbhb");
+            TaxiGraphState state = initialState;
+            while (state.getMaxNextState() != null){
+                System.out.println(state.getMaxRewardAction().actionName());
+                System.out.println(state.getMaxNextState());
+                System.out.println();
+                state = state.getMaxNextState();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
