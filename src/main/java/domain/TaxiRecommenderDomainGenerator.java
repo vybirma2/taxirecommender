@@ -13,6 +13,7 @@ import domain.actions.*;
 import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.EnvironmentEdge;
 import domain.environmentrepresentation.EnvironmentNode;
+import domain.states.TaxiGraphState;
 import org.json.simple.parser.ParseException;
 import org.nustaq.serialization.FSTObjectInput;
 import parameterestimation.ParameterEstimator;
@@ -50,6 +51,7 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
     private ParameterEstimator parameterEstimator;
     private SADomain domain = null;
+    private TaxiGraphStateModel taxiGraphStateModel;
 
 
     public TaxiRecommenderDomainGenerator(String roadGraphInputFile, String chargingStationsInputFile,
@@ -86,6 +88,7 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
             Map<Integer, Map<Integer, Set<NodeTransitionProbability>>> ctd = this.copyTransitionDynamics();
             TaxiGraphStateModel stateModel = new TaxiGraphStateModel(ctd);
+            this.taxiGraphStateModel = stateModel;
             domain = new SADomain();
 
             addAllActionTypes(domain, ctd);
@@ -242,6 +245,11 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
         AllDistancesSpeedsPair result = (AllDistancesSpeedsPair) in.readObject();
         in.close();
         return result;
+    }
+
+
+    public TaxiGraphStateModel getTaxiGraphStateModel() {
+        return taxiGraphStateModel;
     }
 
 

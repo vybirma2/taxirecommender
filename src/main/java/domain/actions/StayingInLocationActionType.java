@@ -35,7 +35,8 @@ public class StayingInLocationActionType extends GraphDefinedDomain.GraphActionT
         List<Action> actions = new ArrayList<>();
 
         if (this.applicableInState(state)) {
-            actions.add(new StayingInLocationAction(this.aId, STAYING_INTERVAL, ((TaxiGraphState) state).getNodeId()));
+            actions.add(new StayingInLocationAction(this.aId, STAYING_INTERVAL, ((TaxiGraphState) state).getNodeId(),
+                    ((TaxiGraphState) state).getTimeStamp()));
         }
 
         return actions;

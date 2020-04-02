@@ -18,6 +18,8 @@ import utils.Utils;
 import java.util.List;
 
 public class Main {
+
+
     public static void main(String[] args) {
 
         TaxiRecommenderDomainGenerator taxiRecommenderDomainGenerator = null;
@@ -31,13 +33,12 @@ public class Main {
         }
         try {
 
-            TaxiGraphHashableFactory hashingFactory = new TaxiGraphHashableFactory();
             SADomain domain = taxiRecommenderDomainGenerator.getDomain();
-            ValueIteration planner = new ValueIteration(domain, 0.99, hashingFactory, 0.001, 100);
-            TaxiGraphState initialState = new TaxiGraphState(taxiRecommenderDomainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getId(), 10, Utils.SHIFT_START_TIME);
+            MyValueIteration planner = new MyValueIteration(taxiRecommenderDomainGenerator.getTaxiGraphStateModel(), domain.getActionTypes());
+            TaxiGraphState initialState = new TaxiGraphState(taxiRecommenderDomainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getId(), 40, Utils.SHIFT_START_TIME);
             planner.performReachabilityFrom(initialState);
 
-            ((TaxiGraphRewardFunction)taxiRecommenderDomainGenerator.getRf()).computeRewardForStates(planner.getAllStates());
+            ((TaxiGraphRewardFunction)taxiRecommenderDomainGenerator.getRf()).computeRewardForStates(planner.getReachableStates());
 
 
             TaxiGraphState state = initialState;

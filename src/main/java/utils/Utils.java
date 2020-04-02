@@ -7,7 +7,7 @@ import parameterestimation.PragueDataSetReader;
 import java.util.Comparator;
 
 public class Utils {
-    public static final int SHIFT_LENGTH = 6 * 60;
+    public static final int SHIFT_LENGTH = 2 * 60;
     public static final int STAYING_INTERVAL = 10;
 
     public static final String VAR_NODE = "node";
@@ -23,8 +23,8 @@ public class Utils {
 
     public static final int VISIT_INTERVAL = 30;
 
-    public static final int ONE_GRID_CELL_WIDTH = 10000;
-    public static final int ONE_GRID_CELL_HEIGHT = 10000;
+    public static final int ONE_GRID_CELL_WIDTH = 1000;
+    public static final int ONE_GRID_CELL_HEIGHT = 1000;
 
     public static final double MAX_NODE_FITTING_DISTANCE = 0.2;
 

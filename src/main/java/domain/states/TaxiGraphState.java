@@ -1,9 +1,12 @@
 package domain.states;
 
+import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.domain.singleagent.graphdefined.GraphStateNode;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.MutableState;
 import burlap.mdp.core.state.State;
+import domain.actions.ActionTypes;
+
 import java.util.*;
 import static utils.Utils.*;
 
@@ -17,6 +20,8 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
     private int nodeId;
     private int stateOfCharge;
     private int timeStamp;
+
+    private boolean changed = false;
 
     private HashMap<Integer, HashMap<Action, TaxiGraphState>> previousActionStatePairs = new HashMap<>();
 
@@ -118,15 +123,16 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
 
 
     /**
-     * @param actionId
      * @return returning false if given action is the only one to get to this state
      */
-    public boolean isPossibleToDoAction(int actionId){
-        return !previousActionStatePairs.containsKey(actionId) || previousActionStatePairs.size() != 1;
+    public boolean isPossibleToGoToNextLocation(){
+        return !previousActionStatePairs.containsKey(ActionTypes.GOING_TO_CHARGING_STATION.getValue())
+                || previousActionStatePairs.size() != 1;
     }
 
 
     public void addPreviousAction(Action action, int actionId, TaxiGraphState state){
+        this.setChanged(true);
         if (previousActionStatePairs.containsKey(actionId)){
             previousActionStatePairs.get(actionId).put(action, state);
         } else {
@@ -139,6 +145,16 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
 
     public Set<Integer> getPreviousActions(){
         return previousActionStatePairs.keySet();
+    }
+
+
+    public Set<Action> getPreviousActionsOfType (int type){
+        if (previousActionStatePairs.containsKey(type)){
+            return previousActionStatePairs.get(type).keySet();
+        } else {
+            return null;
+        }
+
     }
 
 
@@ -162,8 +178,27 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
     }
 
 
+    public int getMaxRewardActionId() {
+        if (maxRewardAction == null){
+            return Integer.MIN_VALUE;
+        } else {
+            return ((GraphDefinedDomain.GraphActionType.GraphAction)maxRewardAction).aId;
+        }
+    }
+
+
     public boolean isStartingState(){
         return previousActionStatePairs.isEmpty();
+    }
+
+
+    public boolean isChanged() {
+        return changed;
+    }
+
+
+    public void setChanged(boolean changed) {
+        this.changed = changed;
     }
 
 

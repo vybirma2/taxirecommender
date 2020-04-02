@@ -18,6 +18,7 @@ import static utils.Utils.VAR_NODE;
 public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
 
     HashMap<TaxiGraphState, TaxiGraphState> states = new HashMap<>();
+    HashSet<TaxiGraphState> visited = new HashSet<>();
 
 
     public TaxiGraphStateModel(Map<Integer, Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>>> transitionDynamics) {
@@ -44,11 +45,12 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
         setStateProperties(ns, newAction, actionId, toNodeId, this.getResultTimeStamp(state, newAction),
                 this.getResultStateOfCharge(state, newAction), state);
 
-        if (states.containsKey(ns)){
+        if (visited.contains(ns)){
             states.get(ns).addPreviousAction(newAction, actionId, (TaxiGraphState) state);
             return resultTransitions;
         } else {
             states.put((TaxiGraphState)ns, (TaxiGraphState)ns);
+            visited.add((TaxiGraphState)ns);
         }
 
         StateTransitionProb tp = new StateTransitionProb(ns, 1.);
@@ -80,6 +82,7 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
         ((TaxiGraphState) state).set(Utils.VAR_TIMESTAMP, resultTime);
         ((TaxiGraphState) state).set(Utils.VAR_STATE_OF_CHARGE, resultStateOfCharge);
         ((TaxiGraphState) state).addPreviousAction(action, actionId, (TaxiGraphState) previousState);
+        ((TaxiGraphState) state).setChanged(false);
     }
 
 

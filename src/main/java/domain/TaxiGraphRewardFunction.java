@@ -5,6 +5,7 @@ import burlap.mdp.core.action.Action;
 import burlap.mdp.core.action.ActionType;
 import burlap.mdp.core.state.State;
 import burlap.mdp.singleagent.model.RewardFunction;
+import domain.actions.ActionTypes;
 import domain.actions.ActionUtils;
 import domain.actions.ChargingAction;
 import domain.states.TaxiGraphState;
@@ -46,7 +47,7 @@ public class TaxiGraphRewardFunction implements RewardFunction {
      * of state. Setting reward for all reachable states till the first one.
      * @param states all reachable states
      */
-    public void computeRewardForStates(List<State> states){
+    public void computeRewardForStates(Set<State> states){
 
         PriorityQueue<TaxiGraphState> openedSet = getSortedTerminalStates(states);
         HashSet<TaxiGraphState> visited = new HashSet<>(openedSet);
@@ -69,7 +70,7 @@ public class TaxiGraphRewardFunction implements RewardFunction {
     }
 
 
-    private PriorityQueue<TaxiGraphState> getSortedTerminalStates(List<State> states){
+    private PriorityQueue<TaxiGraphState> getSortedTerminalStates(Set<State> states){
         PriorityQueue<TaxiGraphState> terminalStates = new PriorityQueue<>(new TaxiGraphStateComparator());
         for (State state : states){
             if (terminalFunction.isTerminal(state)){
@@ -125,11 +126,15 @@ public class TaxiGraphRewardFunction implements RewardFunction {
                 visitedStates.add(previousState);
                 break;
             case 2:
-                previousState.setActionReward(action, getGoingToChargingStationReward(currentState), currentState);
+                if (currentState.getMaxRewardActionId() != ActionTypes.TO_NEXT_LOCATION.getValue()){
+                    previousState.setActionReward(action, getGoingToChargingStationReward(currentState), currentState);
+                }
                 visitedStates.add(previousState);
                 break;
             case 3:
-                previousState.setActionReward(action, getChargingReward(currentState, (ChargingAction) action), currentState);
+                if (currentState.getMaxRewardActionId() != ActionTypes.CHARGING_IN_CHARGING_STATION.getValue()){
+                    previousState.setActionReward(action, getChargingReward(currentState, (ChargingAction) action), currentState);
+                }
                 visitedStates.add(previousState);
                 break;
             case 4:
@@ -264,11 +269,6 @@ public class TaxiGraphRewardFunction implements RewardFunction {
 
 
     private double getAfterPickUpStateReward(TaxiGraphState state, Integer toNodeId){
-        if (state.getAfterTaxiTripStateReward(toNodeId) == null){
-            System.out.println("esds");
-            burlap.mdp.core.action.ActionUtils.allApplicableActionsForTypes(((TaxiGraphTerminalFunction)terminalFunction).getActionTypes(), state);
-        }
-
         return state.getAfterTaxiTripStateReward(toNodeId);
     }
 }

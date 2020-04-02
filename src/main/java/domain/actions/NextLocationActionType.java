@@ -57,7 +57,7 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
 
     @Override
     protected boolean applicableInState(State state) {
-        return super.applicableInState(state) && notGoingToChargingPreviously(state);
+        return super.applicableInState(state);
     }
 
 

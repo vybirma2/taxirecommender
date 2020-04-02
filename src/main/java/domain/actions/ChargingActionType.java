@@ -57,7 +57,7 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
                     int energyCharged = getEnergyCharged(connection, i * chargingTimeUnit);
                     if (applicableInState(state, i * chargingTimeUnit, energyCharged)){
                         actions.add(new ChargingAction(this.aId, i*chargingTimeUnit, station.getId(),
-                                connection.getId(), ((TaxiGraphState)state).getNodeId(), energyCharged));
+                                connection.getId(), ((TaxiGraphState)state).getNodeId(), energyCharged, ((TaxiGraphState)state).getTimeStamp()));
                     }
                 }
             }
@@ -67,13 +67,13 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
 
 
     private int getEnergyCharged(ChargingConnection connection, double chargingTime){
-        return (int)(((connection.getPowerKW()*(chargingTime/60))/Utils.BATTERY_CAPACITY)*100);
+        return (int)(((connection.getPowerKW()*(chargingTime/60.))/Utils.BATTERY_CAPACITY)*100.);
     }
 
 
     private int timeToFullStateOfCharge(TaxiGraphState state, ChargingConnection connection){
         double currentStateOfChargeInKW = (state.getStateOfCharge()/100.) * Utils.BATTERY_CAPACITY;
-        return (int)((Utils.BATTERY_CAPACITY - currentStateOfChargeInKW)/connection.getPowerKW()*60);
+        return (int)((Utils.BATTERY_CAPACITY - currentStateOfChargeInKW)/connection.getPowerKW()*60.);
     }
 
 

@@ -15,22 +15,12 @@ public class ActionUtils {
 
 
     public static boolean notGoingToChargingPreviously(State state){
-        return ((TaxiGraphState)state).isPossibleToDoAction(ActionTypes.GOING_TO_CHARGING_STATION.getValue());
-    }
-
-
-    public static boolean notChargingInARow(State state){
-        return ((TaxiGraphState)state).isPossibleToDoAction(ActionTypes.CHARGING_IN_CHARGING_STATION.getValue());
+        return ((TaxiGraphState)state).isPossibleToGoToNextLocation();
     }
 
 
     public static boolean shiftNotOver(State state, double actionTime){
         return ((TaxiGraphState)state).getTimeStamp() + actionTime < Utils.SHIFT_LENGTH + SHIFT_START_TIME;
-    }
-
-
-    public static boolean notPickUpPrevious(State state){
-        return ((TaxiGraphState)state).isPossibleToDoAction(ActionTypes.PICK_UP_PASSENGER.getValue())  ;
     }
 
 

@@ -19,17 +19,19 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
     private int connectionId;
     private int energyProduction;
     private int nodeId;
+    private int timeStamp;
     private double cost;
 
 
-    public ChargingAction(int aId, int length, int stationId, int connectionId, int nodeId, int energyProduction) {
+    public ChargingAction(int aId, int length, int stationId, int connectionId, int nodeId, int energyProduction, int timeStamp) {
         super(aId);
         this.length = length;
         this.stationId = stationId;
         this.connectionId = connectionId;
         this.nodeId = nodeId;
         this.energyProduction = energyProduction;
-        this.cost = ChargingStationReader.getChargingConnection(connectionId).getPrizeForKW() * energyProduction;
+        this.cost = ChargingStationReader.getChargingConnection(connectionId).getPrizeForKW() * (Utils.BATTERY_CAPACITY*(energyProduction/100.));
+        this.timeStamp = timeStamp;
     }
 
 
@@ -61,7 +63,7 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
 
     @Override
     public Action copy() {
-        return new ChargingAction(this.aId, length, stationId, connectionId, nodeId, energyProduction);
+        return new ChargingAction(this.aId, length, stationId, connectionId, nodeId, energyProduction, timeStamp);
     }
 
 
@@ -77,7 +79,7 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
      */
     @Override
     public int getActionEnergyConsumption(TaxiGraphState state) {
-        return (int)((energyProduction/Utils.BATTERY_CAPACITY) * 100);
+        return energyProduction;
     }
 
 
@@ -109,6 +111,6 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), length, stationId, connectionId, energyProduction, cost);
+        return Objects.hash(super.hashCode(), length, stationId, connectionId, energyProduction, cost, timeStamp);
     }
 }
