@@ -19,11 +19,11 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
     private int connectionId;
     private int energyProduction;
     private int nodeId;
-    private int timeStamp;
+    //private int timeStamp;
     private double cost;
 
 
-    public ChargingAction(int aId, int length, int stationId, int connectionId, int nodeId, int energyProduction, int timeStamp) {
+    public ChargingAction(int aId, int length, int stationId, int connectionId, int nodeId, int energyProduction) {
         super(aId);
         this.length = length;
         this.stationId = stationId;
@@ -31,7 +31,7 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
         this.nodeId = nodeId;
         this.energyProduction = energyProduction;
         this.cost = ChargingStationReader.getChargingConnection(connectionId).getPrizeForKW() * (Utils.BATTERY_CAPACITY*(energyProduction/100.));
-        this.timeStamp = timeStamp;
+        //this.timeStamp = timeStamp;
     }
 
 
@@ -63,7 +63,7 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
 
     @Override
     public Action copy() {
-        return new ChargingAction(this.aId, length, stationId, connectionId, nodeId, energyProduction, timeStamp);
+        return new ChargingAction(this.aId, length, stationId, connectionId, nodeId, energyProduction);
     }
 
 
@@ -111,6 +111,6 @@ public class ChargingAction extends GraphDefinedDomain.GraphActionType.GraphActi
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), length, stationId, connectionId, energyProduction, cost, timeStamp);
+        return Objects.hash(super.hashCode(), length, stationId, connectionId, energyProduction, cost);
     }
 }

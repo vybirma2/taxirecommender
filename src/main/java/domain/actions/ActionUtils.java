@@ -17,12 +17,12 @@ public class ActionUtils {
     public static boolean notGoingToChargingPreviously(State state){
         return ((TaxiGraphState)state).isPossibleToGoToNextLocation();
     }
-
+/*
 
     public static boolean shiftNotOver(State state, double actionTime){
         return ((TaxiGraphState)state).getTimeStamp() + actionTime < Utils.SHIFT_LENGTH + SHIFT_START_TIME;
     }
-
+*/
 
     public static boolean notOverCharging(State state, double energyCharged){
         return ((TaxiGraphState)state).getStateOfCharge() + energyCharged <= 100;

@@ -15,23 +15,25 @@ import static utils.Utils.*;
  * previous actions and states or maximal possible reward achieved by maxReward action which is computed after generating
  * all possible states
  */
-public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGraphState> {
+public class TaxiGraphState extends GraphStateNode /*implements Comparable<TaxiGraphState>*/ {
 
     private int nodeId;
     private int stateOfCharge;
-    private int timeStamp;
+    //private int timeStamp;
 
-    private boolean changed = false;
+    private boolean startingState = false;
 
     private HashMap<Integer, HashMap<Action, TaxiGraphState>> previousActionStatePairs = new HashMap<>();
+    private PriorityQueue<Integer> previousActionIds = new PriorityQueue<>(Collections.reverseOrder());
 
     private Action maxRewardAction = null;
     private TaxiGraphState maxNextState = null;
     private Double maxReward = null;
+    private HashMap<Action, Double> rewardsForActions = new HashMap<>();
     private HashMap<Integer, Double> afterTaxiTripStateRewards = new HashMap<>();
 
 
-    public TaxiGraphState(int nodeId, int stateOfCharge, int timeStamp) {
+    public TaxiGraphState(int nodeId, int stateOfCharge/*, int timeStamp*/) {
         super(nodeId);
         keys.add(VAR_NODE);
         keys.add(VAR_STATE_OF_CHARGE);
@@ -39,7 +41,20 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
 
         this.nodeId = nodeId;
         this.stateOfCharge = stateOfCharge;
-        this.timeStamp = timeStamp;
+        //this.timeStamp = timeStamp;
+    }
+
+
+    public TaxiGraphState(int nodeId, int stateOfCharge, boolean startingState) {
+        super(nodeId);
+        keys.add(VAR_NODE);
+        keys.add(VAR_STATE_OF_CHARGE);
+        keys.add(VAR_TIMESTAMP);
+
+        this.nodeId = nodeId;
+        this.stateOfCharge = stateOfCharge;
+        this.startingState = startingState;
+        //this.timeStamp = timeStamp;
     }
 
 
@@ -59,13 +74,13 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
                     } else {
                         throw new RuntimeException("Invalid value data type " + value.getClass());
                     }
-                case VAR_TIMESTAMP:
+               /* case VAR_TIMESTAMP:
                     if (value instanceof Integer){
                         this.timeStamp = (int)value;
                         return this;
                     } else {
                         throw new RuntimeException("Invalid value data type " + value.getClass());
-                    }
+                    }*/
                 default:
                     throw new RuntimeException("Invalid key value type " + key);
             }
@@ -77,7 +92,7 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
 
     @Override
     public State copy() {
-        return new TaxiGraphState(this.nodeId, this.stateOfCharge, this.timeStamp);
+        return new TaxiGraphState(this.nodeId, this.stateOfCharge/*, this.timeStamp*/);
     }
 
 
@@ -85,10 +100,10 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
         return stateOfCharge;
     }
 
-
+/*
     public int getTimeStamp() {
         return timeStamp;
-    }
+    }*/
 
 
     public int getNodeId() {
@@ -114,6 +129,7 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
      * @param reward potentially received reward
      */
     public void setActionReward(Action action, Double reward, TaxiGraphState maxNextState) {
+        rewardsForActions.put(action, reward);
         if (maxRewardAction == null || this.maxReward < reward){
             this.maxRewardAction = action;
             this.maxReward = reward;
@@ -132,19 +148,19 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
 
 
     public void addPreviousAction(Action action, int actionId, TaxiGraphState state){
-        this.setChanged(true);
         if (previousActionStatePairs.containsKey(actionId)){
             previousActionStatePairs.get(actionId).put(action, state);
         } else {
             HashMap<Action, TaxiGraphState> map = new HashMap<>();
             map.put(action, state);
             previousActionStatePairs.put(actionId, map);
+            previousActionIds.add(actionId);
         }
     }
 
 
-    public Set<Integer> getPreviousActions(){
-        return previousActionStatePairs.keySet();
+    public PriorityQueue<Integer> getPreviousActions(){
+        return previousActionIds;
     }
 
 
@@ -188,17 +204,7 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
 
 
     public boolean isStartingState(){
-        return previousActionStatePairs.isEmpty();
-    }
-
-
-    public boolean isChanged() {
-        return changed;
-    }
-
-
-    public void setChanged(boolean changed) {
-        this.changed = changed;
+        return startingState;
     }
 
 
@@ -210,7 +216,7 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
     public String toString() {
         return "TaxiGraphState{" +
                 "stateOfCharge=" + stateOfCharge +
-                ", timeStamp=" + timeStamp +
+               // ", timeStamp=" + timeStamp +
                 ", id=" + id +
                 '}';
     }
@@ -222,19 +228,19 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
         if (o == null || getClass() != o.getClass()) return false;
         TaxiGraphState that = (TaxiGraphState) o;
         return nodeId == that.nodeId &&
-                stateOfCharge == that.stateOfCharge &&
-                timeStamp == that.timeStamp;
+                stateOfCharge == that.stateOfCharge;
+                //timeStamp == that.timeStamp;
     }
 
 
     @Override
     public int hashCode() {
-        return Objects.hash(nodeId, stateOfCharge, timeStamp);
+        return Objects.hash(nodeId, stateOfCharge/*, timeStamp */);
     }
 
-
+/*
     @Override
     public int compareTo(TaxiGraphState o) {
         return Integer.compare(o.timeStamp, this.timeStamp);
-    }
+    }*/
 }

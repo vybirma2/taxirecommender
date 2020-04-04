@@ -15,14 +15,14 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
 
     private int toNodeId;
     private int fromNodeId;
-    private int timeStamp;
+   // private int timeStamp;
 
 
-    public GoingToChargingStationAction(int aId, int fromNodeId, int toNodeId, int timeStamp) {
+    public GoingToChargingStationAction(int aId, int fromNodeId, int toNodeId/*, int timeStamp*/) {
         super(aId);
         this.toNodeId = toNodeId;
         this.fromNodeId = fromNodeId;
-        this.timeStamp = timeStamp;
+       // this.timeStamp = timeStamp;
     }
 
 
@@ -34,7 +34,7 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
 
     @Override
     public Action copy() {
-        return new GoingToChargingStationAction(this.aId, this.fromNodeId, this.toNodeId, this.timeStamp);
+        return new GoingToChargingStationAction(this.aId, this.fromNodeId, this.toNodeId/*, this.timeStamp*/);
     }
 
 
@@ -64,7 +64,7 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), fromNodeId, toNodeId, timeStamp);
+        return Objects.hash(super.hashCode(), fromNodeId, toNodeId/*, timeStamp*/);
     }
 
 
@@ -74,7 +74,7 @@ public class GoingToChargingStationAction extends GraphDefinedDomain.GraphAction
         } else if (o != null && this.getClass() == o.getClass()) {
             GoingToChargingStationAction that = (GoingToChargingStationAction)o;
             return this.aId == that.aId
-                    && this.timeStamp == that.timeStamp
+                    /*&& this.timeStamp == that.timeStamp*/
                     && this.fromNodeId == that.fromNodeId
                     && this.toNodeId == that.toNodeId;
         } else {

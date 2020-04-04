@@ -25,13 +25,13 @@ public class TaxiGraphTerminalFunction implements TerminalFunction {
 
     @Override
     public boolean isTerminal(State state) {
-        return shiftOver(state) || runOutOfBattery(state) || noActionAvailable(state);
+        return /*shiftOver(state) ||*/ runOutOfBattery(state) || noActionAvailable(state);
     }
 
-
+/*
     private boolean shiftOver(State state){
        return ((TaxiGraphState)state).getTimeStamp() >= Utils.SHIFT_LENGTH + Utils.SHIFT_START_TIME;
-    }
+    }*/
 
 
     private boolean runOutOfBattery(State state){

@@ -17,9 +17,9 @@ import static utils.DistanceGraphUtils.getIntervalStart;
  */
 public class PickUpPassengerActionType  extends GraphDefinedDomain.GraphActionType {
 
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripLengths;
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripDistances;
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripConsumptions;
+    private /*HashMap<Integer, */HashMap<Integer, HashMap<Integer, Double>>/*>*/ taxiTripLengths;
+    private /*HashMap<Integer, */HashMap<Integer, HashMap<Integer, Double>>/*>*/ taxiTripDistances;
+    private /*HashMap<Integer, */HashMap<Integer, HashMap<Integer, Double>>/*>*/ taxiTripConsumptions;
 
 
     /**
@@ -30,9 +30,9 @@ public class PickUpPassengerActionType  extends GraphDefinedDomain.GraphActionTy
     public PickUpPassengerActionType(int aId, Map<Integer, Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>>> transitionDynamics,
                                      ParameterEstimator parameterEstimator) {
         super(aId, transitionDynamics);
-        taxiTripLengths = parameterEstimator.getTaxiTripLengths();
-        taxiTripConsumptions = parameterEstimator.getTaxiTripConsumptions();
-        taxiTripDistances = parameterEstimator.getTaxiTripDistances();
+        taxiTripLengths = parameterEstimator.getTaxiTripLengthsComplete();
+        taxiTripConsumptions = parameterEstimator.getTaxiTripConsumptionsComplete();
+        taxiTripDistances = parameterEstimator.getTaxiTripDistancesComplete();
     }
 
 
@@ -59,11 +59,11 @@ public class PickUpPassengerActionType  extends GraphDefinedDomain.GraphActionTy
             for (GraphDefinedDomain.NodeTransitionProbability neighbour : transitions){
                 if (this.applicableInState((TaxiGraphState) state, neighbour.transitionTo)){
 
-                    int startInterval = getIntervalStart(((TaxiGraphState)state).getTimeStamp());
+                    //int startInterval = getIntervalStart(((TaxiGraphState)state).getTimeStamp());
                     actions.add(new PickUpPassengerAction(this.aId, node, neighbour.transitionTo,
-                            taxiTripLengths.get(startInterval).get(((TaxiGraphState)state).getNodeId()).get(neighbour.transitionTo).longValue(),
-                            taxiTripConsumptions.get(startInterval).get(((TaxiGraphState)state).getNodeId()).get(neighbour.transitionTo).intValue(),
-                            ((TaxiGraphState)state).getTimeStamp()));
+                            taxiTripLengths/*.get(startInterval)*/.get(((TaxiGraphState)state).getNodeId()).get(neighbour.transitionTo).longValue(),
+                            taxiTripConsumptions/*.get(startInterval)*/.get(((TaxiGraphState)state).getNodeId()).get(neighbour.transitionTo).intValue()/*,
+                            ((TaxiGraphState)state).getTimeStamp()*/));
                 }
             }
         }
@@ -78,12 +78,12 @@ public class PickUpPassengerActionType  extends GraphDefinedDomain.GraphActionTy
 
 
     private boolean applicableInState(TaxiGraphState state, int toNodeId){
-        int startInterval = getIntervalStart(state.getTimeStamp());
+        //int startInterval = getIntervalStart(state.getTimeStamp());
 
-        if (taxiTripLengths.get(startInterval).containsKey(state.getNodeId())){
-            if (taxiTripLengths.get(startInterval).get(state.getNodeId()).containsKey(toNodeId)){
-                return applicableInState(state) && shiftNotOver(state, taxiTripLengths.get(startInterval).get(state.getNodeId()).get(toNodeId).longValue()) &&
-                        notRunOutOfBattery(state, taxiTripConsumptions.get(startInterval).get(state.getNodeId()).get(toNodeId).intValue());
+        if (taxiTripLengths./*get(startInterval).*/containsKey(state.getNodeId())){
+            if (taxiTripLengths./*get(startInterval).*/get(state.getNodeId()).containsKey(toNodeId)){
+                return applicableInState(state) /*&& shiftNotOver(state, taxiTripLengths.get(startInterval).get(state.getNodeId()).get(toNodeId).longValue())*/ &&
+                        notRunOutOfBattery(state, taxiTripConsumptions./*get(startInterval).*/get(state.getNodeId()).get(toNodeId).intValue());
             }
         }
 

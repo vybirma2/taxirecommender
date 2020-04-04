@@ -1,5 +1,7 @@
 package parameterestimation;
 
+import cz.agents.multimodalstructures.nodes.RoadNode;
+
 import java.util.*;
 
 import static utils.DistanceGraphUtils.getIntervalStart;
@@ -19,6 +21,12 @@ public class ParameterEstimator {
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripDistances;
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripConsumptions;
 
+
+    private HashMap<Integer, HashMap<Integer, Double>> taxiTripLengthsComplete;
+    private HashMap<Integer, HashMap<Integer, Double>> taxiTripDistancesComplete;
+    private HashMap<Integer, HashMap<Integer, Double>> taxiTripConsumptionsComplete;
+
+
     private HashMap<Integer, HashMap<Integer, Double>> passengerPickUpProbability;
     private HashMap<Integer, Double> passengerPickUpProbabilityComplete;
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> passengerDestinationProbability;
@@ -34,6 +42,9 @@ public class ParameterEstimator {
         this.taxiTripLengths = computeTaxiTripsLengths();
         this.taxiTripDistances = computeTaxiTripsDistances();
         this.taxiTripConsumptions = computeTaxiTripsConsumptions();
+        this.taxiTripLengthsComplete = computeTaxiTripsLengthsComplete();
+        this.taxiTripDistancesComplete = computeTaxiTripsDistancesComplete();
+        this.taxiTripConsumptionsComplete = computeTaxiTripsConsumptionsComplete();
     }
 
     
@@ -109,6 +120,69 @@ public class ParameterEstimator {
     }
 
 
+    public HashMap<Integer, HashMap<Integer, Double>> getTaxiTripLengthsComplete() {
+        return taxiTripLengthsComplete;
+    }
+
+
+    public HashMap<Integer, HashMap<Integer, Double>> getTaxiTripDistancesComplete() {
+        return taxiTripDistancesComplete;
+    }
+
+
+    public HashMap<Integer, HashMap<Integer, Double>> getTaxiTripConsumptionsComplete() {
+        return taxiTripConsumptionsComplete;
+    }
+
+
+    private HashMap<Integer, HashMap<Integer, Double>> computeTaxiTripsLengthsComplete(){
+        HashMap<Integer, HashMap<Integer, Double>> result = new HashMap<>();
+        HashMap<Integer, HashMap<Integer, Integer>> nums = new HashMap<>();
+
+        for (TaxiTrip taxiTrip : taxiTrips) {
+            if (taxiTrip.getTripLength() != 0){
+                addTripParameterComplete(taxiTrip, result, nums, (double)taxiTrip.getTripLength());
+            }
+        }
+
+        computeMeanComplete(result, nums);
+
+        return result;
+    }
+
+
+    private HashMap<Integer, HashMap<Integer, Double>> computeTaxiTripsDistancesComplete(){
+        HashMap<Integer, HashMap<Integer, Double>> result = new HashMap<>();
+        HashMap<Integer, HashMap<Integer, Integer>> nums = new HashMap<>();
+
+        for (TaxiTrip taxiTrip : taxiTrips) {
+            if (taxiTrip.getTripLength() != 0){
+                addTripParameterComplete(taxiTrip, result, nums, (double)taxiTrip.getDistance());
+            }
+        }
+
+        computeMeanComplete(result, nums);
+
+        return result;
+    }
+
+
+    private HashMap<Integer, HashMap<Integer, Double>> computeTaxiTripsConsumptionsComplete(){
+        HashMap<Integer, HashMap<Integer, Double>> result = new HashMap<>();
+        HashMap<Integer, HashMap<Integer, Integer>> nums = new HashMap<>();
+
+        for (TaxiTrip taxiTrip : taxiTrips) {
+            if (taxiTrip.getTripLength() != 0){
+                addTripParameterComplete(taxiTrip, result, nums, (double)taxiTrip.getTripEnergyConsumption());
+            }
+        }
+
+        computeMeanComplete(result, nums);
+
+        return result;
+    }
+
+
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> computeTaxiTripsLengths(){
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result = new HashMap<>();
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums = new HashMap<>();
@@ -167,6 +241,31 @@ public class ParameterEstimator {
             addExistingIntervalTripParameter(intervalStart, taxiTrip, result, nums, parameter);
         } else {
             addNewIntervalTripParameter(intervalStart, taxiTrip, result, nums, parameter);
+        }
+    }
+
+
+    private void addTripParameterComplete(TaxiTrip taxiTrip, HashMap<Integer, HashMap<Integer, Double>> result,
+                                  HashMap<Integer, HashMap<Integer, Integer>> nums, Double parameter){
+        int fromNode = taxiTrip.getPickUpNode().getId();
+        int toNode = taxiTrip.getDestinationNode().getId();
+        if (result.containsKey(fromNode)) {
+            if (result.get(fromNode).containsKey(toNode)){
+                result.get(fromNode).replace(toNode, result.get(fromNode).get(toNode) + parameter);
+                nums.get(fromNode).replace(toNode, nums.get(fromNode).get(toNode) + 1);
+            } else {
+                result.get(fromNode).put(toNode, parameter);
+                nums.get(fromNode).put(toNode, 1);
+            }
+        } else {
+            HashMap<Integer, Double> res = new HashMap<>();
+            HashMap<Integer, Integer> num = new HashMap<>();
+
+            res.put(toNode, parameter);
+            num.put(toNode, 1);
+
+            result.put(fromNode, res);
+            nums.put(fromNode, num);
         }
     }
 
@@ -243,6 +342,17 @@ public class ParameterEstimator {
                 for (Map.Entry<Integer, Double> value : node.getValue().entrySet()){
                     value.setValue(value.getValue()/nums.get(timeInterval.getKey()).get(node.getKey()).get(value.getKey()));
                 }
+            }
+        }
+    }
+
+
+    private void computeMeanComplete(HashMap<Integer, HashMap<Integer, Double>> result,
+                             HashMap<Integer, HashMap<Integer, Integer>> nums){
+
+        for (Map.Entry<Integer, HashMap<Integer, Double>> node :result.entrySet()){
+            for (Map.Entry<Integer, Double> value : node.getValue().entrySet()){
+                value.setValue(value.getValue()/nums.get(node.getKey()).get(value.getKey()));
             }
         }
     }

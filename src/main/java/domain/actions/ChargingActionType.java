@@ -57,7 +57,7 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
                     int energyCharged = getEnergyCharged(connection, i * chargingTimeUnit);
                     if (applicableInState(state, i * chargingTimeUnit, energyCharged)){
                         actions.add(new ChargingAction(this.aId, i*chargingTimeUnit, station.getId(),
-                                connection.getId(), ((TaxiGraphState)state).getNodeId(), energyCharged, ((TaxiGraphState)state).getTimeStamp()));
+                                connection.getId(), ((TaxiGraphState)state).getNodeId(), energyCharged /* ((TaxiGraphState)state).getTimeStamp()*/));
                     }
                 }
             }
@@ -91,6 +91,6 @@ public class ChargingActionType extends GraphDefinedDomain.GraphActionType {
 
 
     protected boolean applicableInState(State s, double chargingTime, double energyCharged) {
-        return shiftNotOver(s, chargingTime) && notOverCharging(s, energyCharged) && energyCharged > 0;
+        return /*shiftNotOver(s, chargingTime) &&*/ notOverCharging(s, energyCharged) && energyCharged > 0;
     }
 }

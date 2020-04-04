@@ -35,6 +35,11 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
     @Override
     public List<StateTransitionProb> stateTransitions(State state, Action action) {
 
+        if (((TaxiGraphState)state).isStartingState()){
+            visited.add((TaxiGraphState)state);
+            states.put((TaxiGraphState)state, (TaxiGraphState)state);
+        }
+
         List<StateTransitionProb> resultTransitions = new ArrayList<>();
         Action newAction = action.copy();
         State ns = state.copy();
@@ -42,7 +47,7 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
         int toNodeId = ((MeasurableAction)action).getToNodeId();
         int actionId = ((GraphDefinedDomain.GraphActionType.GraphAction)action).aId;
 
-        setStateProperties(ns, newAction, actionId, toNodeId, this.getResultTimeStamp(state, newAction),
+        setStateProperties(ns, newAction, actionId, toNodeId/*, this.getResultTimeStamp(state, newAction)*/,
                 this.getResultStateOfCharge(state, newAction), state);
 
         if (visited.contains(ns)){
@@ -70,26 +75,25 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
         int actionId = ((GraphDefinedDomain.GraphActionType.GraphAction)action).aId;
 
         setStateProperties(state, action,actionId, ((MeasurableAction)action).getToNodeId(),
-                this.getResultTimeStamp(state, action), this.getResultStateOfCharge(state, action), state);
+                /*this.getResultTimeStamp(state, action), */this.getResultStateOfCharge(state, action), state);
 
         return state;
     }
 
 
-    private void setStateProperties(State state, Action action, int actionId, int toNodeId, int resultTime,
+    private void setStateProperties(State state, Action action, int actionId, int toNodeId,/* int resultTime,*/
                                     int resultStateOfCharge ,State previousState){
         ((TaxiGraphState) state).set(VAR_NODE, toNodeId);
-        ((TaxiGraphState) state).set(Utils.VAR_TIMESTAMP, resultTime);
+       // ((TaxiGraphState) state).set(Utils.VAR_TIMESTAMP, resultTime);
         ((TaxiGraphState) state).set(Utils.VAR_STATE_OF_CHARGE, resultStateOfCharge);
         ((TaxiGraphState) state).addPreviousAction(action, actionId, (TaxiGraphState) previousState);
-        ((TaxiGraphState) state).setChanged(false);
     }
 
-
+/*
     private int getResultTimeStamp(State state, Action action){
         return ((MeasurableAction)action).getActionTime((TaxiGraphState) state) + ((TaxiGraphState)state).getTimeStamp();
     }
-
+*/
 
     private int getResultStateOfCharge(State state, Action action){
         return ((MeasurableAction)action).getActionEnergyConsumption((TaxiGraphState)state) + ((TaxiGraphState)state).getStateOfCharge();

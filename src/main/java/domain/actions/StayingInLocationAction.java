@@ -13,13 +13,13 @@ public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.
 
     private int length;
     private int nodeId;
-    private int timeStamp;
+    //private int timeStamp;
 
-    public StayingInLocationAction(int aId, int length, int nodeId, int timeStamp) {
+    public StayingInLocationAction(int aId, int length, int nodeId/*, int timeStamp*/) {
         super(aId);
         this.length = length;
         this.nodeId = nodeId;
-        this.timeStamp = timeStamp;
+       // this.timeStamp = timeStamp;
     }
 
 
@@ -42,7 +42,7 @@ public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.
 
     @Override
     public Action copy() {
-        return new StayingInLocationAction(this.aId, length, getToNodeId(), timeStamp);
+        return new StayingInLocationAction(this.aId, length, getToNodeId()/*, timeStamp*/);
     }
 
 
@@ -69,12 +69,12 @@ public class StayingInLocationAction extends GraphDefinedDomain.GraphActionType.
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         StayingInLocationAction that = (StayingInLocationAction) o;
-        return length == that.length && this.timeStamp == that.timeStamp && this.nodeId == that.nodeId;
+        return length == that.length /*&& this.timeStamp == that.timeStamp*/ && this.nodeId == that.nodeId;
     }
 
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), length, nodeId, timeStamp);
+        return Objects.hash(super.hashCode(), length, nodeId/*, timeStamp*/);
     }
 }

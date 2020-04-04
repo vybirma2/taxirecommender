@@ -35,7 +35,7 @@ public class Main {
 
             SADomain domain = taxiRecommenderDomainGenerator.getDomain();
             MyValueIteration planner = new MyValueIteration(taxiRecommenderDomainGenerator.getTaxiGraphStateModel(), domain.getActionTypes());
-            TaxiGraphState initialState = new TaxiGraphState(taxiRecommenderDomainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getId(), 40, Utils.SHIFT_START_TIME);
+            TaxiGraphState initialState = new TaxiGraphState(taxiRecommenderDomainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getId(), 40/*, Utils.SHIFT_START_TIME*/, true);
             planner.performReachabilityFrom(initialState);
 
             ((TaxiGraphRewardFunction)taxiRecommenderDomainGenerator.getRf()).computeRewardForStates(planner.getReachableStates());
