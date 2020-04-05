@@ -8,6 +8,7 @@ import burlap.mdp.singleagent.model.RewardFunction;
 import domain.actions.ActionTypes;
 import domain.actions.ActionUtils;
 import domain.actions.ChargingAction;
+import domain.states.ActionStatePair;
 import domain.states.TaxiGraphState;
 import domain.states.TaxiGraphStateComparator;
 import parameterestimation.ParameterEstimator;
@@ -98,8 +99,8 @@ public class TaxiGraphRewardFunction implements RewardFunction {
         HashSet<TaxiGraphState> visitedStates = new HashSet<>();
 
         for (Integer actionId : state.getPreviousActions()){
-            for (Map.Entry<Action, TaxiGraphState> entry : state.getPreviousStatesOfAction(actionId).entrySet()){
-                setPreviousStateReward(actionId, visitedStates, entry.getKey(), entry.getValue(), state);
+            for (ActionStatePair pair : state.getPreviousStatesOfAction(actionId)){
+                setPreviousStateReward(actionId, visitedStates, pair.getAction(), pair.getState(), state);
             }
         }
         return visitedStates;
@@ -269,6 +270,11 @@ public class TaxiGraphRewardFunction implements RewardFunction {
 
 
     private double getAfterPickUpStateReward(TaxiGraphState state, Integer toNodeId){
-        return state.getAfterTaxiTripStateReward(toNodeId);
+        Double result = state.getAfterTaxiTripStateReward(toNodeId);
+        if (result == null){
+            return Double.MIN_VALUE;
+        } else {
+            return result;
+        }
     }
 }

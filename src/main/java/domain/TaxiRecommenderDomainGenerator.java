@@ -13,15 +13,11 @@ import domain.actions.*;
 import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.EnvironmentEdge;
 import domain.environmentrepresentation.EnvironmentNode;
-import domain.states.TaxiGraphState;
 import org.json.simple.parser.ParseException;
 import org.nustaq.serialization.FSTObjectInput;
 import parameterestimation.ParameterEstimator;
 import parameterestimation.TaxiTrip;
-import utils.DataSerialization;
-import utils.DistanceGraphUtils;
-import utils.GraphLoader;
-import utils.Utils;
+import utils.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -169,10 +165,9 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
         LOGGER.log(Level.INFO, "Computing shortest paths to charging stations...");
         startTime = System.nanoTime();
-        AllDistancesSpeedsPair allDistancesSpeedsPair = getChargingStationDistancesAndSpeed("distance_speed_" + roadGraphInputFile);
-        DistanceGraphUtils.setChargingStationDistances(allDistancesSpeedsPair.getDistances());
-        DistanceGraphUtils.setChargingStationSpeeds(allDistancesSpeedsPair.getSpeeds());
-        Utils.setChargingStationStateOrder(new DistanceChargingStationStateOrder(allDistancesSpeedsPair.getDistances(), this
+        AllDistancesSpeedsPair allDistancesSpeedsPair = getChargingStationDistanceSpeedTime("distance_speed_" + roadGraphInputFile);
+        DistanceGraphUtils.setChargingStationDistancesSpeedTime(allDistancesSpeedsPair.getDistanceSpeedTime());
+        Utils.setChargingStationStateOrder(new DistanceChargingStationStateOrder(allDistancesSpeedsPair.getDistanceSpeedTime(), this
         .environment.getNodes()));
         stopTime  = System.nanoTime();
         LOGGER.log(Level.INFO, "Computing finished in " + (stopTime - startTime)/1000000000. + "s.");
@@ -234,7 +229,7 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
     }
 
 
-    private AllDistancesSpeedsPair getChargingStationDistancesAndSpeed(String inputFile) throws IOException, ClassNotFoundException {
+    private AllDistancesSpeedsPair getChargingStationDistanceSpeedTime(String inputFile) throws IOException, ClassNotFoundException {
         File file = new File("data/programdata/" + Utils.ONE_GRID_CELL_HEIGHT + "x" + Utils.ONE_GRID_CELL_WIDTH + "_" + inputFile);
 
         if(!file.exists()){

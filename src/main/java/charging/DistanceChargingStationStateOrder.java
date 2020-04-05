@@ -1,9 +1,9 @@
 package charging;
 
 import domain.states.TaxiGraphState;
+import utils.DistanceSpeedPairTime;
 import utils.Utils;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
  */
 public class DistanceChargingStationStateOrder implements ChargingStationStateOrder {
 
-    private HashMap<Integer, HashMap<Integer, Double>> chargingStationDistances;
+    private HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> chargingStationDistanceSpeedTime;
     private HashMap<Integer, List<Integer>> orders;
     private Set<Integer> nodes;
 
 
-    public DistanceChargingStationStateOrder(HashMap<Integer, HashMap<Integer, Double>> chargingStationDistances, Set<Integer> nodes) {
-        this.chargingStationDistances = chargingStationDistances;
+    public DistanceChargingStationStateOrder(HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> chargingStationDistanceSpeedTime, Set<Integer> nodes) {
+        this.chargingStationDistanceSpeedTime = chargingStationDistanceSpeedTime;
         this.nodes = nodes;
         computeOrders();
     }
@@ -35,7 +35,7 @@ public class DistanceChargingStationStateOrder implements ChargingStationStateOr
 
 
     private void computeOrders(){
-        Set<Integer> chargingStations = chargingStationDistances.keySet();
+        Set<Integer> chargingStations = chargingStationDistanceSpeedTime.keySet();
         this.orders = new HashMap<>();
 
         for (Integer node : nodes){

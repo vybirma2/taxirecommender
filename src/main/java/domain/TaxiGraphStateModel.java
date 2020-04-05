@@ -78,11 +78,10 @@ public class TaxiGraphStateModel extends GraphDefinedDomain.GraphStateModel {
 
     private void setStateProperties(State state, Action action, int actionId, int toNodeId, int resultTime,
                                     int resultStateOfCharge ,State previousState){
-        ((TaxiGraphState) state).set(VAR_NODE, toNodeId);
-        ((TaxiGraphState) state).set(Utils.VAR_TIMESTAMP, resultTime);
-        ((TaxiGraphState) state).set(Utils.VAR_STATE_OF_CHARGE, resultStateOfCharge);
+        ((TaxiGraphState) state).setNodeId(toNodeId);
+        ((TaxiGraphState) state).setTimeStamp(resultTime);
+        ((TaxiGraphState) state).setStateOfCharge(resultStateOfCharge);
         ((TaxiGraphState) state).addPreviousAction(action, actionId, (TaxiGraphState) previousState);
-        ((TaxiGraphState) state).setChanged(false);
     }
 
 

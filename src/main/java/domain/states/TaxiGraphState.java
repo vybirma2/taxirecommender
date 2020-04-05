@@ -5,7 +5,6 @@ import burlap.domain.singleagent.graphdefined.GraphStateNode;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.state.MutableState;
 import burlap.mdp.core.state.State;
-import domain.actions.ActionTypes;
 
 import java.util.*;
 import static utils.Utils.*;
@@ -23,7 +22,8 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
 
     private boolean changed = false;
 
-    private HashMap<Integer, HashMap<Action, TaxiGraphState>> previousActionStatePairs = new HashMap<>();
+    private ArrayList[] previousActionStatePairs = new ArrayList[NUM_OF_ACTION_TYPES];
+    private Set<Integer> previousActionsId = new HashSet<>();
 
     private Action maxRewardAction = null;
     private TaxiGraphState maxNextState = null;
@@ -95,6 +95,19 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
         return nodeId;
     }
 
+    public void setNodeId(int nodeId) {
+        super.set(VAR_NODE, nodeId);
+
+        this.nodeId = nodeId;
+    }
+
+    public void setStateOfCharge(int stateOfCharge) {
+        this.stateOfCharge = stateOfCharge;
+    }
+
+    public void setTimeStamp(int timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
     /**
      * @return maximal possible reward which were set during reward computation in reward function
@@ -125,41 +138,42 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
     /**
      * @return returning false if given action is the only one to get to this state
      */
-    public boolean isPossibleToGoToNextLocation(){
+    /*public boolean isPossibleToGoToNextLocation(){
         return !previousActionStatePairs.containsKey(ActionTypes.GOING_TO_CHARGING_STATION.getValue())
                 || previousActionStatePairs.size() != 1;
-    }
+    }*/
 
 
     public void addPreviousAction(Action action, int actionId, TaxiGraphState state){
         this.setChanged(true);
-        if (previousActionStatePairs.containsKey(actionId)){
-            previousActionStatePairs.get(actionId).put(action, state);
+        if (previousActionStatePairs[actionId] != null){
+            previousActionStatePairs[actionId].add(new ActionStatePair(state, action));
         } else {
-            HashMap<Action, TaxiGraphState> map = new HashMap<>();
-            map.put(action, state);
-            previousActionStatePairs.put(actionId, map);
+            ArrayList<ActionStatePair> actionType = new ArrayList<>();
+            actionType.add(new ActionStatePair(state, action));
+            previousActionStatePairs[actionId] = actionType;
+            previousActionsId.add(actionId);
         }
     }
 
 
     public Set<Integer> getPreviousActions(){
-        return previousActionStatePairs.keySet();
+        return previousActionsId;
     }
 
 
-    public Set<Action> getPreviousActionsOfType (int type){
-        if (previousActionStatePairs.containsKey(type)){
-            return previousActionStatePairs.get(type).keySet();
+  /*  public ArrayList<ActionStatePair> getPreviousActionsOfType (int type){
+        if (previousActionStatePairs.get(type) != null){
+            return previousActionStatePairs.get(type);
         } else {
             return null;
         }
 
     }
+*/
 
-
-    public HashMap<Action, TaxiGraphState> getPreviousStatesOfAction(int actionId){
-        return previousActionStatePairs.get(actionId);
+    public ArrayList<ActionStatePair> getPreviousStatesOfAction(int actionId){
+        return previousActionStatePairs[actionId];
     }
 
 
@@ -188,7 +202,7 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
 
 
     public boolean isStartingState(){
-        return previousActionStatePairs.isEmpty();
+        return previousActionsId.isEmpty();
     }
 
 

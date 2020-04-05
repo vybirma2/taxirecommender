@@ -8,7 +8,15 @@ import java.util.Set;
 public abstract class EnvironmentEdge extends RoadEdge {
 
 
-    public EnvironmentEdge(int fromId, int toId, long wayID, Set<ModeOfTransport> permittedModes, float allowedMaxSpeedInMpS, int lengthInMetres, int category) {
+    private int time;
+    public EnvironmentEdge(int fromId, int toId, long wayID, Set<ModeOfTransport> permittedModes,
+                           float allowedMaxSpeedInMpS, int lengthInMetres, int category, int time) {
         super(fromId, toId, wayID, permittedModes, allowedMaxSpeedInMpS, lengthInMetres, category);
+        this.time = time;
+    }
+
+
+    public int getTime() {
+        return time;
     }
 }

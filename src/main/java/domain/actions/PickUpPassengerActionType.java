@@ -18,7 +18,9 @@ import static utils.DistanceGraphUtils.getIntervalStart;
 public class PickUpPassengerActionType  extends GraphDefinedDomain.GraphActionType {
 
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripLengths;
+/*
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripDistances;
+*/
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripConsumptions;
 
 
@@ -32,7 +34,7 @@ public class PickUpPassengerActionType  extends GraphDefinedDomain.GraphActionTy
         super(aId, transitionDynamics);
         taxiTripLengths = parameterEstimator.getTaxiTripLengths();
         taxiTripConsumptions = parameterEstimator.getTaxiTripConsumptions();
-        taxiTripDistances = parameterEstimator.getTaxiTripDistances();
+        /*taxiTripDistances = parameterEstimator.getTaxiTripDistances();*/
     }
 
 

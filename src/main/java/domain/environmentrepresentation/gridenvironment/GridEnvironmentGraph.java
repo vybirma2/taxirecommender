@@ -5,7 +5,8 @@ import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.environmentrepresentation.EnvironmentGraph;
-import utils.DistanceSpeedPair;
+import utils.DistanceGraphUtils;
+import utils.DistanceSpeedPairTime;
 import utils.Utils;
 
 import java.io.Serializable;
@@ -75,9 +76,11 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
             for (Integer neighbour : nodes.get(entry.getKey()).getNeighbours()){
 
                 if (!entry.getKey().equals(neighbour)){
-                    DistanceSpeedPair distanceSpeedPair = getDistancesAndSpeedBetweenNodesInGrid(entry.getKey(), neighbour);
-                    nodeEdges.put(neighbour, new GridEnvironmentEdge(entry.getKey(), neighbour, (float) (distanceSpeedPair.getSpeed()/3.6),
-                            (int)(distanceSpeedPair.getDistance() * 1000) ));
+                    DistanceSpeedPairTime distanceSpeedPairTime = getDistancesAndSpeedBetweenNodesInGrid(entry.getKey(), neighbour);
+                    double distance = (distanceSpeedPairTime.getDistance());
+                    float speed = (float) (distanceSpeedPairTime.getSpeed());
+                    nodeEdges.put(neighbour, new GridEnvironmentEdge(entry.getKey(), neighbour, speed,
+                            (int)(distance * 1000), DistanceGraphUtils.getTripTime(distance, speed)));
                 }
             }
             edges.put(node.getId(), nodeEdges);
@@ -85,7 +88,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
     }
 
 
-    private DistanceSpeedPair getDistancesAndSpeedBetweenNodesInGrid(int fromNodeId, int toNodeId){
+    private DistanceSpeedPairTime getDistancesAndSpeedBetweenNodesInGrid(int fromNodeId, int toNodeId){
         LinkedList<Integer> nodePath = aStar(fromNodeId, toNodeId);
 
         if (nodePath != null){

@@ -48,11 +48,13 @@ public class FullEnvironmentGraph extends EnvironmentGraph<FullEnvironmentNode, 
         for (RoadEdge edge : osmGraph.getAllEdges()){
             if (edges.containsKey(edge.fromId)){
                 edges.get(edge.fromId).put(edge.toId, new FullEnvironmentEdge(edge.fromId, edge.toId,edge.wayID,
-                        edge.getPermittedModes(), edge.allowedMaxSpeedInMpS, edge.length, edge.getCategory()));
+                        edge.getPermittedModes(), edge.allowedMaxSpeedInMpS, edge.length, edge.getCategory(),
+                        DistanceGraphUtils.getTripTime(edge.length, edge.allowedMaxSpeedInMpS)));
             } else {
                 HashMap<Integer, FullEnvironmentEdge> nodeEdges = new HashMap<>();
                 nodeEdges.put(edge.toId, new FullEnvironmentEdge(edge.fromId, edge.toId,edge.wayID,
-                        edge.getPermittedModes(), edge.allowedMaxSpeedInMpS, edge.length, edge.getCategory()));
+                        edge.getPermittedModes(), edge.allowedMaxSpeedInMpS, edge.length, edge.getCategory(),
+                        DistanceGraphUtils.getTripTime(edge.length, edge.allowedMaxSpeedInMpS)));
                 edges.put(edge.fromId, nodeEdges);
             }
         }

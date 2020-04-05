@@ -1,5 +1,7 @@
 package domain;
 
+import utils.DistanceSpeedPairTime;
+
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -8,32 +10,14 @@ import java.util.HashMap;
  */
 public class AllDistancesSpeedsPair implements Serializable {
 
-    private HashMap<Integer, HashMap<Integer, Double>> distances;
-    private HashMap<Integer, HashMap<Integer, Double>> speeds;
+    private HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> distanceSpeedTime;
 
 
-    public AllDistancesSpeedsPair(HashMap<Integer, HashMap<Integer, Double>> distances, HashMap<Integer, HashMap<Integer, Double>> speeds) {
-        this.distances = distances;
-        this.speeds = speeds;
+    public AllDistancesSpeedsPair(HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> distanceSpeedTime) {
+        this.distanceSpeedTime = distanceSpeedTime;
     }
 
-
-    public HashMap<Integer, HashMap<Integer, Double>> getDistances() {
-        return distances;
-    }
-
-
-    public void setDistances(HashMap<Integer, HashMap<Integer, Double>> distances) {
-        this.distances = distances;
-    }
-
-
-    public HashMap<Integer, HashMap<Integer, Double>> getSpeeds() {
-        return speeds;
-    }
-
-
-    public void setSpeeds(HashMap<Integer, HashMap<Integer, Double>> speeds) {
-        this.speeds = speeds;
+    public HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> getDistanceSpeedTime() {
+        return distanceSpeedTime;
     }
 }

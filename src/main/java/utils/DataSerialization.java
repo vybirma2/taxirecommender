@@ -2,11 +2,9 @@ package utils;
 
 import charging.ChargingStation;
 import domain.AllDistancesSpeedsPair;
-import domain.actions.ChargingAction;
 import domain.environmentrepresentation.EnvironmentNode;
 import org.nustaq.serialization.FSTObjectOutput;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
@@ -26,51 +24,48 @@ public class DataSerialization {
      */
     public static void serializeChargingStationDistancesAndSpeed(List<ChargingStation> chargingStations,
                                                                  Collection<? extends EnvironmentNode> nodes, String fileName) throws IOException {
-        HashMap<Integer, HashMap<Integer, Double>> resultDistances = new HashMap<>();
-        HashMap<Integer, HashMap<Integer, Double>> resultSpeeds = new HashMap<>();
+        HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> resultDistanceSpeedTime = new HashMap<>();
 
         for (ChargingStation chargingStation : chargingStations) {
-            addDistancesAndSpeedsToChargingStation(chargingStation, nodes, resultDistances, resultSpeeds);
+            addDistancesAndSpeedsToChargingStation(chargingStation, nodes, resultDistanceSpeedTime);
         }
 
-        serializeData(fileName, resultDistances, resultSpeeds);
+        serializeData(fileName, resultDistanceSpeedTime);
     }
 
 
     private static void addDistancesAndSpeedsToChargingStation(ChargingStation chargingStation,
                                                                Collection<? extends EnvironmentNode> nodes,
-                                                               HashMap<Integer, HashMap<Integer, Double>> resultDistances,
-                                                               HashMap<Integer, HashMap<Integer, Double>> resultSpeeds
-                                                               ){
+                                                               HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> resultDistanceSpeedTime){
 
-        HashMap<Integer, Double> stationDistances = new HashMap<>();
-        HashMap<Integer, Double> stationSpeeds = new HashMap<>();
+        HashMap<Integer, DistanceSpeedPairTime> stationDistanceSpeedTime = new HashMap<>();
 
         Set<LinkedList<Integer>> paths = nodes.stream().map(node -> aStar(node.getId(), chargingStation.getRoadNode().getId())).collect(Collectors.toSet());
 
         for (LinkedList<Integer> path : paths){
             if (path != null){
-                DistanceSpeedPair distanceSpeedPair = getDistanceSpeedPairOfPath(path);
+                DistanceSpeedPairTime distanceSpeedPairTime = getDistanceSpeedPairOfPath(path);
 
-                stationDistances.put(path.getFirst(), distanceSpeedPair.getDistance());
-                stationSpeeds.put(path.getFirst(), distanceSpeedPair.getSpeed());
+                double distance = distanceSpeedPairTime.getDistance();
+                double speed = distanceSpeedPairTime.getSpeed();
+                int time = distanceSpeedPairTime.getTime();
+
+                stationDistanceSpeedTime.put(path.getFirst(), new DistanceSpeedPairTime(distance, speed, time));
 
             } else {
                 throw new IllegalArgumentException("No connection between node: " + path.getFirst() + " and node: " + chargingStation.getId());
             }
         }
 
-        resultDistances.put(chargingStation.getRoadNode().getId(), stationDistances);
-        resultSpeeds.put(chargingStation.getRoadNode().getId(), stationSpeeds);
+        resultDistanceSpeedTime.put(chargingStation.getRoadNode().getId(), stationDistanceSpeedTime);
     }
 
 
     private static void serializeData(String fileName,
-                                      HashMap<Integer, HashMap<Integer, Double>> resultDistances,
-                                      HashMap<Integer, HashMap<Integer, Double>> resultSpeeds) throws IOException {
+                                      HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> resultDistanceSpeedTime) throws IOException {
 
         FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(fileName));
-        out.writeObject( new AllDistancesSpeedsPair(resultDistances, resultSpeeds) );
+        out.writeObject(new AllDistancesSpeedsPair(resultDistanceSpeedTime));
         out.close();
     }
 }

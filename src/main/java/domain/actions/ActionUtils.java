@@ -14,9 +14,9 @@ import static utils.Utils.*;
 public class ActionUtils {
 
 
-    public static boolean notGoingToChargingPreviously(State state){
+    /*public static boolean notGoingToChargingPreviously(State state){
         return ((TaxiGraphState)state).isPossibleToGoToNextLocation();
-    }
+    }*/
 
 
     public static boolean shiftNotOver(State state, double actionTime){
