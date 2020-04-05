@@ -20,6 +20,7 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
     private int stateOfCharge;
     private int timeStamp;
 
+
     private boolean changed = false;
 
     private ArrayList[] previousActionStatePairs = new ArrayList[NUM_OF_ACTION_TYPES];
