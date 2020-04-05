@@ -19,6 +19,7 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
     private int stateOfCharge;
     private int timeStamp;
 
+
     private boolean changed = false;
 
     private ArrayList<ArrayList<ActionStatePair>> previousActionStatePairs = new ArrayList<>(NUM_OF_ACTION_TYPES);
