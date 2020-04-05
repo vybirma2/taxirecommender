@@ -46,7 +46,7 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
         if (transitions != null){
             for (GraphDefinedDomain.NodeTransitionProbability neighbour : transitions){
                 if (this.applicableInState((TaxiGraphState) state, neighbour.transitionTo)){
-                    actions.add(new NextLocationAction(this.aId, node, neighbour.transitionTo, ((TaxiGraphState)state).getTimeStamp()));
+                    actions.add(new NextLocationAction(this.aId, node, neighbour.transitionTo/*, ((TaxiGraphState)state).getTimeStamp()*/));
                 }
             }
         }
@@ -67,7 +67,7 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
 
 
     private boolean applicableInState(TaxiGraphState state, int toNodeId){
-        return applicableInState(state) && shiftNotOver(state, this.getActionTime(state, toNodeId)) &&
+        return applicableInState(state) /*&& shiftNotOver(state, this.getActionTime(state, toNodeId)) */&&
                 notRunOutOfBattery(state, toNodeId, getActionTime(state, toNodeId));
     }
 }

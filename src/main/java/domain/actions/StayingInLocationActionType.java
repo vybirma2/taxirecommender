@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static utils.Utils.STAYING_INTERVAL;
-import static domain.actions.ActionUtils.shiftNotOver;
 
 /**
  * Class with the main purpose of returning all available actions of staying in some node in the environment.
@@ -35,8 +34,8 @@ public class StayingInLocationActionType extends GraphDefinedDomain.GraphActionT
         List<Action> actions = new ArrayList<>();
 
         if (this.applicableInState(state)) {
-            actions.add(new StayingInLocationAction(this.aId, STAYING_INTERVAL, ((TaxiGraphState) state).getNodeId(),
-                    ((TaxiGraphState) state).getTimeStamp()));
+            actions.add(new StayingInLocationAction(this.aId, STAYING_INTERVAL, ((TaxiGraphState) state).getNodeId()/*,
+                    ((TaxiGraphState) state).getTimeStamp()*/));
         }
 
         return actions;
@@ -45,6 +44,6 @@ public class StayingInLocationActionType extends GraphDefinedDomain.GraphActionT
 
     @Override
     protected boolean applicableInState(State s) {
-        return shiftNotOver(s, STAYING_INTERVAL) && super.applicableInState(s);
+        return/* shiftNotOver(s, STAYING_INTERVAL) &&*/ super.applicableInState(s);
     }
 }
