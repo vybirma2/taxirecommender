@@ -17,14 +17,14 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
 
     private int fromNodeId;
     private int toNodeId;
-    private int timeStamp;
+    /*private int timeStamp;*/
 
 
-    public NextLocationAction(int aId, int fromNodeId, int toNodeId, int timeStamp) {
+    public NextLocationAction(int aId, int fromNodeId, int toNodeId/*, int timeStamp*/) {
         super(aId);
         this.toNodeId = toNodeId;
         this.fromNodeId = fromNodeId;
-        this.timeStamp = timeStamp;
+        //this.timeStamp = timeStamp;
     }
 
 
@@ -42,7 +42,7 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
 
     @Override
     public Action copy() {
-        return new NextLocationAction(this.aId,fromNodeId, toNodeId, timeStamp);
+        return new NextLocationAction(this.aId,fromNodeId, toNodeId/*, timeStamp*/);
     }
 
 
@@ -60,7 +60,7 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(),fromNodeId, toNodeId, timeStamp);
+        return Objects.hash(super.hashCode(),fromNodeId, toNodeId/*, timeStamp*/);
     }
 
 
@@ -76,7 +76,7 @@ public class NextLocationAction extends GraphDefinedDomain.GraphActionType.Graph
         } else if (o != null && this.getClass() == o.getClass()) {
             NextLocationAction that = (NextLocationAction)o;
             return this.aId == that.aId
-                    && this.timeStamp == that.timeStamp
+                    /*&& this.timeStamp == that.timeStamp*/
                     && this.fromNodeId == that.fromNodeId
                     && this.toNodeId == that.toNodeId;
         } else {

@@ -11,20 +11,20 @@ import java.util.Objects;
  */
 public class PickUpPassengerAction extends GraphDefinedDomain.GraphActionType.GraphAction implements MeasurableAction  {
 
-    private int timeStamp;
+   // private int timeStamp;
     private int fromNodeId;
     private int toNodeId;
     private long actionTime;
     private int energyConsumption;
 
 
-    public PickUpPassengerAction(int aId, int fromNodeId, int toNodeId, long actionTime, int energyConsumption, int timeStamp) {
+    public PickUpPassengerAction(int aId, int fromNodeId, int toNodeId, long actionTime, int energyConsumption/*, int timeStamp*/) {
         super(aId);
         this.fromNodeId = fromNodeId;
         this.toNodeId = toNodeId;
         this.actionTime = actionTime;
         this.energyConsumption = energyConsumption;
-        this.timeStamp = timeStamp;
+      //  this.timeStamp = timeStamp;
     }
 
 
@@ -42,7 +42,7 @@ public class PickUpPassengerAction extends GraphDefinedDomain.GraphActionType.Gr
 
     @Override
     public Action copy() {
-        return new PickUpPassengerAction(this.aId, fromNodeId, toNodeId, actionTime, energyConsumption, timeStamp);
+        return new PickUpPassengerAction(this.aId, fromNodeId, toNodeId, actionTime, energyConsumption/*, timeStamp*/);
     }
 
 
@@ -66,7 +66,7 @@ public class PickUpPassengerAction extends GraphDefinedDomain.GraphActionType.Gr
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), fromNodeId, toNodeId, actionTime, energyConsumption, timeStamp);
+        return Objects.hash(super.hashCode(), fromNodeId, toNodeId, actionTime, energyConsumption/*, timeStamp*/);
     }
 
     public boolean equals(Object o) {
@@ -79,7 +79,7 @@ public class PickUpPassengerAction extends GraphDefinedDomain.GraphActionType.Gr
                     && this.toNodeId == that.toNodeId
                     && this.energyConsumption == that.energyConsumption
                     && this.fromNodeId == that.fromNodeId
-                    && this.timeStamp == that.timeStamp;
+                   /* && this.timeStamp == that.timeStamp*/;
         } else {
             return false;
         }

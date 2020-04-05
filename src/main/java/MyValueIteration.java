@@ -1,13 +1,9 @@
 
-import burlap.behavior.singleagent.planning.stochastic.DynamicProgramming;
-import burlap.debugtools.DPrint;
 import burlap.mdp.core.StateTransitionProb;
 import burlap.mdp.core.action.Action;
 import burlap.mdp.core.action.ActionType;
 import burlap.mdp.core.action.ActionUtils;
 import burlap.mdp.core.state.State;
-import burlap.mdp.singleagent.SADomain;
-import burlap.statehashing.HashableStateFactory;
 import domain.TaxiGraphStateModel;
 
 import java.util.HashSet;
