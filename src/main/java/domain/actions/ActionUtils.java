@@ -1,11 +1,9 @@
 package domain.actions;
 
-import burlap.mdp.core.state.State;
 import utils.Utils;
 import domain.states.TaxiGraphState;
 
 import static parameterestimation.EnergyConsumptionEstimator.getActionEnergyConsumption;
-import static utils.DistanceGraphUtils.getDistanceBetweenNodes;
 import static utils.Utils.*;
 
 /**
@@ -19,28 +17,28 @@ public class ActionUtils {
     }*/
 
 
-    public static boolean shiftNotOver(State state, double actionTime){
-        return ((TaxiGraphState)state).getTimeStamp() + actionTime < Utils.SHIFT_LENGTH + SHIFT_START_TIME;
+    public static boolean shiftNotOver(TaxiGraphState state, double actionTime){
+        return state.getTimeStamp() + actionTime < Utils.SHIFT_LENGTH + SHIFT_START_TIME;
     }
 
 
-    public static boolean notOverCharging(State state, double energyCharged){
-        return ((TaxiGraphState)state).getStateOfCharge() + energyCharged <= 100;
+    public static boolean notOverCharging(TaxiGraphState state, double energyCharged){
+        return state.getStateOfCharge() + energyCharged <= 100;
     }
 
 
-    public static boolean notChargedALot(State state){
-        return ((TaxiGraphState)state).getStateOfCharge() < MINIMAL_CHARGING_STATE_OF_CHARGE;
+    public static boolean notChargedALot(int stateOfCharge){
+        return stateOfCharge < MINIMAL_CHARGING_STATE_OF_CHARGE;
     }
 
 
-    public static boolean notRunOutOfBattery(State state, int toNodeId, double actionTime){
-        return ((TaxiGraphState)state).getStateOfCharge() + getActionEnergyConsumption((TaxiGraphState) state, toNodeId, actionTime) > 0;
+    public static boolean notRunOutOfBattery(TaxiGraphState state, int toNodeId, double actionTime){
+        return state.getStateOfCharge() + getActionEnergyConsumption(state.getNodeId(), toNodeId) > 0;
     }
 
 
-    public static boolean notRunOutOfBattery(State state, int energyConsumption){
-        return ((TaxiGraphState)state).getStateOfCharge() + energyConsumption > 0;
+    public static boolean notRunOutOfBattery(TaxiGraphState state, int energyConsumption){
+        return state.getStateOfCharge() + energyConsumption > 0;
     }
 
 

@@ -1,32 +1,21 @@
 package domain.actions;
 
-import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
-import burlap.mdp.core.action.Action;
-import burlap.mdp.core.state.State;
 import domain.states.TaxiGraphState;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import static domain.actions.ActionTypes.TO_NEXT_LOCATION;
 import static domain.actions.ActionUtils.*;
 import static utils.DistanceGraphUtils.getTripTime;
 
 /**
  * Class with the main purpose of returning all available actions of moving to the neighbouring node in the environment.
  */
-public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
+public class NextLocationActionType extends TaxiActionType {
 
 
-    public NextLocationActionType(int aId, Map<Integer, Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>>> transitionDynamics) {
-        super(aId, transitionDynamics);
-    }
-
-
-    @Override
-    public String typeName() {
-        return ActionTypes.TO_NEXT_LOCATION.getName();
+    public NextLocationActionType(int actionId, HashMap<Integer, ArrayList<Integer>> transitions) {
+        super(actionId, transitions);
     }
 
 
@@ -36,28 +25,27 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
      * in TaxiRecommenderDomainGenerator - check on applicability - not running out of time/battery...
      */
     @Override
-    public List<Action> allApplicableActions(State state) {
-        List<Action> actions = new ArrayList<>();
+    public List<MeasurableAction> allApplicableActions(TaxiGraphState state) {
+        List<MeasurableAction> actions = new ArrayList<>();
 
-        int node = (Integer)state.get("node");
-        Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>> actionMap = this.transitionDynamics.get(node);
-        Set<GraphDefinedDomain.NodeTransitionProbability> transitions = actionMap.get(this.aId);
+        ArrayList<Integer> trans = transitions.get(state.getNodeId());
 
-        if (transitions != null){
-            for (GraphDefinedDomain.NodeTransitionProbability neighbour : transitions){
-                if (this.applicableInState((TaxiGraphState) state, neighbour.transitionTo)){
-                    actions.add(new NextLocationAction(this.aId, node, neighbour.transitionTo/*, ((TaxiGraphState)state).getTimeStamp()*/));
+        if (trans != null){
+            for (int neighbour : trans){
+                if (this.applicableInState(state, neighbour)){
+                    actions.add(new NextLocationAction(this.actionId, state.getNodeId(), neighbour, state.getTimeStamp()));
                 }
             }
         }
+
 
         return actions;
     }
 
 
     @Override
-    protected boolean applicableInState(State state) {
-        return super.applicableInState(state);
+    protected boolean applicableInState(TaxiGraphState state) {
+        return transitions.containsKey(state.getNodeId());
     }
 
 
@@ -67,7 +55,7 @@ public class NextLocationActionType extends GraphDefinedDomain.GraphActionType {
 
 
     private boolean applicableInState(TaxiGraphState state, int toNodeId){
-        return applicableInState(state) /*&& shiftNotOver(state, this.getActionTime(state, toNodeId)) */&&
+        return applicableInState(state) && shiftNotOver(state, this.getActionTime(state, toNodeId)) &&
                 notRunOutOfBattery(state, toNodeId, getActionTime(state, toNodeId));
     }
 }

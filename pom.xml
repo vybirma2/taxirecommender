@@ -55,14 +55,7 @@
             <artifactId>multimodal-structures</artifactId>
             <version>2.3</version>
         </dependency>
-
-
-        <!--BURLAP dependencies-->
-        <dependency>
-            <groupId>edu.brown.cs.burlap</groupId>
-            <artifactId>burlap</artifactId>
-            <version>3.0.1</version>
-        </dependency>
+        
 
         <!--json dependencies-->
         <dependency>

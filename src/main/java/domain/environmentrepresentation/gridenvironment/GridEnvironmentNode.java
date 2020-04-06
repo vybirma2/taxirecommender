@@ -5,7 +5,6 @@ import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.environmentrepresentation.EnvironmentNode;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
 /**

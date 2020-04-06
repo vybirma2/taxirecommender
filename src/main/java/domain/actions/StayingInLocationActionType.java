@@ -1,41 +1,30 @@
 package domain.actions;
 
-import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
-import burlap.mdp.core.action.Action;
-import burlap.mdp.core.state.State;
 import domain.states.TaxiGraphState;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static utils.Utils.STAYING_INTERVAL;
+import static domain.actions.ActionUtils.shiftNotOver;
 
 /**
  * Class with the main purpose of returning all available actions of staying in some node in the environment.
  */
-public class StayingInLocationActionType extends GraphDefinedDomain.GraphActionType {
+public class StayingInLocationActionType extends TaxiActionType {
 
 
-    public StayingInLocationActionType(int aId, Map<Integer, Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>>> transitionDynamics) {
-        super(aId, transitionDynamics);
+    public StayingInLocationActionType(int aId, HashMap<Integer, ArrayList<Integer>> transitions) {
+        super(aId, transitions);
     }
 
 
     @Override
-    public String typeName() {
-        return ActionTypes.STAYING_IN_LOCATION.getName();
-    }
-
-
-    @Override
-    public List<Action> allApplicableActions(State state) {
-        List<Action> actions = new ArrayList<>();
+    public List<MeasurableAction> allApplicableActions(TaxiGraphState state) {
+        List<MeasurableAction> actions = new ArrayList<>();
 
         if (this.applicableInState(state)) {
-            actions.add(new StayingInLocationAction(this.aId, STAYING_INTERVAL, ((TaxiGraphState) state).getNodeId()/*,
-                    ((TaxiGraphState) state).getTimeStamp()*/));
+            actions.add(new StayingInLocationAction(this.actionId, state.getNodeId(), state.getNodeId(),
+                    state.getTimeStamp(), STAYING_INTERVAL, 0));
         }
 
         return actions;
@@ -43,7 +32,7 @@ public class StayingInLocationActionType extends GraphDefinedDomain.GraphActionT
 
 
     @Override
-    protected boolean applicableInState(State s) {
-        return/* shiftNotOver(s, STAYING_INTERVAL) &&*/ super.applicableInState(s);
+    boolean applicableInState(TaxiGraphState state) {
+        return transitions.containsKey(state.getNodeId()) && shiftNotOver(state, STAYING_INTERVAL);
     }
 }

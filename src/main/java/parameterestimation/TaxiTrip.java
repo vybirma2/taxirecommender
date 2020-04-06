@@ -1,7 +1,6 @@
 package parameterestimation;
 
 import cz.agents.multimodalstructures.nodes.RoadNode;
-import domain.actions.ActionUtils;
 import domain.environmentrepresentation.EnvironmentNode;
 
 import java.io.Serializable;

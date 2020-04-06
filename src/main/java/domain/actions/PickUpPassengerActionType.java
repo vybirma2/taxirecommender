@@ -1,8 +1,5 @@
 package domain.actions;
 
-import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
-import burlap.mdp.core.action.Action;
-import burlap.mdp.core.state.State;
 import domain.states.TaxiGraphState;
 import parameterestimation.ParameterEstimator;
 
@@ -15,33 +12,22 @@ import static utils.DistanceGraphUtils.getIntervalStart;
 /**
  * Class with the main purpose of returning all available actions of picking up passenger in some node in the environment.
  */
-public class PickUpPassengerActionType  extends GraphDefinedDomain.GraphActionType {
+public class PickUpPassengerActionType  extends TaxiActionType {
 
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripLengths;
-/*
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripDistances;
-*/
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripConsumptions;
 
 
     /**
-     * @param aId
-     * @param transitionDynamics
      * @param parameterEstimator used parameter estimator to get passenger trips information - trip lengths, consumptions...
      */
-    public PickUpPassengerActionType(int aId, Map<Integer, Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>>> transitionDynamics,
-                                     ParameterEstimator parameterEstimator) {
-        super(aId, transitionDynamics);
+    public PickUpPassengerActionType(int actionId, HashMap<Integer, ArrayList<Integer>> transitions, ParameterEstimator parameterEstimator) {
+        super(actionId, transitions);
         taxiTripLengths = parameterEstimator.getTaxiTripLengths();
         taxiTripConsumptions = parameterEstimator.getTaxiTripConsumptions();
-        /*taxiTripDistances = parameterEstimator.getTaxiTripDistances();*/
     }
 
 
-    @Override
-    public String typeName() {
-        return ActionTypes.PICK_UP_PASSENGER.getName();
-    }
 
 
     /**
@@ -50,32 +36,29 @@ public class PickUpPassengerActionType  extends GraphDefinedDomain.GraphActionTy
      * in TaxiRecommenderDomainGenerator - check on applicability - not running out of time/battery...
      */
     @Override
-    public List<Action> allApplicableActions(State state) {
-        List<Action> actions = new ArrayList<>();
+    public List<MeasurableAction> allApplicableActions(TaxiGraphState state) {
+        List<MeasurableAction> actions = new ArrayList<>();
 
-        int node = (Integer)state.get("node");
-        Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>> actionMap = this.transitionDynamics.get(node);
-        Set<GraphDefinedDomain.NodeTransitionProbability> transitions = actionMap.get(this.aId);
+        ArrayList<Integer> trans = transitions.get(state.getNodeId());
 
-        if (transitions != null){
-            for (GraphDefinedDomain.NodeTransitionProbability neighbour : transitions){
-                if (this.applicableInState((TaxiGraphState) state, neighbour.transitionTo)){
+        if (trans != null) {
+            for (Integer neighbour : trans) {
+                if (this.applicableInState(state, neighbour)) {
+                    int startInterval = getIntervalStart(state.getTimeStamp());
 
-                    int startInterval = getIntervalStart(((TaxiGraphState)state).getTimeStamp());
-                    actions.add(new PickUpPassengerAction(this.aId, node, neighbour.transitionTo,
-                            taxiTripLengths.get(startInterval).get(((TaxiGraphState)state).getNodeId()).get(neighbour.transitionTo).longValue(),
-                            taxiTripConsumptions.get(startInterval).get(((TaxiGraphState)state).getNodeId()).get(neighbour.transitionTo).intValue(),
-                            ((TaxiGraphState)state).getTimeStamp()));
+                    actions.add(new PickUpPassengerAction(this.actionId, state.getNodeId(), neighbour, state.getTimeStamp(),
+                            taxiTripLengths.get(startInterval).get(state.getNodeId()).get(neighbour).intValue(),
+                            taxiTripConsumptions.get(startInterval).get(state.getNodeId()).get(neighbour).intValue()));
                 }
             }
         }
+
         return actions;
     }
 
-
     @Override
-    protected boolean applicableInState(State state) {
-        return super.applicableInState(state);
+    boolean applicableInState(TaxiGraphState state) {
+        return transitions.containsKey(state.getNodeId());
     }
 
 
