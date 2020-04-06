@@ -1,82 +1,47 @@
 package domain.states;
 
-import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
-import burlap.domain.singleagent.graphdefined.GraphStateNode;
-import burlap.mdp.core.action.Action;
-import burlap.mdp.core.state.MutableState;
-import burlap.mdp.core.state.State;
+
+import domain.actions.MeasurableAction;
 
 import java.util.*;
-import static utils.Utils.*;
+
+import static utils.Utils.NUM_OF_ACTION_TYPES;
 
 /**
  * Class representing state for planning containing information of current node, state of charge, timestamp but also
  * previous actions and states or maximal possible reward achieved by maxReward action which is computed after generating
  * all possible states
  */
-public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGraphState> {
+public class TaxiGraphState implements Comparable<TaxiGraphState> {
 
+    private Integer hash;
     private int nodeId;
     private int stateOfCharge;
     private int timeStamp;
 
     private boolean changed = false;
 
-    private ArrayList[] previousActionStatePairs = new ArrayList[NUM_OF_ACTION_TYPES];
+    private ArrayList<ArrayList<ActionStatePair>> previousActionStatePairs = new ArrayList<>(NUM_OF_ACTION_TYPES);
     private Set<Integer> previousActionsId = new HashSet<>();
 
-    private Action maxRewardAction = null;
+    private MeasurableAction maxRewardAction = null;
     private TaxiGraphState maxNextState = null;
     private Double maxReward = null;
     private HashMap<Integer, Double> afterTaxiTripStateRewards = new HashMap<>();
 
 
     public TaxiGraphState(int nodeId, int stateOfCharge, int timeStamp) {
-        super(nodeId);
-        keys.add(VAR_NODE);
-        keys.add(VAR_STATE_OF_CHARGE);
-        keys.add(VAR_TIMESTAMP);
 
         this.nodeId = nodeId;
         this.stateOfCharge = stateOfCharge;
         this.timeStamp = timeStamp;
-    }
-
-
-    @Override
-    public MutableState set(Object variableKey, Object value) {
-        if (variableKey instanceof String){
-            String key = (String) variableKey;
-            switch (key){
-                case VAR_NODE:
-                    super.set(variableKey, value);
-                    this.nodeId = (int)value;
-                    return this;
-                case VAR_STATE_OF_CHARGE:
-                    if (value instanceof Integer){
-                        this.stateOfCharge = (int)value;
-                        return this;
-                    } else {
-                        throw new RuntimeException("Invalid value data type " + value.getClass());
-                    }
-                case VAR_TIMESTAMP:
-                    if (value instanceof Integer){
-                        this.timeStamp = (int)value;
-                        return this;
-                    } else {
-                        throw new RuntimeException("Invalid value data type " + value.getClass());
-                    }
-                default:
-                    throw new RuntimeException("Invalid key value type " + key);
-            }
-        } else {
-            throw new RuntimeException("Invalid key data type " + variableKey.getClass());
+        for (int i = 0; i < NUM_OF_ACTION_TYPES; i++){
+            previousActionStatePairs.add(null);
         }
     }
 
 
-    @Override
-    public State copy() {
+    public TaxiGraphState copy() {
         return new TaxiGraphState(this.nodeId, this.stateOfCharge, this.timeStamp);
     }
 
@@ -95,9 +60,8 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
         return nodeId;
     }
 
-    public void setNodeId(int nodeId) {
-        super.set(VAR_NODE, nodeId);
 
+    public void setNodeId(int nodeId) {
         this.nodeId = nodeId;
     }
 
@@ -126,7 +90,7 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
      * @param action action to do to receive given reward
      * @param reward potentially received reward
      */
-    public void setActionReward(Action action, Double reward, TaxiGraphState maxNextState) {
+    public void setActionReward(MeasurableAction action, Double reward, TaxiGraphState maxNextState) {
         if (maxRewardAction == null || this.maxReward < reward){
             this.maxRewardAction = action;
             this.maxReward = reward;
@@ -144,14 +108,14 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
     }*/
 
 
-    public void addPreviousAction(Action action, int actionId, TaxiGraphState state){
+    public void addPreviousAction(MeasurableAction action, int actionId, TaxiGraphState state){
         this.setChanged(true);
-        if (previousActionStatePairs[actionId] != null){
-            previousActionStatePairs[actionId].add(new ActionStatePair(state, action));
+        if (previousActionStatePairs.get(actionId) != null){
+            previousActionStatePairs.get(actionId).add(new ActionStatePair(state, action));
         } else {
             ArrayList<ActionStatePair> actionType = new ArrayList<>();
             actionType.add(new ActionStatePair(state, action));
-            previousActionStatePairs[actionId] = actionType;
+            previousActionStatePairs.set(actionId, actionType);
             previousActionsId.add(actionId);
         }
     }
@@ -173,7 +137,7 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
 */
 
     public ArrayList<ActionStatePair> getPreviousStatesOfAction(int actionId){
-        return previousActionStatePairs[actionId];
+        return previousActionStatePairs.get(actionId);
     }
 
 
@@ -187,7 +151,7 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
     }
 
 
-    public Action getMaxRewardAction() {
+    public MeasurableAction getMaxRewardAction() {
         return maxRewardAction;
     }
 
@@ -196,7 +160,7 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
         if (maxRewardAction == null){
             return Integer.MIN_VALUE;
         } else {
-            return ((GraphDefinedDomain.GraphActionType.GraphAction)maxRewardAction).aId;
+            return maxRewardAction.getActionId();
         }
     }
 
@@ -225,15 +189,13 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
         return "TaxiGraphState{" +
                 "stateOfCharge=" + stateOfCharge +
                 ", timeStamp=" + timeStamp +
-                ", id=" + id +
+                ", nodeId=" + nodeId +
                 '}';
     }
 
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
         TaxiGraphState that = (TaxiGraphState) o;
         return nodeId == that.nodeId &&
                 stateOfCharge == that.stateOfCharge &&
@@ -243,7 +205,10 @@ public class TaxiGraphState extends GraphStateNode implements Comparable<TaxiGra
 
     @Override
     public int hashCode() {
-        return Objects.hash(nodeId, stateOfCharge, timeStamp);
+        if (hash == null){
+            hash = Objects.hash(nodeId, stateOfCharge, timeStamp);
+        }
+        return hash;
     }
 
 

@@ -1,8 +1,5 @@
 package domain.actions;
 
-import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
-import burlap.mdp.core.action.Action;
-import burlap.mdp.core.state.State;
 import charging.ChargingStationReader;
 import charging.TripToChargingStation;
 import domain.states.TaxiGraphState;
@@ -17,17 +14,11 @@ import static utils.DistanceGraphUtils.getTripTime;
 /**
  * Class with the main purpose of returning the best available actions of going to charging in given state.
  */
-public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphActionType {
+public class GoingToChargingStationActionType extends TaxiActionType {
 
 
-    public GoingToChargingStationActionType(int aId, Map<Integer, Map<Integer, Set<GraphDefinedDomain.NodeTransitionProbability>>> transitionDynamics) {
-        super(aId, transitionDynamics);
-    }
-
-
-    @Override
-    public String typeName() {
-        return ActionTypes.GOING_TO_CHARGING_STATION.getName();
+    public GoingToChargingStationActionType(int actionId, HashMap<Integer, ArrayList<Integer>> transitions) {
+        super(actionId, transitions);
     }
 
 
@@ -37,49 +28,46 @@ public class GoingToChargingStationActionType extends GraphDefinedDomain.GraphAc
      * charging station order - distance/prize...
      */
     @Override
-    public List<Action> allApplicableActions(State state) {
-        List<Action> actions = new ArrayList<>();
+    public List<MeasurableAction> allApplicableActions(TaxiGraphState state) {
+        List<MeasurableAction> actions = new ArrayList<>();
 
-        int nodeId = (Integer)state.get("node");
-        Set<GraphDefinedDomain.NodeTransitionProbability> transitions = this.transitionDynamics.get(nodeId).get(this.aId);
+        List<Integer> trans = this.transitions.get(state.getNodeId());
 
-        if (transitions != null){
-            List<Integer> stations = chooseBestChargingStation(Utils.NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO,
-                    (TaxiGraphState) state, transitions);
-
+        if (trans != null){
+            List<Integer> stations = chooseBestChargingStation(state, trans);
             for (Integer chargingStation : stations){
-                if (this.applicableInState((TaxiGraphState) state, chargingStation)){
-                    actions.add(new GoingToChargingStationAction(this.aId, nodeId, chargingStation, ((TaxiGraphState)state).getTimeStamp()));
+                if (this.applicableInState(state, chargingStation)){
+                    actions.add(new GoingToChargingStationAction(this.actionId, state.getNodeId(), chargingStation, state.getTimeStamp()));
                 }
             }
         }
+
+
 
         return actions;
     }
 
 
-    private List<Integer> chooseBestChargingStation(int numOfStations, TaxiGraphState state,
-                                                            Set<GraphDefinedDomain.NodeTransitionProbability> transitions){
+    private List<Integer> chooseBestChargingStation(TaxiGraphState state, List<Integer> transitions){
 
         if (Utils.CHARGING_STATION_STATE_ORDER == null){
             return transitions
                     .stream()
-                    .map(trans -> ChargingStationReader.getChargingStation(trans.transitionTo))
+                    .map(ChargingStationReader::getChargingStation)
                     .map(station -> new TripToChargingStation(state.getNodeId(), station.getRoadNode().getId()))
                     .sorted(Utils.tripToChargingStationComparator)
-                    .limit(numOfStations)
+                    .limit(Utils.NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO)
                     .map(TripToChargingStation::getChargingStation)
                     .collect(Collectors.toList());
         } else {
-            return Utils.CHARGING_STATION_STATE_ORDER.get(state, numOfStations);
+            return Utils.CHARGING_STATION_STATE_ORDER.get(state, Utils.NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO);
         }
-
     }
 
 
     @Override
-    protected boolean applicableInState(State s) {
-        return notChargedALot(s) && super.applicableInState(s);
+    protected boolean applicableInState(TaxiGraphState state) {
+        return notChargedALot(state.getStateOfCharge()) && transitions.containsKey(state.getNodeId());
     }
 
 

@@ -1,15 +1,15 @@
 package domain.states;
 
 
-import burlap.mdp.core.action.Action;
+import domain.actions.MeasurableAction;
 
 public class ActionStatePair {
 
     private TaxiGraphState state;
-    private Action action;
+    private MeasurableAction action;
 
 
-    public ActionStatePair(TaxiGraphState state, Action action) {
+    public ActionStatePair(TaxiGraphState state, MeasurableAction action) {
         this.state = state;
         this.action = action;
     }
@@ -19,7 +19,8 @@ public class ActionStatePair {
         return state;
     }
 
-    public Action getAction() {
+
+    public MeasurableAction getAction() {
         return action;
     }
 }

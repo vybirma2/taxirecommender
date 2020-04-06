@@ -1,15 +1,12 @@
 package domain.environmentrepresentation.gridenvironment;
 
 import domain.environmentrepresentation.Environment;
-import domain.environmentrepresentation.fullenvironment.FullEnvironment;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
-import parameterestimation.TaxiTrip;
 import utils.Utils;
 
 import java.io.*;
-import java.text.ParseException;
-import java.util.ArrayList;
+
 
 
 /**

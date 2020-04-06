@@ -1,13 +1,8 @@
 package domain;
 
-import burlap.mdp.core.TerminalFunction;
-import burlap.mdp.core.action.Action;
-import burlap.mdp.core.action.ActionType;
-import burlap.mdp.core.state.State;
-import burlap.mdp.singleagent.model.RewardFunction;
 import domain.actions.ActionTypes;
-import domain.actions.ActionUtils;
 import domain.actions.ChargingAction;
+import domain.actions.MeasurableAction;
 import domain.states.ActionStatePair;
 import domain.states.TaxiGraphState;
 import domain.states.TaxiGraphStateComparator;
@@ -25,21 +20,15 @@ import static utils.DistanceGraphUtils.getIntervalStart;
  * dynamic programing i.e. by starting with the last terminal states - the end of the shift - and continuing
  * to its start.
  */
-public class TaxiGraphRewardFunction implements RewardFunction {
+public class TaxiGraphRewardFunction {
 
-    private TerminalFunction terminalFunction;
+    private TaxiGraphTerminalFunction terminalFunction;
     private ParameterEstimator parameterEstimator;
 
 
-    public TaxiGraphRewardFunction(TerminalFunction terminalFunction, ParameterEstimator parameterEstimator) {
+    public TaxiGraphRewardFunction(TaxiGraphTerminalFunction terminalFunction, ParameterEstimator parameterEstimator) {
         this.terminalFunction = terminalFunction;
         this.parameterEstimator = parameterEstimator;
-    }
-
-
-    @Override
-    public double reward(State state, Action action, State state1) {
-        return 0;
     }
 
 
@@ -48,7 +37,7 @@ public class TaxiGraphRewardFunction implements RewardFunction {
      * of state. Setting reward for all reachable states till the first one.
      * @param states all reachable states
      */
-    public void computeRewardForStates(Set<State> states){
+    public void computeRewardForStates(Set<TaxiGraphState> states){
 
         PriorityQueue<TaxiGraphState> openedSet = getSortedTerminalStates(states);
         HashSet<TaxiGraphState> visited = new HashSet<>(openedSet);
@@ -71,13 +60,12 @@ public class TaxiGraphRewardFunction implements RewardFunction {
     }
 
 
-    private PriorityQueue<TaxiGraphState> getSortedTerminalStates(Set<State> states){
+    private PriorityQueue<TaxiGraphState> getSortedTerminalStates(Set<TaxiGraphState> states){
         PriorityQueue<TaxiGraphState> terminalStates = new PriorityQueue<>(new TaxiGraphStateComparator());
-        for (State state : states){
+        for (TaxiGraphState state : states){
             if (terminalFunction.isTerminal(state)){
-                terminalStates.add((TaxiGraphState)state);
+                terminalStates.add(state);
             }
-
         }
 
         return terminalStates;
@@ -118,7 +106,7 @@ public class TaxiGraphRewardFunction implements RewardFunction {
      * @param currentState
      */
     private void setPreviousStateReward(int actionId,
-                                        HashSet<TaxiGraphState> visitedStates, Action action, TaxiGraphState previousState,
+                                        HashSet<TaxiGraphState> visitedStates, MeasurableAction action, TaxiGraphState previousState,
                                         TaxiGraphState currentState){
         switch (actionId){
             case 0:

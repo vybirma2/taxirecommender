@@ -1,7 +1,6 @@
 package domain.environmentrepresentation.gridenvironment;
 
 import domain.environmentrepresentation.EnvironmentEdge;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.io.Serializable;
 import java.util.HashSet;

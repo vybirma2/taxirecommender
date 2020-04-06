@@ -1,7 +1,5 @@
 package parameterestimation;
 
-import domain.states.TaxiGraphState;
-
 import static utils.DistanceGraphUtils.getDistanceBetweenNodes;
 import static utils.Utils.CAR_FULL_BATTERY_DISTANCE;
 
@@ -23,8 +21,8 @@ public class EnergyConsumptionEstimator {
     }
 
 
-    public static int getActionEnergyConsumption(TaxiGraphState state, int toNodeId, double actionTime) {
-        return getMovingEnergyConsumption(state.getNodeId(), toNodeId);
+    public static int getActionEnergyConsumption(int fromNodeId, int toNodeId) {
+        return getMovingEnergyConsumption(fromNodeId, toNodeId);
     }
 
 

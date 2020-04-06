@@ -1,10 +1,6 @@
 package domain;
 
-import burlap.mdp.core.TerminalFunction;
-import burlap.mdp.core.action.Action;
-import burlap.mdp.core.action.ActionType;
-import burlap.mdp.core.action.ActionUtils;
-import burlap.mdp.core.state.State;
+import domain.actions.TaxiActionType;
 import domain.states.TaxiGraphState;
 import utils.Utils;
 
@@ -13,39 +9,43 @@ import java.util.List;
 /**
  * Terminal function defining conditions of marking state as a terminal.
  */
-public class TaxiGraphTerminalFunction implements TerminalFunction {
+public class TaxiGraphTerminalFunction {
 
-    private List<ActionType> actionTypes;
+    private List<TaxiActionType> actionTypes;
 
 
-    public TaxiGraphTerminalFunction(List<ActionType> actionTypes) {
+    public TaxiGraphTerminalFunction(List<TaxiActionType> actionTypes) {
         this.actionTypes = actionTypes;
     }
 
 
-    @Override
-    public boolean isTerminal(State state) {
+    public boolean isTerminal(TaxiGraphState state) {
         return shiftOver(state) || runOutOfBattery(state) || noActionAvailable(state);
     }
 
 
-    private boolean shiftOver(State state){
-       return ((TaxiGraphState)state).getTimeStamp() >= Utils.SHIFT_LENGTH + Utils.SHIFT_START_TIME;
+    private boolean shiftOver(TaxiGraphState state){
+       return state.getTimeStamp() >= Utils.SHIFT_LENGTH + Utils.SHIFT_START_TIME;
     }
 
 
-    private boolean runOutOfBattery(State state){
-        return ((TaxiGraphState)state).getStateOfCharge() <= 0;
+    private boolean runOutOfBattery(TaxiGraphState state){
+        return state.getStateOfCharge() <= 0;
     }
 
 
-    private boolean noActionAvailable(State state) {
-        List<Action> actions = ActionUtils.allApplicableActionsForTypes(this.actionTypes, state);
-        return actions.isEmpty();
+    private boolean noActionAvailable(TaxiGraphState state) {
+        for (TaxiActionType actionType : actionTypes){
+            if (!actionType.allApplicableActions(state).isEmpty()){
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
-    public List<ActionType> getActionTypes() {
+    public List<TaxiActionType> getActionTypes() {
         return actionTypes;
     }
 }

@@ -3,10 +3,7 @@ package domain.environmentrepresentation;
 import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
-import domain.environmentrepresentation.gridenvironment.GridEnvironmentEdge;
-import domain.environmentrepresentation.gridenvironment.GridEnvironmentNode;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;

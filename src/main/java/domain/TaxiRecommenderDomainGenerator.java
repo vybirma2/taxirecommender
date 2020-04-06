@@ -1,8 +1,5 @@
 package domain;
 
-import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
-import burlap.mdp.singleagent.SADomain;
-import burlap.mdp.singleagent.model.FactoredModel;
 import charging.ChargingStation;
 import charging.ChargingStationReader;
 import charging.DistanceChargingStationStateOrder;
@@ -26,11 +23,13 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static domain.actions.ActionTypes.*;
+
 /**
  * Class responsible for loading all needed data, creating all objects needed for planning and generating domain
  * for the following planning
  */
-public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
+public class TaxiRecommenderDomainGenerator {
 
     private final static Logger LOGGER = Logger.getLogger(TaxiRecommenderDomainGenerator.class.getName());
 
@@ -40,35 +39,31 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
     private List<ChargingStation> chargingStations;
     private ArrayList<TaxiTrip> taxiTrips;
 
+    private List<TaxiActionType> actionTypes = new ArrayList<>();
+
     private String roadGraphInputFileFullPath;
     private String roadGraphInputFile;
     private String chargingStationsInputFileFullPath;
     private String chargingStationsInputFile;
 
     private ParameterEstimator parameterEstimator;
-    private SADomain domain = null;
     private TaxiGraphStateModel taxiGraphStateModel;
+
+
+    private TaxiGraphTerminalFunction terminalFunction;
+    private TaxiGraphRewardFunction rewardFunction;
+
+    private ArrayList<HashMap<Integer, ArrayList<Integer>>> transitions = new ArrayList<>(5);
 
 
     public TaxiRecommenderDomainGenerator(String roadGraphInputFile, String chargingStationsInputFile,
                                           Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> environment){
-        super();
         this.roadGraphInputFileFullPath = "data/graphs/" + roadGraphInputFile;
         this.roadGraphInputFile = roadGraphInputFile;
         this.chargingStationsInputFileFullPath = "data/chargingstations/" + chargingStationsInputFile;
         this.chargingStationsInputFile = chargingStationsInputFile;
         this.environment = environment;
-    }
-
-
-    /**
-     * @return generated domain
-     */
-    public SADomain getDomain(){
-        if (this.domain == null){
-            this.domain = this.generateDomain();
-        }
-        return domain;
+        generateDomain();
     }
 
 
@@ -76,37 +71,26 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
      * Loading all data from extern files, estimating parameters, setting all needed objects
      * @return generated domain
      */
-    @Override
-    public SADomain generateDomain() {
-        SADomain domain = null;
+
+    public void generateDomain() {
         try {
             loadData();
-
-            Map<Integer, Map<Integer, Set<NodeTransitionProbability>>> ctd = this.copyTransitionDynamics();
-            TaxiGraphStateModel stateModel = new TaxiGraphStateModel(ctd);
-            this.taxiGraphStateModel = stateModel;
-            domain = new SADomain();
-
-            addAllActionTypes(domain, ctd);
-            setTf(new TaxiGraphTerminalFunction(domain.getActionTypes()));
-            setRf(new TaxiGraphRewardFunction(this.getTf(), parameterEstimator));
-
-            FactoredModel model = new FactoredModel(stateModel, this.rf, this.tf);
-            domain.setModel(model);
+            this.taxiGraphStateModel =  new TaxiGraphStateModel();
+            addAllActionTypes();
+            setTerminalFunction(new TaxiGraphTerminalFunction(this.actionTypes));
+            setRewardFunction(new TaxiGraphRewardFunction(this.getTerminalFunction(), parameterEstimator));
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return domain;
     }
 
 
-    private void addAllActionTypes(SADomain domain, Map<Integer, Map<Integer, Set<NodeTransitionProbability>>> ctd){
-        domain.addActionType(new StayingInLocationActionType(ActionTypes.STAYING_IN_LOCATION.getValue(), ctd));
-        domain.addActionType(new NextLocationActionType(ActionTypes.TO_NEXT_LOCATION.getValue(),ctd));
-        domain.addActionType(new GoingToChargingStationActionType(ActionTypes.GOING_TO_CHARGING_STATION.getValue(),ctd));
-        domain.addActionType(new ChargingActionType(ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(), ctd));
-        domain.addActionType(new PickUpPassengerActionType(ActionTypes.PICK_UP_PASSENGER.getValue(), ctd, parameterEstimator));
+    private void addAllActionTypes(){
+        actionTypes.add(new StayingInLocationActionType(STAYING_IN_LOCATION.getValue(), transitions.get(STAYING_IN_LOCATION.getValue())));
+        actionTypes.add(new NextLocationActionType(TO_NEXT_LOCATION.getValue(), transitions.get(TO_NEXT_LOCATION.getValue())));
+        actionTypes.add(new GoingToChargingStationActionType(GOING_TO_CHARGING_STATION.getValue(), transitions.get(GOING_TO_CHARGING_STATION.getValue())));
+        actionTypes.add(new ChargingActionType(CHARGING_IN_CHARGING_STATION.getValue(), transitions.get(CHARGING_IN_CHARGING_STATION.getValue())));
+        actionTypes.add(new PickUpPassengerActionType(PICK_UP_PASSENGER.getValue(), transitions.get(PICK_UP_PASSENGER.getValue()), parameterEstimator));
     }
 
 
@@ -190,41 +174,54 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
 
     private void setTransitions() {
+        for (int i = 0; i < Utils.NUM_OF_ACTION_TYPES; i++){
+            transitions.add(new HashMap<>());
+        }
+
+        ArrayList<Integer> trans;
         for (EnvironmentNode node : environment.getEnvironmentNodes()) {
 
             // setting transition between node itself - action of staying in location, i.e. prob 1
-            this.setTransition(node.getId(), ActionTypes.STAYING_IN_LOCATION.getValue(), node.getId(), 1.);
+            trans = new ArrayList<>();
+            trans.add(node.getId());
+            this.transitions.get(STAYING_IN_LOCATION.getValue()).put(node.getId(), trans);
 
             // setting transitions between neighbouring nodes - action of going to next location, i.e. prob 1
             setToNextLocationTransitions(node);
 
             // setting transitions between current node and all available charging stations
+            trans = new ArrayList<>();
+            this.transitions.get(GOING_TO_CHARGING_STATION.getValue()).put(node.getId(), trans);
             for (ChargingStation station : chargingStations) {
-                this.setTransition(node.getId(), ActionTypes.GOING_TO_CHARGING_STATION.getValue(), station.getRoadNode().getId(), 1.);
+                trans.add(station.getRoadNode().getId());
             }
         }
+
 
         for (ChargingStation chargingStation : chargingStations){
             EnvironmentNode node = DistanceGraphUtils.chooseEnvironmentNode(chargingStation.getRoadNode().getLongitude(), chargingStation.getRoadNode().getLatitude());
 
-            this.setTransition(chargingStation.getRoadNode().getId(), ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(), chargingStation.getRoadNode().getId(), 1.);
-            this.setTransition(chargingStation.getRoadNode().getId(), ActionTypes.TO_NEXT_LOCATION.getValue(), node.getId(), 1.);
+            trans = new ArrayList<>();
+            trans.add(chargingStation.getRoadNode().getId());
+            this.transitions.get(ActionTypes.CHARGING_IN_CHARGING_STATION.getValue()).put(chargingStation.getRoadNode().getId(), trans);
+            trans = new ArrayList<>();
+            trans.add(node.getId());
+            this.transitions.get(TO_NEXT_LOCATION.getValue()).put(chargingStation.getRoadNode().getId(), trans);
         }
     }
 
 
     private void setToNextLocationTransitions(EnvironmentNode node){
         Set<Integer> neighbours = node.getNeighbours();
-
-        for (Integer neighbour : neighbours) {
-            this.setTransition(node.getId(), ActionTypes.TO_NEXT_LOCATION.getValue(), neighbour, 1.);
-        }
+        ArrayList<Integer> trans = new ArrayList<>();
+        this.transitions.get(TO_NEXT_LOCATION.getValue()).put(node.getId(), trans);
+        trans.addAll(neighbours);
 
         HashMap<Integer, Double> destinationProbabilities = parameterEstimator.getDestinationProbabilitiesInNode(node.getId());
+        trans = new ArrayList<>();
+        this.transitions.get(ActionTypes.PICK_UP_PASSENGER.getValue()).put(node.getId(), trans);
         if (destinationProbabilities != null){
-            for (Map.Entry<Integer, Double> destination : destinationProbabilities.entrySet()){
-                this.setTransition(node.getId(), ActionTypes.PICK_UP_PASSENGER.getValue(), destination.getKey(), 1.);
-            }
+            trans.addAll(destinationProbabilities.keySet());
         }
     }
 
@@ -250,5 +247,27 @@ public class TaxiRecommenderDomainGenerator extends GraphDefinedDomain {
 
     public Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> getEnvironment() {
         return environment;
+    }
+
+
+    public void setTerminalFunction(TaxiGraphTerminalFunction terminalFunction) {
+        this.terminalFunction = terminalFunction;
+    }
+
+    public void setRewardFunction(TaxiGraphRewardFunction rewardFunction) {
+        this.rewardFunction = rewardFunction;
+    }
+
+
+    public TaxiGraphTerminalFunction getTerminalFunction() {
+        return terminalFunction;
+    }
+
+    public TaxiGraphRewardFunction getRewardFunction() {
+        return rewardFunction;
+    }
+
+    public List<TaxiActionType> getActionTypes() {
+        return actionTypes;
     }
 }
