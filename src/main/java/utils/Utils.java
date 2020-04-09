@@ -21,6 +21,16 @@ public class Utils {
 
     public static final int VISIT_INTERVAL = 30;
 
+    public static final int NUM_OF_CLUSTERS = 100;
+
+    public static final int NUM_OF_NEIGHBOURS = 8;
+
+
+    public static final boolean VISUALIZE_ENVIRONMENT = false;
+
+
+    public static final int MAX_KMEANS_ITERATIONS = 1000;
+
     public static final int ONE_GRID_CELL_WIDTH = 10000;
     public static final int ONE_GRID_CELL_HEIGHT = 10000;
 

@@ -32,12 +32,13 @@ import static domain.actions.ActionTypes.*;
 public class TaxiRecommenderDomainGenerator {
 
     private final static Logger LOGGER = Logger.getLogger(TaxiRecommenderDomainGenerator.class.getName());
+    private static ArrayList<TaxiTrip> taxiTrips;
+
 
     private Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> environment;
     private Graph<RoadNode, RoadEdge> osmGraph;
     private Collection<RoadNode> osmNodes;
     private List<ChargingStation> chargingStations;
-    private ArrayList<TaxiTrip> taxiTrips;
 
     private List<TaxiActionType> actionTypes = new ArrayList<>();
 
@@ -97,13 +98,31 @@ public class TaxiRecommenderDomainGenerator {
     private void loadData() throws Exception {
         loadGraph();
 
+        loadTaxiTripDataset();
+
+        setEnvironment();
+
+        this.parameterEstimator = new ParameterEstimator(taxiTrips);
+        this.parameterEstimator.estimateParameters();
+
         loadChargingStations();
 
         computeShortestPathsToChargingStations();
 
-        loadTaxiTripDataset();
-
         setTransitions();
+    }
+
+
+    private void setEnvironment() throws IOException, ClassNotFoundException {
+        this.environment.setOsmGraph(osmGraph);
+
+        DistanceGraphUtils.setNodes(this.environment.getEnvironmentNodes());
+        DistanceGraphUtils.setGraph(this.environment.getEnvironmentGraph());
+
+        for (TaxiTrip taxiTrip : taxiTrips){
+            taxiTrip.setFromEnvironmentNode(DistanceGraphUtils.chooseEnvironmentNode(taxiTrip.getPickUpLongitude(), taxiTrip.getPickUpLatitude()));
+            taxiTrip.setToEnvironmentNode(DistanceGraphUtils.chooseEnvironmentNode(taxiTrip.getDestinationLongitude(), taxiTrip.getDestinationLatitude()));
+        }
     }
 
 
@@ -118,11 +137,6 @@ public class TaxiRecommenderDomainGenerator {
         DistanceGraphUtils.setOsmGraph(osmGraph);
         osmNodes = osmGraph.getAllNodes();
         DistanceGraphUtils.setOsmNodes(osmNodes);
-
-        environment.setOsmGraph(osmGraph);
-
-        DistanceGraphUtils.setNodes(environment.getEnvironmentNodes());
-        DistanceGraphUtils.setGraph(environment.getEnvironmentGraph());
 
         stopTime  = System.nanoTime();
 
@@ -167,9 +181,6 @@ public class TaxiRecommenderDomainGenerator {
         taxiTrips = Utils.DATA_SET_READER.readDataSet();
         stopTime  = System.nanoTime();
         LOGGER.log(Level.INFO, "Reading finished in " + (stopTime - startTime)/1000000000. + "s.");
-
-        this.parameterEstimator = new ParameterEstimator(taxiTrips);
-        this.parameterEstimator.estimateParameters();
     }
 
 
@@ -270,4 +281,11 @@ public class TaxiRecommenderDomainGenerator {
     public List<TaxiActionType> getActionTypes() {
         return actionTypes;
     }
+
+
+    public static  ArrayList<TaxiTrip> getTaxiTrips(){
+        return taxiTrips;
+    }
+
+
 }

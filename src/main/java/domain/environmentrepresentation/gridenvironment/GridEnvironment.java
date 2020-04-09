@@ -27,7 +27,7 @@ public class GridEnvironment extends Environment<GridEnvironmentNode, GridEnviro
     }
 
 
-    private void createGridEnvironmentAndSerializeIt(File file) throws IOException {
+    private void createGridEnvironmentAndSerializeIt(File file) throws IOException, ClassNotFoundException {
         this.environmentGraph = new GridEnvironmentGraph(this.getOsmGraph());
 
         FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));

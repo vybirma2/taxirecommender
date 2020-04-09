@@ -32,14 +32,14 @@ public class ParameterEstimationUtils {
         for (TaxiTrip taxiTrip : taxiTrips){
             if (tripsToDestinationNode.containsKey(taxiTrip.getPickUpNode().getId())){
                 HashMap<Integer, Integer> tripsFromNode = tripsToDestinationNode.get(taxiTrip.getPickUpNode().getId());
-                if (tripsFromNode.containsKey(taxiTrip.getDestinationNode().getId())){
-                    tripsFromNode.replace(taxiTrip.getDestinationNode().getId(), tripsFromNode.get(taxiTrip.getDestinationNode().getId()) + 1);
+                if (tripsFromNode.containsKey(taxiTrip.getDestinationRoadNode().getId())){
+                    tripsFromNode.replace(taxiTrip.getDestinationRoadNode().getId(), tripsFromNode.get(taxiTrip.getDestinationRoadNode().getId()) + 1);
                 } else {
-                    tripsFromNode.put(taxiTrip.getDestinationNode().getId(), 1);
+                    tripsFromNode.put(taxiTrip.getDestinationRoadNode().getId(), 1);
                 }
             } else {
                 HashMap<Integer, Integer> toNodeTrips = new HashMap<>();
-                toNodeTrips.put(taxiTrip.getDestinationNode().getId(), 1);
+                toNodeTrips.put(taxiTrip.getDestinationRoadNode().getId(), 1);
                 tripsToDestinationNode.put(taxiTrip.getPickUpNode().getId(), toNodeTrips);
             }
         }
@@ -90,10 +90,10 @@ public class ParameterEstimationUtils {
         HashMap<Integer, Integer> dropOffsInOSMNodes = new HashMap<>();
 
         for (TaxiTrip taxiTrip : taxiTrips){
-            if (dropOffsInOSMNodes.containsKey(taxiTrip.getDestinationNode().getId())){
-                dropOffsInOSMNodes.replace(taxiTrip.getDestinationNode().getId(), dropOffsInOSMNodes.get(taxiTrip.getDestinationNode().getId()) + 1 );
+            if (dropOffsInOSMNodes.containsKey(taxiTrip.getDestinationRoadNode().getId())){
+                dropOffsInOSMNodes.replace(taxiTrip.getDestinationRoadNode().getId(), dropOffsInOSMNodes.get(taxiTrip.getDestinationRoadNode().getId()) + 1 );
             } else {
-                dropOffsInOSMNodes.put(taxiTrip.getDestinationNode().getId(), 1);
+                dropOffsInOSMNodes.put(taxiTrip.getDestinationRoadNode().getId(), 1);
             }
         }
 
