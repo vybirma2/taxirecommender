@@ -67,7 +67,7 @@ public class DistanceGraphUtils {
         RoadNode roadNode = null;
 
         for (RoadNode node : nodes){
-            double distance = getDistance(longitude, latitude, node.getLongitude(), node.getLatitude());
+            double distance = getEuclideanDistance(longitude, latitude, node.getLongitude(), node.getLatitude());
 
             if (distance < min){
                 min = distance;
@@ -96,7 +96,7 @@ public class DistanceGraphUtils {
      * @param latitude2
      * @return euclidean distance of two longitude latitude defined points
      */
-    public static double getDistance(double longitude1, double latitude1, double longitude2, double latitude2){
+    public static double getEuclideanDistance(double longitude1, double latitude1, double longitude2, double latitude2){
         longitude1 = Math.toRadians(longitude1);
         latitude1 = Math.toRadians(latitude1);
         longitude2 = Math.toRadians(longitude2);
@@ -189,7 +189,7 @@ public class DistanceGraphUtils {
     public static double getEuclideanDistanceBetweenOsmNodes(int fromNodeId, int toNodeId){
         RoadNode fromNode = osmGraph.getNode(fromNodeId);
         RoadNode toNode = osmGraph.getNode(toNodeId);
-        return DistanceGraphUtils.getDistance(fromNode.getLongitude(), fromNode.getLatitude(),
+        return DistanceGraphUtils.getEuclideanDistance(fromNode.getLongitude(), fromNode.getLatitude(),
                 toNode.getLongitude(), toNode.getLatitude());
     }
 
@@ -207,6 +207,17 @@ public class DistanceGraphUtils {
 
         RoadEdge edge = osmGraph.getEdge(fromNodeId, toNodeId);
         return edge.getAllowedMaxSpeedInMpS() * 3.6;
+    }
+
+
+    public static DistanceSpeedPairTime getDistancesAndSpeedBetweenNodes(int fromNodeId, int toNodeId){
+        LinkedList<Integer> nodePath = aStar(fromNodeId, toNodeId);
+
+        if (nodePath != null){
+            return getDistanceSpeedPairOfPath(nodePath);
+        } else {
+            throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
+        }
     }
 
 

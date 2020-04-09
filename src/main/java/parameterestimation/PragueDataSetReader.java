@@ -1,5 +1,6 @@
 package parameterestimation;
 
+import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.environmentrepresentation.EnvironmentNode;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
@@ -91,8 +92,8 @@ public class PragueDataSetReader implements DataSetReader {
 
         double distance = Integer.parseInt(trip[5])/1000.;
 
-        EnvironmentNode pickUpNode = DistanceGraphUtils.chooseEnvironmentNode(pickUpLongitude, pickUpLatitude);
-        EnvironmentNode destinationNode = DistanceGraphUtils.chooseEnvironmentNode(destinationLongitude, destinationLatitude);
+        RoadNode pickUpNode = DistanceGraphUtils.chooseRoadNode(pickUpLongitude, pickUpLatitude);
+        RoadNode destinationNode = DistanceGraphUtils.chooseRoadNode(destinationLongitude, destinationLatitude);
 
         if (pickUpNode == null || destinationNode == null){
             return null;
@@ -105,6 +106,6 @@ public class PragueDataSetReader implements DataSetReader {
         long tripLengthMinutes = TimeUnit.MINUTES.convert(tripLengthMilliseconds, TimeUnit.MILLISECONDS);
 
         return new TaxiTrip(orderId, pickUpLongitude, pickUpLatitude, destinationLongitude,
-                destinationLatitude, distance,tripLengthMinutes , pickUpNode, destinationNode, startDate, finishDate);
+                destinationLatitude, distance,tripLengthMinutes , pickUpNode, destinationNode, startDate, finishDate, null, null);
     }
 }

@@ -7,6 +7,7 @@ import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.environmentrepresentation.EnvironmentGraph;
 import utils.DistanceGraphUtils;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ import java.util.Set;
 public class FullEnvironmentGraph extends EnvironmentGraph<FullEnvironmentNode, FullEnvironmentEdge> {
 
 
-    public FullEnvironmentGraph(Graph<RoadNode, RoadEdge> osmGraph) {
+    public FullEnvironmentGraph(Graph<RoadNode, RoadEdge> osmGraph) throws IOException, ClassNotFoundException {
         super(osmGraph);
     }
 

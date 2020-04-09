@@ -12,8 +12,6 @@ import java.util.Set;
  */
 public class GridEnvironmentNode extends EnvironmentNode implements Serializable {
 
-    private Set<RoadNode> osmNodes;
-
     private double topLatitude;
     private double bottomLatitude;
     private double leftLongitude;
@@ -28,16 +26,6 @@ public class GridEnvironmentNode extends EnvironmentNode implements Serializable
         this.bottomLatitude = bottomLatitude;
         this.leftLongitude = leftLongitude;
         this.rightLongitude = rightLongitude;
-    }
-
-
-    public Set<RoadNode> getOsmNodes() {
-        return osmNodes;
-    }
-
-
-    public void setOsmNodes(Set<RoadNode> osmNodes) {
-        this.osmNodes = osmNodes;
     }
 
 
@@ -79,7 +67,4 @@ public class GridEnvironmentNode extends EnvironmentNode implements Serializable
     public void setRightLongitude(double rightLongitude) {
         this.rightLongitude = rightLongitude;
     }
-
-
-    public void setNeighbours(Set<Integer> neighbours) { this.neighbours = neighbours; }
 }

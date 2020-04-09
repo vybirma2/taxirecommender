@@ -21,16 +21,21 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
     private long tripLength;
     private int tripEnergyConsumption;
 
-    private EnvironmentNode pickUpNode;
-    private EnvironmentNode destinationNode;
+    private RoadNode pickUpRoadNode;
+    private RoadNode destinationRoadNode;
+
+
+    private EnvironmentNode fromEnvironmentNode;
+    private EnvironmentNode toEnvironmentNode;
+
 
     private Date startDate;
     private Date finishDate;
 
 
     public TaxiTrip(String orderId, double pickUpLongitude, double pickUpLatitude, double destinationLongitude,
-                    double destinationLatitude, double distance, long tripLength ,EnvironmentNode pickUpNode,
-                    EnvironmentNode destinationNode, Date startDate, Date finishDate) {
+                    double destinationLatitude, double distance, long tripLength , RoadNode pickUpNode,
+                    RoadNode destinationRoadNode, Date startDate, Date finishDate, EnvironmentNode fromNode, EnvironmentNode toNode) {
         this.orderId = orderId;
         this.pickUpLongitude = pickUpLongitude;
         this.pickUpLatitude = pickUpLatitude;
@@ -38,11 +43,13 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
         this.destinationLatitude = destinationLatitude;
         this.distance = distance;
         this.tripLength = tripLength;
-        this.pickUpNode = pickUpNode;
-        this.destinationNode = destinationNode;
+        this.pickUpRoadNode = pickUpNode;
+        this.destinationRoadNode = destinationRoadNode;
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.tripEnergyConsumption = computeEnergyConsumption();
+        fromEnvironmentNode = fromNode;
+        toEnvironmentNode = toNode;
     }
 
 
@@ -107,24 +114,36 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
 
 
     public RoadNode getPickUpNode() {
-        return pickUpNode;
+        return pickUpRoadNode;
     }
 
 
     public void setPickUpNode(EnvironmentNode pickUpNode) {
-        this.pickUpNode = pickUpNode;
+        this.pickUpRoadNode = pickUpNode;
     }
 
 
-    public RoadNode getDestinationNode() {
-        return destinationNode;
+    public RoadNode getDestinationRoadNode() {
+        return destinationRoadNode;
     }
 
 
-    public void setDestinationNode(EnvironmentNode destinationNode) {
-        this.destinationNode = destinationNode;
+    public void setDestinationRoadNode(EnvironmentNode destinationRoadNode) {
+        this.destinationRoadNode = destinationRoadNode;
     }
 
+
+    public RoadNode getPickUpRoadNode() {
+        return pickUpRoadNode;
+    }
+
+    public EnvironmentNode getFromEnvironmentNode() {
+        return fromEnvironmentNode;
+    }
+
+    public EnvironmentNode getToEnvironmentNode() {
+        return toEnvironmentNode;
+    }
 
     public Date getStartDate() {
         return startDate;
@@ -160,6 +179,14 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
         return EnergyConsumptionEstimator.getEnergyConsumption(this.distance);
     }
 
+
+    public void setFromEnvironmentNode(EnvironmentNode fromEnvironmentNode) {
+        this.fromEnvironmentNode = fromEnvironmentNode;
+    }
+
+    public void setToEnvironmentNode(EnvironmentNode toEnvironmentNode) {
+        this.toEnvironmentNode = toEnvironmentNode;
+    }
 
     @Override
     public String toString() {

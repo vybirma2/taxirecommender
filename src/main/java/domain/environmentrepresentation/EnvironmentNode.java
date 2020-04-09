@@ -20,6 +20,14 @@ public abstract class EnvironmentNode extends RoadNode implements Serializable {
         return neighbours;
     }
 
+    public void addNeighbour(int neighbour){
+        neighbours.add(neighbour);
+    }
+
+    public void addNeighbours(Set<Integer> neighbours){
+        this.neighbours.addAll(neighbours);
+    }
+
 
     @Override
     public double getLatitude() {
