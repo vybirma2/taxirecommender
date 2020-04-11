@@ -8,6 +8,7 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironmentNode;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPoint;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPointCentroid;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.TaxiTripPickupPlace;
@@ -23,7 +24,7 @@ import java.util.concurrent.CountDownLatch;
 public class MapVisualizer extends Application {
 
     private MapView mapView;
-    private static GraphicsOverlay nodeGraphicsOverlay;
+    public static GraphicsOverlay nodeGraphicsOverlay;
 
     private static SimpleMarkerSymbol centroidSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000, 8.0f);
 
@@ -130,9 +131,32 @@ public class MapVisualizer extends Application {
         }
     }
 
+
+    public static void addKMeansNodesToMap(List<KMeansEnvironmentNode> allNodes){
+        //nodeGraphicsOverlay.getGraphics().removeAll(nodeGraphicsOverlay.getGraphics());
+        for (KMeansEnvironmentNode node: allNodes) {
+            addKMeansNodeToMap(node);
+        }
+    }
+
+
     public static void addCentroidToMap(PickUpPointCentroid node){
         nodeGraphicsOverlay.getGraphics().add(createGraphicCentroid(node));
     }
+
+    public static void addKMeansNodeToMap(KMeansEnvironmentNode node){
+        nodeGraphicsOverlay.getGraphics().add(createGraphicKMeansNode(node));
+    }
+
+
+    private static Graphic createGraphicKMeansNode(KMeansEnvironmentNode node) {
+        Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
+        Graphic pointGraphic = new Graphic(point, centroidSymbol);
+        pointGraphic.getAttributes().put("ID", node.getId());
+
+        return pointGraphic;
+    }
+
 
     private static Graphic createGraphicCentroid(PickUpPoint node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());

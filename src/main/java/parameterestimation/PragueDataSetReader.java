@@ -26,7 +26,7 @@ public class PragueDataSetReader implements DataSetReader {
      */
     @Override
     public ArrayList<TaxiTrip> readDataSet() throws IOException, ClassNotFoundException {
-        File file = new File("data/programdata/" + Utils.ONE_GRID_CELL_WIDTH+ "x"+ Utils.ONE_GRID_CELL_HEIGHT + "liftago_prague.fst");
+        File file = new File("data/programdata/liftago_prague.fst");
         ArrayList<TaxiTrip> taxiTrips = null;
 
         if(!file.exists()) {

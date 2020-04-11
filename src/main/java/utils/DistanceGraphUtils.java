@@ -129,6 +129,9 @@ public class DistanceGraphUtils {
 
 
     public static int getTripTime(int fromNodeId, int toNodeId){
+        if (fromNodeId == toNodeId){
+            return 0;
+        }
         EnvironmentEdge edge = graph.getEdge(fromNodeId, toNodeId);
         if (edge != null){
             return (int)(edge.getTime()* (1/0.8));

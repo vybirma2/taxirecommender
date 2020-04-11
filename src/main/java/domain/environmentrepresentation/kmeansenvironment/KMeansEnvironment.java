@@ -6,12 +6,12 @@ import domain.environmentrepresentation.kmeansenvironment.kmeans.KMeansAlgorithm
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPlacesDistance;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPointCentroid;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.TaxiTripPickupPlace;
-import domain.environmentrepresentation.kmeansenvironment.kmeansenvironmentutils.ConvexHullFinder;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
 import visualization.MapVisualizer;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,13 +29,17 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
     @Override
     protected void setEnvironmentGraph() throws IOException, ClassNotFoundException {
         setClusters();
-        if (VISUALIZE_ENVIRONMENT){
+        /*if (VISUALIZE_ENVIRONMENT){
             visualizeEnvironment();
-        }
+        }*/
 
         this.environmentGraph = new KMeansEnvironmentGraph(this.getOsmGraph());
 
-        System.out.println("shbfsjf");
+
+        if (VISUALIZE_ENVIRONMENT){
+            visualizeEnvironment();
+        }
+        //System.out.println("shbfsjf");
 
     }
 
@@ -50,24 +54,37 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
         }.start();
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(20000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        MapVisualizer.addCentroidsToMap(clusters.keySet());
+        /*MapVisualizer.addCentroidsToMap(clusters.keySet());*/
 
-        for (Map.Entry<PickUpPointCentroid, List<TaxiTripPickupPlace>> entry : clusters.entrySet()){
-            List<TaxiTripPickupPlace> hull = ConvexHullFinder.getConvexHull(clusters.get(entry.getKey()));
+        for (KMeansEnvironmentNode node : this.environmentGraph.getNodes()){
+            List<KMeansEnvironmentNode> neighbours = new ArrayList<>();
+            MapVisualizer.nodeGraphicsOverlay.getGraphics().removeAll(MapVisualizer.nodeGraphicsOverlay.getGraphics());
+            MapVisualizer.addKMeansNodeToMap(node);
+            MapVisualizer.addPickUpPointsToMap(node.getPickupPlaceList());
+            double distance = 0;
+            for (Integer neighbour : node.getNeighbours()){
+                distance += ((KMeansEnvironmentGraph)environmentGraph).getDistanceBetweenNodes(node.getId(), neighbour);
+                neighbours.add(environmentGraph.getNode(neighbour));
+            }
+            distance /= 7;
+            System.out.println("distance is: " + distance);
+            MapVisualizer.addKMeansNodesToMap(neighbours);
+            /*List<TaxiTripPickupPlace> hull = ConvexHullFinder.getConvexHull(clusters.get(entry.getKey()));
             MapVisualizer.addHullPointsToMap(hull, entry.getKey());
-            MapVisualizer.addPickUpPointsToMap(entry.getValue());
+            MapVisualizer.addPickUpPointsToMap(entry.getValue());*/
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
     }
 

@@ -324,11 +324,11 @@ public class ParameterEstimator {
 
         HashMap<Integer, Double> parameters = new HashMap<>();
         HashMap<Integer, Integer> toDestNums = new HashMap<>();
-        parameters.put(taxiTrip.getFromEnvironmentNode().getId(), parameter);
+        parameters.put(taxiTrip.getToEnvironmentNode().getId(), parameter);
         toDestNums.put(taxiTrip.getToEnvironmentNode().getId(), 1);
 
         result.get(intervalStart).put(taxiTrip.getFromEnvironmentNode().getId(), parameters);
-        nums.get(intervalStart).put(taxiTrip.getToEnvironmentNode().getId(), toDestNums);
+        nums.get(intervalStart).put(taxiTrip.getFromEnvironmentNode().getId(), toDestNums);
     }
 
 
