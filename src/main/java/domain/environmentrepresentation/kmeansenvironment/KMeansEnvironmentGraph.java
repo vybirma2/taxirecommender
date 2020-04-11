@@ -55,7 +55,7 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
                             (int)(distance * 1000), DistanceGraphUtils.getTripTime(distance, speed)));
                 }
             }
-            edges.put(node.getId(), nodeEdges);
+            edges.put(node.getNodeId(), nodeEdges);
         }
     }
 
@@ -64,9 +64,7 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
         this.nodes = new HashMap<>();
         for (PickUpPointCentroid centroid : clusters.keySet()) {
             RoadNode centroidNode = DistanceGraphUtils.chooseRoadNode(centroid.getLongitude(), centroid.getLatitude());
-            this.nodes.put(centroidNode.getId(), new KMeansEnvironmentNode(centroidNode.id, centroidNode.sourceId,
-                    new GPSLocation(centroidNode.latE6, centroidNode.lonE6, centroidNode.latProjected,
-                            centroidNode.lonProjected, centroidNode.elevation), new HashSet<>(), centroid, clusters.get(centroid)));
+            this.nodes.put(centroidNode.getId(), new KMeansEnvironmentNode(centroidNode.getId(), new HashSet<>(), centroid, clusters.get(centroid)));
         }
     }
 
@@ -88,6 +86,7 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
         return distanceSpeedTime.get(fromNodeId).stream().filter(t-> t.getToNodeId() == toNodeId).findFirst().get().getDistanceSpeedPairTime().getDistance();
     }
 
+
     public DistanceSpeedPairTime getDistanceSpeedTimeBetweenNodes(int fromNodeId, int toNodeId){
         return distanceSpeedTime.get(fromNodeId).stream().filter(t-> t.getToNodeId() == toNodeId).findFirst().get().getDistanceSpeedPairTime();
     }
@@ -98,14 +97,14 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
 
         for (KMeansEnvironmentNode fromNode : this.nodes.values()){
             for (KMeansEnvironmentNode toNode : this.nodes.values()){
-                if (distanceSpeedTime.containsKey(fromNode.getId())){
-                    DistanceSpeedPairTime distance = DistanceGraphUtils.getDistancesAndSpeedBetweenNodes(fromNode.getId(), toNode.getId());
-                    distanceSpeedTime.get(fromNode.getId()).add(new TripToNode(toNode.getId(), distance));
+                if (distanceSpeedTime.containsKey(fromNode.getNodeId())){
+                    DistanceSpeedPairTime distance = DistanceGraphUtils.getDistancesAndSpeedBetweenNodes(fromNode.getNodeId(), toNode.getNodeId());
+                    distanceSpeedTime.get(fromNode.getNodeId()).add(new TripToNode(toNode.getNodeId(), distance));
                 } else {
                     List<TripToNode> fromNodeDistances = new ArrayList<>();
-                    DistanceSpeedPairTime distance = DistanceGraphUtils.getDistancesAndSpeedBetweenNodes(fromNode.getId(), toNode.getId());
-                    fromNodeDistances.add(new TripToNode(toNode.getId(), distance));
-                    distanceSpeedTime.put(fromNode.getId(), fromNodeDistances);
+                    DistanceSpeedPairTime distance = DistanceGraphUtils.getDistancesAndSpeedBetweenNodes(fromNode.getNodeId(), toNode.getNodeId());
+                    fromNodeDistances.add(new TripToNode(toNode.getNodeId(), distance));
+                    distanceSpeedTime.put(fromNode.getNodeId(), fromNodeDistances);
                 }
             }
         }
@@ -124,9 +123,9 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
 
     private void setNodeNeighbours(){
         for (KMeansEnvironmentNode node : nodes.values()){
-            Set<Integer> neighbours = distanceSpeedTime.get(node.getId())
+            Set<Integer> neighbours = distanceSpeedTime.get(node.getNodeId())
                     .stream()
-                    .filter(t -> t.getToNodeId() != node.getId())
+                    .filter(t -> t.getToNodeId() != node.getNodeId())
                     .sorted()
                     .limit(Utils.NUM_OF_NEIGHBOURS)
                     .map(TripToNode::getToNodeId)

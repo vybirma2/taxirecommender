@@ -82,13 +82,6 @@ public class ChargingStationReader {
 
     private static ChargingStation parseChargingStation(JSONObject station){
         JSONObject addressInfo = (JSONObject) station.get("AddressInfo");
-        Long id = (Long)addressInfo.get("ID");
-        Long countryId = (Long)addressInfo.get("CountryID");
-        String postCode = (String)addressInfo.get("Postcode");
-
-        String title = (String)addressInfo.get("Title");
-        String address = (String)addressInfo.get("AddressLine1");
-        String town = (String)addressInfo.get("Town");
 
         double longitude = (double)addressInfo.get("Longitude");
         double latitude = (double)addressInfo.get("Latitude");
@@ -99,20 +92,16 @@ public class ChargingStationReader {
         for (JSONObject connection : (Iterable<JSONObject>) connectionsJSON) {
             if (connection.get("ID") != null && connection.get("PowerKW") != null){
                 ChargingConnection chargingConnection = new ChargingConnection(Math.toIntExact((Long) connection.get("ID")),
-                        (Double) connection.get("PowerKW"), Utils.COST_FOR_KW);
+                        (Double) connection.get("PowerKW"));
                 connections.add(chargingConnection);
                 chargingConnections.put(chargingConnection.getId(), chargingConnection);
             }
         }
 
-        if (addressInfo.get("AddressLine2") != null) {
-            address += "\n" + addressInfo.get("AddressLine2");
-        }
-
         RoadNode node = DistanceGraphUtils.chooseRoadNode(longitude, latitude);
 
         if (node != null) {
-            ChargingStation chargingStation = new ChargingStation(Math.toIntExact(id), Math.toIntExact(countryId), postCode, title, address, town, longitude, latitude, node, connections);
+            ChargingStation chargingStation = new ChargingStation(node, connections);
             chargingStations.put(node.getId(), chargingStation);
             return chargingStation;
         } else {

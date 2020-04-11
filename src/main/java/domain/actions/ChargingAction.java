@@ -10,17 +10,13 @@ import java.util.Objects;
  */
 public class ChargingAction extends MeasurableAction {
 
-    private int connectionId;
-    private double cost;
+    private final int connectionId;
 
 
-    public ChargingAction(int actionId, int fromNodeId, int toNodeId, int timeStamp, int length, int connectionId, int energyProduction) {
-        super(actionId, fromNodeId, toNodeId, timeStamp, length, energyProduction);
+    public ChargingAction(int actionId, int fromNodeId, int toNodeId, int length, int connectionId) {
+        super(actionId, fromNodeId, toNodeId, length);
         this.connectionId = connectionId;
-        this.cost = ChargingStationReader.getChargingConnection(connectionId).getPrizeForKW() * (Utils.BATTERY_CAPACITY*(energyProduction/100.));
     }
-
-
 
 
     public int getConnectionId() {
@@ -29,33 +25,33 @@ public class ChargingAction extends MeasurableAction {
 
 
     public double getChargingCost(){
-        return -cost;
+        return -Utils.COST_FOR_KW * (Utils.BATTERY_CAPACITY*(this.getConsumption()/100.));
     }
 
 
     @Override
     public MeasurableAction copy() {
-        return new ChargingAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId(), this.getTimeStamp(),
-                this.getLength(), connectionId, this.getConsumption());
+        return new ChargingAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId(),
+                this.getLength(), connectionId);
     }
 
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
         ChargingAction that = (ChargingAction) o;
         return this.getLength() == that.getLength() &&
                 this.getFromNodeId() == that.getFromNodeId() &&
-                connectionId == that.connectionId &&
-                this.getConsumption() == that.getConsumption() &&
-                Double.compare(that.cost, cost) == 0;
+                connectionId == that.connectionId;
     }
 
 
     @Override
+    public int getConsumption() {
+        return (int)(ChargingStationReader.getChargingConnection(connectionId).getPowerKW() * getLength()/Utils.BATTERY_CAPACITY);
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(this.getActionId(), this.getFromNodeId(), this.getToNodeId(), this.getTimeStamp(),
-                this.getLength(), connectionId, this.getConsumption());
+        return Objects.hash(this.getActionId(), this.getFromNodeId(), this.getToNodeId(), this.getLength(), connectionId);
     }
 }

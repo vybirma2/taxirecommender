@@ -28,6 +28,10 @@ public class PickUpPassengerActionType  extends TaxiActionType {
     }
 
 
+    @Override
+    void addPreviousState(TaxiGraphState previousState, int stateId) {
+        previousState.addTripPreviousState(stateId);
+    }
 
 
     /**
@@ -36,8 +40,8 @@ public class PickUpPassengerActionType  extends TaxiActionType {
      * in TaxiRecommenderDomainGenerator - check on applicability - not running out of time/battery...
      */
     @Override
-    public List<MeasurableAction> allApplicableActions(TaxiGraphState state) {
-        List<MeasurableAction> actions = new ArrayList<>();
+    public List<TaxiGraphState> allReachableStates(TaxiGraphState state) {
+        List<TaxiGraphState> states = new ArrayList<>();
 
         ArrayList<Integer> trans = transitions.get(state.getNodeId());
 
@@ -45,15 +49,14 @@ public class PickUpPassengerActionType  extends TaxiActionType {
             for (Integer neighbour : trans) {
                 if (this.applicableInState(state, neighbour)) {
                     int startInterval = getIntervalStart(state.getTimeStamp());
-
-                    actions.add(new PickUpPassengerAction(this.actionId, state.getNodeId(), neighbour, state.getTimeStamp(),
+                    addNewState(states, state,
                             taxiTripLengths.get(startInterval).get(state.getNodeId()).get(neighbour).intValue(),
-                            taxiTripConsumptions.get(startInterval).get(state.getNodeId()).get(neighbour).intValue()));
+                            taxiTripConsumptions.get(startInterval).get(state.getNodeId()).get(neighbour).intValue());
                 }
             }
         }
 
-        return actions;
+        return states;
     }
 
     @Override

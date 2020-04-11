@@ -16,12 +16,12 @@ import java.util.Set;
  */
 public abstract class Environment<TNode extends EnvironmentNode, TEdge extends EnvironmentEdge> {
 
-    private Graph<RoadNode, RoadEdge> osmGraph;
+    private static Graph<RoadNode, RoadEdge> osmGraph;
     protected EnvironmentGraph<TNode, TEdge> environmentGraph;
 
 
     public void setOsmGraph(Graph<RoadNode, RoadEdge> osmGraph) throws IOException, ClassNotFoundException {
-        this.osmGraph = osmGraph;
+        Environment.osmGraph = osmGraph;
         setEnvironmentGraph();
     }
 
@@ -47,4 +47,14 @@ public abstract class Environment<TNode extends EnvironmentNode, TEdge extends E
 
 
     protected abstract void setEnvironmentGraph() throws IOException, ClassNotFoundException;
+
+
+    public static double getNodeLongitude(int nodeId){
+        return Environment.osmGraph.getNode(nodeId).getLongitude();
+    }
+
+
+    public static double getNodeLatitude(int nodeId){
+        return Environment.osmGraph.getNode(nodeId).getLatitude();
+    }
 }

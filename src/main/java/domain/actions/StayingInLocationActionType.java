@@ -19,15 +19,19 @@ public class StayingInLocationActionType extends TaxiActionType {
 
 
     @Override
-    public List<MeasurableAction> allApplicableActions(TaxiGraphState state) {
-        List<MeasurableAction> actions = new ArrayList<>();
+    void addPreviousState(TaxiGraphState previousState, int stateId) {
+        previousState.addStayingPreviousState(stateId);
+    }
+
+    @Override
+    public List<TaxiGraphState> allReachableStates(TaxiGraphState state) {
+        List<TaxiGraphState> states = new ArrayList<>();
 
         if (this.applicableInState(state)) {
-            actions.add(new StayingInLocationAction(this.actionId, state.getNodeId(), state.getNodeId(),
-                    state.getTimeStamp(), STAYING_INTERVAL, 0));
+            addNewState(states, state, STAYING_INTERVAL, 0);
         }
 
-        return actions;
+        return states;
     }
 
 

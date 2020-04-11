@@ -1,22 +1,45 @@
 package domain.environmentrepresentation;
 
-import cz.agents.multimodalstructures.additional.ModeOfTransport;
-import cz.agents.multimodalstructures.edges.RoadEdge;
 
-import java.util.Set;
-
-public abstract class EnvironmentEdge extends RoadEdge {
-
+public abstract class EnvironmentEdge {
 
     private int time;
-    public EnvironmentEdge(int fromId, int toId, long wayID, Set<ModeOfTransport> permittedModes,
-                           float allowedMaxSpeedInMpS, int lengthInMetres, int category, int time) {
-        super(fromId, toId, wayID, permittedModes, allowedMaxSpeedInMpS, lengthInMetres, category);
+    private int fromId;
+    private int toId;
+    private int length;
+    private float speed;
+
+
+    public EnvironmentEdge(int fromId, int toId, float speed, int length, int time) {
+        this.fromId = fromId;
+        this.toId = toId;
+        this.speed = speed;
+        this.length = length;
         this.time = time;
     }
 
 
     public int getTime() {
         return time;
+    }
+
+
+    public int getFromId() {
+        return fromId;
+    }
+
+
+    public int getToId() {
+        return toId;
+    }
+
+
+    public int getLength() {
+        return length;
+    }
+
+
+    public float getSpeed() {
+        return speed;
     }
 }

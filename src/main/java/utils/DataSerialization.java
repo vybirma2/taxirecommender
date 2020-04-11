@@ -40,7 +40,7 @@ public class DataSerialization {
 
         HashMap<Integer, DistanceSpeedPairTime> stationDistanceSpeedTime = new HashMap<>();
 
-        Set<LinkedList<Integer>> paths = nodes.stream().map(node -> aStar(node.getId(), chargingStation.getRoadNode().getId())).collect(Collectors.toSet());
+        Set<LinkedList<Integer>> paths = nodes.stream().map(node -> aStar(node.getNodeId(), chargingStation.getRoadNode().getId())).collect(Collectors.toSet());
 
         for (LinkedList<Integer> path : paths){
             if (path != null){
@@ -53,7 +53,7 @@ public class DataSerialization {
                 stationDistanceSpeedTime.put(path.getFirst(), new DistanceSpeedPairTime(distance, speed, time));
 
             } else {
-                throw new IllegalArgumentException("No connection between node: " + path.getFirst() + " and node: " + chargingStation.getId());
+                throw new IllegalArgumentException("No connection between node: " + path.getFirst() + " and node: " + chargingStation.getRoadNode().getId());
             }
         }
 

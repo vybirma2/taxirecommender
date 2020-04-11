@@ -11,7 +11,9 @@ public class ParameterEstimationUtils {
      * @param timeSortedTaxiTrips taxi trips sorted into defined estimation intervals
      * @return number of trips from to some node sorted in estimation intervals
      */
-    public static HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getNumberOfTripsToDestinationNodesPerInterval(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
+    public static HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getNumberOfTripsToDestinationNodesPerInterval(
+            HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
+
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> tripsToDestinationNode = new HashMap<>();
 
         for (Map.Entry<Integer, ArrayList<TaxiTrip>> entry : timeSortedTaxiTrips.entrySet()){
@@ -30,17 +32,18 @@ public class ParameterEstimationUtils {
         HashMap<Integer, HashMap<Integer, Integer>> tripsToDestinationNode = new HashMap<>();
 
         for (TaxiTrip taxiTrip : taxiTrips){
-            if (tripsToDestinationNode.containsKey(taxiTrip.getFromEnvironmentNode().getId())){
-                HashMap<Integer, Integer> tripsFromNode = tripsToDestinationNode.get(taxiTrip.getFromEnvironmentNode().getId());
-                if (tripsFromNode.containsKey(taxiTrip.getToEnvironmentNode().getId())){
-                    tripsFromNode.replace(taxiTrip.getToEnvironmentNode().getId(), tripsFromNode.get(taxiTrip.getToEnvironmentNode().getId()) + 1);
+            if (tripsToDestinationNode.containsKey(taxiTrip.getFromEnvironmentNode().getNodeId())){
+                HashMap<Integer, Integer> tripsFromNode = tripsToDestinationNode.get(taxiTrip.getFromEnvironmentNode().getNodeId());
+                if (tripsFromNode.containsKey(taxiTrip.getToEnvironmentNode().getNodeId())){
+                    tripsFromNode.replace(taxiTrip.getToEnvironmentNode().getNodeId(),
+                            tripsFromNode.get(taxiTrip.getToEnvironmentNode().getNodeId()) + 1);
                 } else {
-                    tripsFromNode.put(taxiTrip.getToEnvironmentNode().getId(), 1);
+                    tripsFromNode.put(taxiTrip.getToEnvironmentNode().getNodeId(), 1);
                 }
             } else {
                 HashMap<Integer, Integer> toNodeTrips = new HashMap<>();
-                toNodeTrips.put(taxiTrip.getToEnvironmentNode().getId(), 1);
-                tripsToDestinationNode.put(taxiTrip.getFromEnvironmentNode().getId(), toNodeTrips);
+                toNodeTrips.put(taxiTrip.getToEnvironmentNode().getNodeId(), 1);
+                tripsToDestinationNode.put(taxiTrip.getFromEnvironmentNode().getNodeId(), toNodeTrips);
             }
         }
 
@@ -52,7 +55,9 @@ public class ParameterEstimationUtils {
      * @param timeSortedTaxiTrips
      * @return number of pickups in given nodes in estimation time intervals
      */
-    public static HashMap<Integer, HashMap<Integer, Integer>> getPickUpsInNodesInEstimationIntervals(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
+    public static HashMap<Integer, HashMap<Integer, Integer>> getPickUpsInNodesInEstimationIntervals(
+            HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
+
         HashMap<Integer, HashMap<Integer, Integer>> pickupsInOSMNodes = new HashMap<>();
 
         for (Map.Entry<Integer, ArrayList<TaxiTrip>> entry : timeSortedTaxiTrips.entrySet()){
@@ -71,10 +76,11 @@ public class ParameterEstimationUtils {
        HashMap<Integer, Integer> pickupsInOSMNodes = new HashMap<>();
 
         for (TaxiTrip taxiTrip : taxiTrips){
-            if (pickupsInOSMNodes.containsKey(taxiTrip.getFromEnvironmentNode().getId())){
-                pickupsInOSMNodes.replace(taxiTrip.getFromEnvironmentNode().getId(), pickupsInOSMNodes.get(taxiTrip.getFromEnvironmentNode().getId()) + 1 );
+            if (pickupsInOSMNodes.containsKey(taxiTrip.getFromEnvironmentNode().getNodeId())){
+                pickupsInOSMNodes.replace(taxiTrip.getFromEnvironmentNode().getNodeId(),
+                        pickupsInOSMNodes.get(taxiTrip.getFromEnvironmentNode().getNodeId()) + 1 );
             } else {
-                pickupsInOSMNodes.put(taxiTrip.getFromEnvironmentNode().getId(), 1);
+                pickupsInOSMNodes.put(taxiTrip.getFromEnvironmentNode().getNodeId(), 1);
             }
         }
 
@@ -90,10 +96,11 @@ public class ParameterEstimationUtils {
         HashMap<Integer, Integer> dropOffsInOSMNodes = new HashMap<>();
 
         for (TaxiTrip taxiTrip : taxiTrips){
-            if (dropOffsInOSMNodes.containsKey(taxiTrip.getToEnvironmentNode().getId())){
-                dropOffsInOSMNodes.replace(taxiTrip.getToEnvironmentNode().getId(), dropOffsInOSMNodes.get(taxiTrip.getToEnvironmentNode().getId()) + 1 );
+            if (dropOffsInOSMNodes.containsKey(taxiTrip.getToEnvironmentNode().getNodeId())){
+                dropOffsInOSMNodes.replace(taxiTrip.getToEnvironmentNode().getNodeId(),
+                        dropOffsInOSMNodes.get(taxiTrip.getToEnvironmentNode().getNodeId()) + 1 );
             } else {
-                dropOffsInOSMNodes.put(taxiTrip.getToEnvironmentNode().getId(), 1);
+                dropOffsInOSMNodes.put(taxiTrip.getToEnvironmentNode().getNodeId(), 1);
             }
         }
 
@@ -105,7 +112,9 @@ public class ParameterEstimationUtils {
      * @param timeSortedTaxiTrips
      * @return number of drop offs in given nodes in estimation intervals
      */
-    public static HashMap<Integer, HashMap<Integer, Integer>> getDropOffsInNodesInEstimationIntervals(HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips){
+    public static HashMap<Integer, HashMap<Integer, Integer>> getDropOffsInNodesInEstimationIntervals(HashMap<Integer,
+            ArrayList<TaxiTrip>> timeSortedTaxiTrips){
+
         HashMap<Integer, HashMap<Integer, Integer>> dropOffsInOSMNodes = new HashMap<>();
 
         for (Map.Entry<Integer, ArrayList<TaxiTrip>> entry : timeSortedTaxiTrips.entrySet()){
@@ -130,7 +139,8 @@ public class ParameterEstimationUtils {
         for (TaxiTrip taxiTrip : taxiTrips){
             if (beforeTripTime(taxiTrip, estimationTime)){
                 continue;
-            } else if (afterTripTime(taxiTrip, estimationTime) && beforeTripTime(taxiTrip, estimationTime + Utils.ESTIMATION_EPISODE_LENGTH)){
+            } else if (afterTripTime(taxiTrip, estimationTime) && beforeTripTime(taxiTrip,
+                    estimationTime + Utils.ESTIMATION_EPISODE_LENGTH)){
                 trips.add(taxiTrip);
             } else {
                 if (!trips.isEmpty()){
@@ -143,7 +153,8 @@ public class ParameterEstimationUtils {
                     return timeSortedTaxiTrips;
                 }
 
-                if (afterTripTime(taxiTrip, estimationTime) && beforeTripTime(taxiTrip, estimationTime + Utils.ESTIMATION_EPISODE_LENGTH)){
+                if (afterTripTime(taxiTrip, estimationTime) && beforeTripTime(taxiTrip,
+                        estimationTime + Utils.ESTIMATION_EPISODE_LENGTH)){
                     trips.add(taxiTrip);
                 }
 

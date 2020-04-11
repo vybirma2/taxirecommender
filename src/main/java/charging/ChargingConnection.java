@@ -8,15 +8,13 @@ import java.io.Serializable;
  */
 public class ChargingConnection implements Serializable {
 
-    private int id;
-    private double powerKW;
-    private double prizeForKW;
+    private final int id;
+    private final double powerKW;
 
 
-    public ChargingConnection(int id, double powerKW, double prizeForKW) {
+    public ChargingConnection(int id, double powerKW) {
         this.id = id;
         this.powerKW = powerKW;
-        this.prizeForKW = prizeForKW;
     }
 
 
@@ -29,8 +27,4 @@ public class ChargingConnection implements Serializable {
         return powerKW;
     }
 
-
-    public double getPrizeForKW() {
-        return prizeForKW;
-    }
 }

@@ -8,10 +8,10 @@ import java.util.Comparator;
 
 public class Utils {
 
-    public static final int NUM_OF_CLUSTERS = 200;
+    public static final int NUM_OF_CLUSTERS = 100;
 
 
-    public static final int SHIFT_LENGTH = 1 * 60;
+    public static final int SHIFT_LENGTH = 4 * 60;
     public static final int STAYING_INTERVAL = 10;
 
     public static final double COST_FOR_KW = 5.5;

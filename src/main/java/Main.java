@@ -19,20 +19,20 @@ public class Main {
         }
         try {
 
-            ReachableStatesGenerator planner = new ReachableStatesGenerator(taxiRecommenderDomainGenerator.getTaxiGraphStateModel(), taxiRecommenderDomainGenerator.getActionTypes());
-            TaxiGraphState initialState = new TaxiGraphState(taxiRecommenderDomainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getId(), 40, Utils.SHIFT_START_TIME);
+            ReachableStatesGenerator planner = new ReachableStatesGenerator(taxiRecommenderDomainGenerator.getTaxiGraphStateModel());
+            TaxiGraphState initialState = new TaxiGraphState(taxiRecommenderDomainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getNodeId(), 40, Utils.SHIFT_START_TIME);
             planner.performReachabilityFrom(initialState);
 
-            taxiRecommenderDomainGenerator.getRewardFunction().computeRewardForStates(planner.getReachableStates());
+          //  taxiRecommenderDomainGenerator.getRewardFunction().computeRewardForStates(planner.getReachableStates());
 
 
             TaxiGraphState state = initialState;
-            while (state.getMaxNextState() != null){
+            /*while (state.getMaxNextState() != null){
                 System.out.println(state.getMaxRewardAction().getActionId());
                 System.out.println(state.getMaxNextState());
                 System.out.println();
                 state = state.getMaxNextState();
-            }
+            }*/
 
         } catch (Exception e) {
             e.printStackTrace();

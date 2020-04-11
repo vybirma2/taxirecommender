@@ -30,11 +30,7 @@ public class FullEnvironmentGraph extends EnvironmentGraph<FullEnvironmentNode, 
         nodes = new HashMap<>();
 
         for (RoadNode node : osmGraph.getAllNodes()){
-            nodes.put(node.getId(), new FullEnvironmentNode(
-                    node.id, node.sourceId,
-                    new GPSLocation(node.latE6, node.lonE6, node.latProjected, node.lonProjected, node.elevation),
-                    DistanceGraphUtils.getOsmNeighbours(node.getId()))
-            );
+            nodes.put(node.getId(), new FullEnvironmentNode(node.id, DistanceGraphUtils.getOsmNeighbours(node.getId())));
         }
     }
 
@@ -48,13 +44,11 @@ public class FullEnvironmentGraph extends EnvironmentGraph<FullEnvironmentNode, 
 
         for (RoadEdge edge : osmGraph.getAllEdges()){
             if (edges.containsKey(edge.fromId)){
-                edges.get(edge.fromId).put(edge.toId, new FullEnvironmentEdge(edge.fromId, edge.toId,edge.wayID,
-                        edge.getPermittedModes(), edge.allowedMaxSpeedInMpS, edge.length, edge.getCategory(),
+                edges.get(edge.fromId).put(edge.toId, new FullEnvironmentEdge(edge.getFromId(), edge.getToId(), edge.allowedMaxSpeedInMpS, edge.length,
                         DistanceGraphUtils.getTripTime(edge.length, edge.allowedMaxSpeedInMpS)));
             } else {
                 HashMap<Integer, FullEnvironmentEdge> nodeEdges = new HashMap<>();
-                nodeEdges.put(edge.toId, new FullEnvironmentEdge(edge.fromId, edge.toId,edge.wayID,
-                        edge.getPermittedModes(), edge.allowedMaxSpeedInMpS, edge.length, edge.getCategory(),
+                nodeEdges.put(edge.toId, new FullEnvironmentEdge(edge.getFromId(), edge.getToId(), edge.allowedMaxSpeedInMpS, edge.length,
                         DistanceGraphUtils.getTripTime(edge.length, edge.allowedMaxSpeedInMpS)));
                 edges.put(edge.fromId, nodeEdges);
             }

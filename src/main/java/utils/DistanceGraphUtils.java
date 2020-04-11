@@ -6,6 +6,7 @@ import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.AStarNode;
+import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.EnvironmentEdge;
 import domain.environmentrepresentation.EnvironmentGraph;
 import domain.environmentrepresentation.EnvironmentNode;
@@ -18,7 +19,7 @@ import java.util.*;
  */
 public class DistanceGraphUtils {
 
-    private static Collection<? extends RoadNode> nodes;
+    private static Collection<? extends EnvironmentNode> nodes;
     private static Collection<RoadNode> osmNodes;
     private static EnvironmentGraph<? extends EnvironmentNode, ? extends EnvironmentEdge> graph;
     private static Graph<RoadNode, RoadEdge> osmGraph;
@@ -85,7 +86,19 @@ public class DistanceGraphUtils {
 
 
     public static EnvironmentNode chooseEnvironmentNode(double longitude, double latitude){
-        return (EnvironmentNode) chooseRoadNode(nodes, longitude, latitude);
+        double min = Double.MAX_VALUE;
+        EnvironmentNode environmentNode = null;
+
+        for (EnvironmentNode node : nodes){
+            double distance = getEuclideanDistance(longitude, latitude, node.getLongitude(), node.getLatitude());
+
+            if (distance < min){
+                min = distance;
+                environmentNode = node;
+            }
+        }
+
+        return environmentNode;
     }
 
 
@@ -246,7 +259,7 @@ public class DistanceGraphUtils {
 
         EnvironmentEdge edge = graph.getEdge(fromNodeId, toNodeId);
         if (edge != null){
-            return edge.getAllowedMaxSpeedInMpS() * 3.6;
+            return edge.getSpeed() * 3.6;
         } else {
             DistanceSpeedPairTime distanceSpeedPairTime = getChargingStationParameters(fromNodeId, toNodeId, chargingStationDistancesSpeedTime);
             return distanceSpeedPairTime.getSpeed();
