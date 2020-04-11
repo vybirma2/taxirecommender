@@ -9,17 +9,19 @@ import static utils.DistanceGraphUtils.getTripTime;
 public class GoingToChargingStationAction extends MeasurableAction  {
 
 
-    public GoingToChargingStationAction(int actionId, int fromNodeId, int toNodeId, int timeStamp) {
-        super(actionId, fromNodeId, toNodeId, timeStamp, getTripTime(fromNodeId, toNodeId),
-                EnergyConsumptionEstimator.getActionEnergyConsumption(fromNodeId, toNodeId));
+    public GoingToChargingStationAction(int actionId, int fromNodeId, int toNodeId) {
+        super(actionId, fromNodeId, toNodeId, getTripTime(fromNodeId, toNodeId));
     }
 
 
-
+    @Override
+    public int getConsumption() {
+        return EnergyConsumptionEstimator.getActionEnergyConsumption(this.getFromNodeId(), this.getToNodeId());
+    }
 
     @Override
     public MeasurableAction copy() {
-        return new GoingToChargingStationAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId(), this.getTimeStamp());
+        return new GoingToChargingStationAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId());
     }
 
 }

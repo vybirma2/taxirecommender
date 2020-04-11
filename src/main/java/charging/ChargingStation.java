@@ -11,73 +11,23 @@ import java.util.ArrayList;
  */
 public class ChargingStation implements Serializable {
 
-    private Integer id;
-    private Integer countryId;
-
-    private double longitude;
-    private double latitude;
-
-    private String postCode;
-    private String title;
-    private String address;
-    private String town;
-
     private RoadNode roadNode;
     private ArrayList<ChargingConnection> connections;
 
 
-    public ChargingStation(Integer id, Integer countryId, String postCode, String title, String address, String town,
-                           double longitude, double latitude, RoadNode roadNode, ArrayList<ChargingConnection> connections) {
-        this.id = id;
-        this.countryId = countryId;
-        this.postCode = postCode;
-        this.title = title;
-        this.address = address;
-        this.town = town;
-        this.longitude = longitude;
-        this.latitude = latitude;
+    public ChargingStation(RoadNode roadNode, ArrayList<ChargingConnection> connections) {
         this.roadNode = roadNode;
         this.connections = connections;
     }
 
 
-    public Integer getId() {
-        return id;
-    }
-
-
-    public Integer getCountryId() {
-        return countryId;
-    }
-
-
-    public String getPostCode() {
-        return postCode;
-    }
-
-
-    public String getTitle() {
-        return title;
-    }
-
-
-    public String getAddress() {
-        return address;
-    }
-
-
-    public String getTown() {
-        return town;
-    }
-
-
     public double getLongitude() {
-        return longitude;
+        return roadNode.getLongitude();
     }
 
 
     public double getLatitude() {
-        return latitude;
+        return roadNode.getLatitude();
     }
 
 
@@ -93,11 +43,6 @@ public class ChargingStation implements Serializable {
 
     @Override
     public String toString() {
-        return "Id: " + id +
-                ", Title: " + title + '\'' +
-                ", Town: " + town + '\'' +
-                ", Lon: " + longitude +
-                ", Lat: " + latitude +
-                ", lon: " + roadNode.getLongitude() + ", lat: " + roadNode.getLatitude();
+        return "Lon: " + roadNode.getLongitude() + ", lat: " + roadNode.getLatitude();
     }
 }

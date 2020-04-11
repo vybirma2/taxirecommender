@@ -1,6 +1,7 @@
 package domain.actions;
 
 import domain.states.TaxiGraphState;
+import parameterestimation.EnergyConsumptionEstimator;
 
 import java.util.*;
 
@@ -19,29 +20,39 @@ public class NextLocationActionType extends TaxiActionType {
     }
 
 
+    @Override
+    void addPreviousState(TaxiGraphState previousState, int stateId) {
+        previousState.addNextLocationPreviousState(stateId);
+    }
+
     /**
      * @param state
      * @return list of all possible actions of moving to the neighbouring node defined by transitions set
      * in TaxiRecommenderDomainGenerator - check on applicability - not running out of time/battery...
      */
     @Override
-    public List<MeasurableAction> allApplicableActions(TaxiGraphState state) {
-        List<MeasurableAction> actions = new ArrayList<>();
+    public List<TaxiGraphState> allReachableStates(TaxiGraphState state) {
+        List<TaxiGraphState> states = new ArrayList<>();
 
         ArrayList<Integer> trans = transitions.get(state.getNodeId());
 
         if (trans != null){
             for (int neighbour : trans){
                 if (this.applicableInState(state, neighbour)){
-                    actions.add(new NextLocationAction(this.actionId, state.getNodeId(), neighbour, state.getTimeStamp()));
+                    addNewState(states, state, getTripTime(state.getNodeId(), neighbour),
+                            getConsumption(state.getNodeId(), neighbour));
                 }
             }
         }
 
 
-        return actions;
+        return states;
     }
 
+
+    private int getConsumption(int fromNodeId, int toNodeId) {
+        return EnergyConsumptionEstimator.getActionEnergyConsumption(fromNodeId, toNodeId);
+    }
 
     @Override
     protected boolean applicableInState(TaxiGraphState state) {

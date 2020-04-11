@@ -36,7 +36,7 @@ public class TaxiGraphTerminalFunction {
 
     private boolean noActionAvailable(TaxiGraphState state) {
         for (TaxiActionType actionType : actionTypes){
-            if (!actionType.allApplicableActions(state).isEmpty()){
+            if (!actionType.allReachableStates(state).isEmpty()){
                 return false;
             }
         }

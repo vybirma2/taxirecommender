@@ -81,7 +81,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
                             (int)(distance * 1000), DistanceGraphUtils.getTripTime(distance, speed)));
                 }
             }
-            edges.put(node.getId(), nodeEdges);
+            edges.put(node.getNodeId(), nodeEdges);
         }
     }
 
@@ -241,7 +241,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         int i = row - 1;
         while (i >= 0){
             if (gridWorld[i][column] != null){
-                gridWorld[row][column].addNeighbour(gridWorld[i][column].getId());
+                gridWorld[row][column].addNeighbour(gridWorld[i][column].getNodeId());
                 return;
             }
             i--;
@@ -253,7 +253,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         int i = row + 1;
         while (i < numOfRows){
             if (gridWorld[i][column] != null){
-                gridWorld[row][column].addNeighbour(gridWorld[i][column].getId());
+                gridWorld[row][column].addNeighbour(gridWorld[i][column].getNodeId());
                 return;
             }
             i++;
@@ -265,7 +265,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         int i = column - 1;
         while (i >= 0){
             if (gridWorld[row][i] != null){
-                gridWorld[row][column].addNeighbour(gridWorld[row][i].getId());
+                gridWorld[row][column].addNeighbour(gridWorld[row][i].getNodeId());
                 return;
             }
             i--;
@@ -277,7 +277,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         int i = column + 1;
         while (i < numOfColumns){
             if (gridWorld[row][i] != null){
-                gridWorld[row][column].addNeighbour(gridWorld[row][i].getId());
+                gridWorld[row][column].addNeighbour(gridWorld[row][i].getNodeId());
                 return;
             }
             i++;
@@ -290,7 +290,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         int j = row - 1;
         while (i >= 0 && j >= 0){
             if (gridWorld[j][i] != null){
-                gridWorld[row][column].addNeighbour(gridWorld[j][i].getId());
+                gridWorld[row][column].addNeighbour(gridWorld[j][i].getNodeId());
                 return;
             }
             i--;
@@ -304,7 +304,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         int j = row - 1;
         while (i < numOfColumns && j >= 0){
             if (gridWorld[j][i] != null){
-                gridWorld[row][column].addNeighbour(gridWorld[j][i].getId());
+                gridWorld[row][column].addNeighbour(gridWorld[j][i].getNodeId());
                 return;
             }
             i++;
@@ -318,7 +318,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         int j = row + 1;
         while (i >= 0 && j < numOfRows){
             if (gridWorld[j][i] != null){
-                gridWorld[row][column].addNeighbour(gridWorld[j][i].getId());
+                gridWorld[row][column].addNeighbour(gridWorld[j][i].getNodeId());
                 return;
             }
             i--;
@@ -332,7 +332,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         int j = row + 1;
         while (i < numOfColumns && j < numOfRows){
             if (gridWorld[j][i] != null){
-                gridWorld[row][column].addNeighbour(gridWorld[j][i].getId());
+                gridWorld[row][column].addNeighbour(gridWorld[j][i].getNodeId());
                 return;
             }
             i++;
@@ -404,10 +404,8 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         RoadNode centerNode = chooseRoadNode(nodes, longitude, latitude);
 
         if (centerNode != null){
-            gridWorld[row][column] = new GridEnvironmentNode( centerNode.id, centerNode.sourceId,
-                    new GPSLocation(centerNode.latE6, centerNode.lonE6, centerNode.latProjected,
-                            centerNode.lonProjected, centerNode.elevation), new HashSet<>(), top, bottom, left, right);
-            this.nodes.put(gridWorld[row][column].getId(), gridWorld[row][column]);
+            gridWorld[row][column] = new GridEnvironmentNode(centerNode.getId(), new HashSet<>());
+            this.nodes.put(gridWorld[row][column].getNodeId(), gridWorld[row][column]);
         }
     }
 
@@ -508,7 +506,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         for (int i = 0; i < this.numOfRows; i++){
             for (int j = 0; j < this.numOfColumns; j++){
                 if (this.gridWorld[i][j] != null){
-                    result.append(this.gridWorld[i][j].getId()).append("   ");
+                    result.append(this.gridWorld[i][j].getNodeId()).append("   ");
                 } else {
                     result.append("        ");
                 }

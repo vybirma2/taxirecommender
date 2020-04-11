@@ -3,6 +3,7 @@ package domain.actions;
 import charging.ChargingStationReader;
 import charging.TripToChargingStation;
 import domain.states.TaxiGraphState;
+import parameterestimation.EnergyConsumptionEstimator;
 import utils.Utils;
 
 import java.util.*;
@@ -21,6 +22,11 @@ public class GoingToChargingStationActionType extends TaxiActionType {
         super(actionId, transitions);
     }
 
+    @Override
+    void addPreviousState(TaxiGraphState previousState, int stateId) {
+        previousState.addGoingToChargingPreviousState(stateId);
+    }
+
 
     /**
      * @param state Current state to go to charging station from
@@ -28,8 +34,8 @@ public class GoingToChargingStationActionType extends TaxiActionType {
      * charging station order - distance/prize...
      */
     @Override
-    public List<MeasurableAction> allApplicableActions(TaxiGraphState state) {
-        List<MeasurableAction> actions = new ArrayList<>();
+    public List<TaxiGraphState> allReachableStates(TaxiGraphState state) {
+        List<TaxiGraphState> states = new ArrayList<>();
 
         List<Integer> trans = this.transitions.get(state.getNodeId());
 
@@ -37,15 +43,20 @@ public class GoingToChargingStationActionType extends TaxiActionType {
             List<Integer> stations = chooseBestChargingStation(state, trans);
             for (Integer chargingStation : stations){
                 if (this.applicableInState(state, chargingStation)){
-                    actions.add(new GoingToChargingStationAction(this.actionId, state.getNodeId(), chargingStation, state.getTimeStamp()));
+                    addNewState(states, state, getTripTime(state.getNodeId(), chargingStation),
+                            getConsumption(state.getNodeId(), chargingStation));
                 }
             }
         }
 
-
-
-        return actions;
+        return states;
     }
+
+
+    private int getConsumption(int fromNodeId, int toNodeId) {
+        return EnergyConsumptionEstimator.getActionEnergyConsumption(fromNodeId, toNodeId);
+    }
+
 
 
     private List<Integer> chooseBestChargingStation(TaxiGraphState state, List<Integer> transitions){

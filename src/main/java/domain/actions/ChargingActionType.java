@@ -19,40 +19,48 @@ import static utils.Utils.NUM_OF_CHARGING_LENGTH_POSSIBILITIES;
  */
 public class ChargingActionType extends TaxiActionType {
 
+
+
     public ChargingActionType(int actionId, HashMap<Integer, ArrayList<Integer>> transitions) {
         super(actionId, transitions);
+    }
+
+    @Override
+    void addPreviousState(TaxiGraphState previousState, int stateId) {
+        previousState.addChargingPreviousState(stateId);
     }
 
 
     /**
      * Choosing the best available connection and producing charging actions of different length.
-     * @param state current state to be charging done in
-     * @return charging actions available in current state - equally divided into NUM_OF_CHARGING_LENGTH_POSSIBILITIES
+     * @param previousState current previousState to be charging done in
+     * @return charging actions available in current previousState - equally divided into NUM_OF_CHARGING_LENGTH_POSSIBILITIES
      * intervals.
      */
     @Override
-    public List<MeasurableAction> allApplicableActions(TaxiGraphState state) {
-        List<MeasurableAction> actions = new ArrayList<>();
+    public List<TaxiGraphState> allReachableStates(TaxiGraphState previousState) {
 
-        if (this.applicableInState(state)) {
-            ChargingStation station = ChargingStationReader.getChargingStation(state.getNodeId());
+        List<TaxiGraphState> states = new ArrayList<>();
+
+        if (this.applicableInState(previousState)) {
+            ChargingStation station = ChargingStationReader.getChargingStation(previousState.getNodeId());
 
             if (!station.getAvailableConnections().isEmpty()){
                 ChargingConnection connection = chooseBestChargingConnection(station.getAvailableConnections());
 
-                int timeToFullStateOfCharge = timeToFullStateOfCharge(state, connection);
+                int timeToFullStateOfCharge = timeToFullStateOfCharge(previousState, connection);
                 int chargingTimeUnit = timeToFullStateOfCharge/NUM_OF_CHARGING_LENGTH_POSSIBILITIES;
 
                 for(int i = 1; i <= NUM_OF_CHARGING_LENGTH_POSSIBILITIES; i++){
                     int energyCharged = getEnergyCharged(connection, i * chargingTimeUnit);
-                    if (applicableInState(state, i * chargingTimeUnit, energyCharged)){
-                        actions.add(new ChargingAction(this.actionId, state.getNodeId(), state.getNodeId(), state.getTimeStamp(),
-                                i*chargingTimeUnit, connection.getId(), energyCharged));
+                    if (applicableInState(previousState, i * chargingTimeUnit, energyCharged)){
+                        addNewState(states, previousState, i * chargingTimeUnit, energyCharged);
                     }
                 }
             }
         }
-        return actions;
+
+        return states;
     }
 
 

@@ -68,7 +68,7 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
             MapVisualizer.addPickUpPointsToMap(node.getPickupPlaceList());
             double distance = 0;
             for (Integer neighbour : node.getNeighbours()){
-                distance += ((KMeansEnvironmentGraph)environmentGraph).getDistanceBetweenNodes(node.getId(), neighbour);
+                distance += ((KMeansEnvironmentGraph)environmentGraph).getDistanceBetweenNodes(node.getNodeId(), neighbour);
                 neighbours.add(environmentGraph.getNode(neighbour));
             }
             distance /= 7;

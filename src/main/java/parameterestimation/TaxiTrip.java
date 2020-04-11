@@ -118,19 +118,13 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
     }
 
 
-    public void setPickUpNode(EnvironmentNode pickUpNode) {
-        this.pickUpRoadNode = pickUpNode;
-    }
+
 
 
     public RoadNode getDestinationRoadNode() {
         return destinationRoadNode;
     }
 
-
-    public void setDestinationRoadNode(EnvironmentNode destinationRoadNode) {
-        this.destinationRoadNode = destinationRoadNode;
-    }
 
 
     public RoadNode getPickUpRoadNode() {

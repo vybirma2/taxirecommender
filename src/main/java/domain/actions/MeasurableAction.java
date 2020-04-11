@@ -4,31 +4,26 @@ import java.util.Objects;
 
 public abstract class MeasurableAction {
 
+    public static int ids;
+
+    private int id;
     private int actionId;
     private int fromNodeId;
     private int toNodeId;
-    private int timeStamp;
     private int length;
-    private int consumption;
 
 
-    public MeasurableAction(int actionId, int fromNodeId, int toNodeId, int timeStamp, int length, int consumption) {
+    public MeasurableAction(int actionId, int fromNodeId, int toNodeId, int length) {
+        this.id = ids++;
         this.actionId = actionId;
         this.fromNodeId = fromNodeId;
         this.toNodeId = toNodeId;
-        this.timeStamp = timeStamp;
         this.length = length;
-        this.consumption = consumption;
     }
 
 
     public int getFromNodeId() {
         return fromNodeId;
-    }
-
-
-    public int getTimeStamp() {
-        return timeStamp;
     }
 
 
@@ -46,14 +41,19 @@ public abstract class MeasurableAction {
         return length;
     }
 
-    public int getConsumption() {
-        return consumption;
+
+    public int getId(){
+        return id;
     }
+
+
+    public abstract int getConsumption();
+
 
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getFromNodeId(), this.getToNodeId(), this.getTimeStamp());
+        return Objects.hash(this.fromNodeId, this.toNodeId, this.actionId);
     }
 
 
@@ -63,7 +63,6 @@ public abstract class MeasurableAction {
         } else if (o != null && this.getClass() == o.getClass()) {
             MeasurableAction that = (MeasurableAction) o;
             return this.actionId == that.getActionId()
-                    && this.timeStamp == that.getTimeStamp()
                     && this.fromNodeId == that.getFromNodeId()
                     && this.toNodeId == that.getToNodeId();
         } else {

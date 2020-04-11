@@ -1,42 +1,44 @@
 package domain.environmentrepresentation;
 
-import cz.agents.basestructures.GPSLocation;
-import cz.agents.multimodalstructures.nodes.RoadNode;
-
 import java.io.Serializable;
 import java.util.Set;
 
-public abstract class EnvironmentNode extends RoadNode implements Serializable {
+public abstract class EnvironmentNode implements Serializable {
 
     protected Set<Integer> neighbours;
+    private final int nodeId;
 
 
-    public EnvironmentNode(int id, long sourceId, GPSLocation location, boolean isParkAndRide, boolean isBikeSharingStation, Set<Integer> neighbours) {
-        super(id, sourceId, location, isParkAndRide, isBikeSharingStation);
+    public EnvironmentNode(int nodeId, Set<Integer> neighbours) {
         this.neighbours = neighbours;
+        this.nodeId = nodeId;
     }
+
 
     public Set<Integer> getNeighbours(){
         return neighbours;
+    }
+
+    public int getNodeId() {
+        return nodeId;
     }
 
     public void addNeighbour(int neighbour){
         neighbours.add(neighbour);
     }
 
+
     public void addNeighbours(Set<Integer> neighbours){
         this.neighbours.addAll(neighbours);
     }
 
 
-    @Override
     public double getLatitude() {
-        return super.getLatitude();
+        return Environment.getNodeLatitude(nodeId);
     }
 
 
-    @Override
     public double getLongitude() {
-        return super.getLongitude();
+        return Environment.getNodeLongitude(nodeId);
     }
 }

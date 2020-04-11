@@ -81,7 +81,6 @@ public class MapVisualizer extends Application {
     private static Graphic createGraphicPickupPoint(PickUpPoint node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
         Graphic pointGraphic = new Graphic(point, pickUpPointSymbol);
-        pointGraphic.getAttributes().put("ID", node.getId());
 
         return pointGraphic;
     }
@@ -117,7 +116,6 @@ public class MapVisualizer extends Application {
     private static Graphic createGraphicHullPoint(PickUpPoint node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
         Graphic pointGraphic = new Graphic(point, hullPointSymbol);
-        pointGraphic.getAttributes().put("ID", node.getId());
 
         return pointGraphic;
     }
@@ -152,7 +150,6 @@ public class MapVisualizer extends Application {
     private static Graphic createGraphicKMeansNode(KMeansEnvironmentNode node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
         Graphic pointGraphic = new Graphic(point, centroidSymbol);
-        pointGraphic.getAttributes().put("ID", node.getId());
 
         return pointGraphic;
     }
@@ -161,7 +158,6 @@ public class MapVisualizer extends Application {
     private static Graphic createGraphicCentroid(PickUpPoint node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
         Graphic pointGraphic = new Graphic(point, centroidSymbol);
-        pointGraphic.getAttributes().put("ID", node.getId());
 
         return pointGraphic;
     }

@@ -86,11 +86,11 @@ public class TaxiGraphRewardFunction {
 
         HashSet<TaxiGraphState> visitedStates = new HashSet<>();
 
-        for (Integer actionId : state.getPreviousActions()){
+        /*for (Integer actionId : state.getPreviousActions()){
             for (ActionStatePair pair : state.getPreviousStatesOfAction(actionId)){
                 setPreviousStateReward(actionId, visitedStates, pair.getAction(), pair.getState(), state);
             }
-        }
+        }*/
         return visitedStates;
     }
 
@@ -111,19 +111,19 @@ public class TaxiGraphRewardFunction {
         switch (actionId){
             case 0:
             case 1:
-                previousState.setActionReward(action, getStayingAndNextLocationReward(currentState), currentState);
+               /* previousState.setActionReward(action, getStayingAndNextLocationReward(currentState), currentState);
                 visitedStates.add(previousState);
-                break;
+                break;*/
             case 2:
-                if (currentState.getMaxRewardActionId() != ActionTypes.TO_NEXT_LOCATION.getValue()){
+               /* if (currentState.getMaxRewardActionId() != ActionTypes.TO_NEXT_LOCATION.getValue()){
                     previousState.setActionReward(action, getGoingToChargingStationReward(currentState), currentState);
-                }
+                }*/
                 visitedStates.add(previousState);
                 break;
             case 3:
-                if (currentState.getMaxRewardActionId() != ActionTypes.CHARGING_IN_CHARGING_STATION.getValue()){
+               /* if (currentState.getMaxRewardActionId() != ActionTypes.CHARGING_IN_CHARGING_STATION.getValue()){
                     previousState.setActionReward(action, getChargingReward(currentState, (ChargingAction) action), currentState);
-                }
+                }*/
                 visitedStates.add(previousState);
                 break;
             case 4:

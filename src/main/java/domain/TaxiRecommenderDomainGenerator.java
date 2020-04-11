@@ -78,7 +78,7 @@ public class TaxiRecommenderDomainGenerator {
     public void generateDomain() {
         try {
             loadData();
-            this.taxiGraphStateModel =  new TaxiGraphStateModel();
+            this.taxiGraphStateModel =  new TaxiGraphStateModel(actionTypes);
             addAllActionTypes();
             setTerminalFunction(new TaxiGraphTerminalFunction(this.actionTypes));
             setRewardFunction(new TaxiGraphRewardFunction(this.getTerminalFunction(), parameterEstimator));
@@ -196,15 +196,15 @@ public class TaxiRecommenderDomainGenerator {
 
             // setting transition between node itself - action of staying in location, i.e. prob 1
             trans = new ArrayList<>();
-            trans.add(node.getId());
-            this.transitions.get(STAYING_IN_LOCATION.getValue()).put(node.getId(), trans);
+            trans.add(node.getNodeId());
+            this.transitions.get(STAYING_IN_LOCATION.getValue()).put(node.getNodeId(), trans);
 
             // setting transitions between neighbouring nodes - action of going to next location, i.e. prob 1
             setToNextLocationTransitions(node);
 
             // setting transitions between current node and all available charging stations
             trans = new ArrayList<>();
-            this.transitions.get(GOING_TO_CHARGING_STATION.getValue()).put(node.getId(), trans);
+            this.transitions.get(GOING_TO_CHARGING_STATION.getValue()).put(node.getNodeId(), trans);
             for (ChargingStation station : chargingStations) {
                 trans.add(station.getRoadNode().getId());
             }
@@ -218,7 +218,7 @@ public class TaxiRecommenderDomainGenerator {
             trans.add(chargingStation.getRoadNode().getId());
             this.transitions.get(ActionTypes.CHARGING_IN_CHARGING_STATION.getValue()).put(chargingStation.getRoadNode().getId(), trans);
             trans = new ArrayList<>();
-            trans.add(node.getId());
+            trans.add(node.getNodeId());
             this.transitions.get(TO_NEXT_LOCATION.getValue()).put(chargingStation.getRoadNode().getId(), trans);
         }
     }
@@ -227,12 +227,12 @@ public class TaxiRecommenderDomainGenerator {
     private void setToNextLocationTransitions(EnvironmentNode node){
         Set<Integer> neighbours = node.getNeighbours();
         ArrayList<Integer> trans = new ArrayList<>();
-        this.transitions.get(TO_NEXT_LOCATION.getValue()).put(node.getId(), trans);
+        this.transitions.get(TO_NEXT_LOCATION.getValue()).put(node.getNodeId(), trans);
         trans.addAll(neighbours);
 
-        HashMap<Integer, Double> destinationProbabilities = parameterEstimator.getDestinationProbabilitiesInNode(node.getId());
+        HashMap<Integer, Double> destinationProbabilities = parameterEstimator.getDestinationProbabilitiesInNode(node.getNodeId());
         trans = new ArrayList<>();
-        this.transitions.get(ActionTypes.PICK_UP_PASSENGER.getValue()).put(node.getId(), trans);
+        this.transitions.get(ActionTypes.PICK_UP_PASSENGER.getValue()).put(node.getNodeId(), trans);
         if (destinationProbabilities != null){
             trans.addAll(destinationProbabilities.keySet());
         }

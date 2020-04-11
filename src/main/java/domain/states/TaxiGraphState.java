@@ -1,11 +1,7 @@
 package domain.states;
 
 
-import domain.actions.MeasurableAction;
-
 import java.util.*;
-
-import static utils.Utils.NUM_OF_ACTION_TYPES;
 
 /**
  * Class representing state for planning containing information of current node, state of charge, timestamp but also
@@ -14,31 +10,31 @@ import static utils.Utils.NUM_OF_ACTION_TYPES;
  */
 public class TaxiGraphState implements Comparable<TaxiGraphState> {
 
-    private Integer hash;
+    private static int stateId = 0;
+
+    private int id;
     private int nodeId;
     private int stateOfCharge;
     private int timeStamp;
 
+    private Set<Integer> nextLocationPreviousStates;
+    private Set<Integer> stayingPreviousStates;
+    private Set<Integer> tripPreviousStates;
+    private Set<Integer> chargingPreviousStates;
+    private Set<Integer> goingChargingPreviousStates;
 
-    private boolean changed = false;
 
-    private ArrayList<ArrayList<ActionStatePair>> previousActionStatePairs = new ArrayList<>(NUM_OF_ACTION_TYPES);
-    private Set<Integer> previousActionsId = new HashSet<>();
+    private int maxRewardState;
 
-    private MeasurableAction maxRewardAction = null;
-    private TaxiGraphState maxNextState = null;
-    private Double maxReward = null;
-    private HashMap<Integer, Double> afterTaxiTripStateRewards = new HashMap<>();
+    private double maxReward = Double.MIN_VALUE;
+    private final HashMap<Integer, Double> afterTaxiTripStateRewards = new HashMap<>();
 
 
     public TaxiGraphState(int nodeId, int stateOfCharge, int timeStamp) {
-
+        this.id = stateId++;
         this.nodeId = nodeId;
         this.stateOfCharge = stateOfCharge;
         this.timeStamp = timeStamp;
-        for (int i = 0; i < NUM_OF_ACTION_TYPES; i++){
-            previousActionStatePairs.add(null);
-        }
     }
 
 
@@ -66,19 +62,26 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
         this.nodeId = nodeId;
     }
 
+
     public void setStateOfCharge(int stateOfCharge) {
         this.stateOfCharge = stateOfCharge;
     }
 
+
     public void setTimeStamp(int timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+
+    public int getId() {
+        return id;
     }
 
     /**
      * @return maximal possible reward which were set during reward computation in reward function
      */
     public double getReward() {
-        if (maxRewardAction == null){
+        if (maxRewardState == Double.MIN_VALUE){
             return 0;
         } else {
             return maxReward;
@@ -88,61 +91,58 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
 
     /**
      * If better than before set value, setting new maximum
-     * @param action action to do to receive given reward
      * @param reward potentially received reward
      */
-    public void setActionReward(MeasurableAction action, Double reward, TaxiGraphState maxNextState) {
-        if (maxRewardAction == null || this.maxReward < reward){
-            this.maxRewardAction = action;
+    public void setActionReward(int actionId, double reward) {
+        if (maxRewardState == Double.MIN_VALUE || this.maxReward < reward){
+            this.maxRewardState = actionId;
             this.maxReward = reward;
-            this.maxNextState = maxNextState;
         }
     }
 
 
-    /**
-     * @return returning false if given action is the only one to get to this state
-     */
-    /*public boolean isPossibleToGoToNextLocation(){
-        return !previousActionStatePairs.containsKey(ActionTypes.GOING_TO_CHARGING_STATION.getValue())
-                || previousActionStatePairs.size() != 1;
-    }*/
-
-
-    public void addPreviousAction(MeasurableAction action, int actionId, TaxiGraphState state){
-        this.setChanged(true);
-        if (previousActionStatePairs.get(actionId) != null){
-            previousActionStatePairs.get(actionId).add(new ActionStatePair(state, action));
-        } else {
-            ArrayList<ActionStatePair> actionType = new ArrayList<>();
-            actionType.add(new ActionStatePair(state, action));
-            previousActionStatePairs.set(actionId, actionType);
-            previousActionsId.add(actionId);
+    public void addNextLocationPreviousState(int stateId){
+        if (nextLocationPreviousStates == null){
+            nextLocationPreviousStates = new HashSet<>();
         }
+        nextLocationPreviousStates.add(stateId);
     }
 
 
-    public Set<Integer> getPreviousActions(){
-        return previousActionsId;
-    }
-
-
-  /*  public ArrayList<ActionStatePair> getPreviousActionsOfType (int type){
-        if (previousActionStatePairs.get(type) != null){
-            return previousActionStatePairs.get(type);
-        } else {
-            return null;
+    public void addStayingPreviousState(int stateId){
+        if (stayingPreviousStates == null){
+            stayingPreviousStates = new HashSet<>();
         }
-
+        stayingPreviousStates.add(stateId);
     }
-*/
 
-    public ArrayList<ActionStatePair> getPreviousStatesOfAction(int actionId){
-        return previousActionStatePairs.get(actionId);
+
+    public void addGoingToChargingPreviousState(int stateId){
+        if (goingChargingPreviousStates == null){
+            goingChargingPreviousStates = new HashSet<>();
+        }
+        goingChargingPreviousStates.add(stateId);
+    }
+
+
+    public void addChargingPreviousState(int stateId){
+        if (chargingPreviousStates == null){
+            chargingPreviousStates = new HashSet<>();
+        }
+        chargingPreviousStates.add(stateId);
+    }
+
+
+    public void addTripPreviousState(int stateId){
+        if (tripPreviousStates == null){
+            tripPreviousStates = new HashSet<>();
+        }
+        tripPreviousStates.add(stateId);
     }
 
 
     public void addAfterTaxiTripStateReward(int toNodeId, double reward){
+
         this.afterTaxiTripStateRewards.put(toNodeId, reward);
     }
 
@@ -152,38 +152,15 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
     }
 
 
-    public MeasurableAction getMaxRewardAction() {
-        return maxRewardAction;
-    }
-
-
-    public int getMaxRewardActionId() {
-        if (maxRewardAction == null){
-            return Integer.MIN_VALUE;
-        } else {
-            return maxRewardAction.getActionId();
-        }
+    public int getMaxRewardState() {
+        return maxRewardState;
     }
 
 
     public boolean isStartingState(){
-        return previousActionsId.isEmpty();
+        return nextLocationPreviousStates.isEmpty();
     }
 
-
-    public boolean isChanged() {
-        return changed;
-    }
-
-
-    public void setChanged(boolean changed) {
-        this.changed = changed;
-    }
-
-
-    public TaxiGraphState getMaxNextState() {
-        return maxNextState;
-    }
 
     @Override
     public String toString() {
@@ -206,10 +183,7 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
 
     @Override
     public int hashCode() {
-        if (hash == null){
-            hash = Objects.hash(nodeId, stateOfCharge, timeStamp);
-        }
-        return hash;
+        return Objects.hash(nodeId, stateOfCharge, timeStamp);
     }
 
 
