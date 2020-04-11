@@ -6,7 +6,6 @@ import parameterestimation.ParameterEstimator;
 import java.util.*;
 
 import static domain.actions.ActionUtils.*;
-import static domain.actions.ActionUtils.notRunOutOfBattery;
 import static utils.DistanceGraphUtils.getIntervalStart;
 
 /**
@@ -49,7 +48,7 @@ public class PickUpPassengerActionType  extends TaxiActionType {
             for (Integer neighbour : trans) {
                 if (this.applicableInState(state, neighbour)) {
                     int startInterval = getIntervalStart(state.getTimeStamp());
-                    addNewState(states, state,
+                    addNewState(states, state, neighbour,
                             taxiTripLengths.get(startInterval).get(state.getNodeId()).get(neighbour).intValue(),
                             taxiTripConsumptions.get(startInterval).get(state.getNodeId()).get(neighbour).intValue());
                 }
@@ -71,7 +70,7 @@ public class PickUpPassengerActionType  extends TaxiActionType {
         if (taxiTripLengths.get(startInterval).containsKey(state.getNodeId())){
             if (taxiTripLengths.get(startInterval).get(state.getNodeId()).containsKey(toNodeId)){
                 return applicableInState(state) && shiftNotOver(state, taxiTripLengths.get(startInterval).get(state.getNodeId()).get(toNodeId).longValue()) &&
-                        notRunOutOfBattery(state, taxiTripConsumptions.get(startInterval).get(state.getNodeId()).get(toNodeId).intValue());
+                        notRunOutOfBattery(state.getStateOfCharge(), taxiTripConsumptions.get(startInterval).get(state.getNodeId()).get(toNodeId).intValue());
             }
         }
 

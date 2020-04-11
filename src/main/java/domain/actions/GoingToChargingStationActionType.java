@@ -42,8 +42,9 @@ public class GoingToChargingStationActionType extends TaxiActionType {
         if (trans != null){
             List<Integer> stations = chooseBestChargingStation(state, trans);
             for (Integer chargingStation : stations){
-                if (this.applicableInState(state, chargingStation)){
-                    addNewState(states, state, getTripTime(state.getNodeId(), chargingStation),
+                int time = getTripTime(state.getNodeId(), chargingStation);
+                if (this.applicableInState(state, chargingStation, time)){
+                    addNewState(states, state,chargingStation, time,
                             getConsumption(state.getNodeId(), chargingStation));
                 }
             }
@@ -78,18 +79,13 @@ public class GoingToChargingStationActionType extends TaxiActionType {
 
     @Override
     protected boolean applicableInState(TaxiGraphState state) {
-        return notChargedALot(state.getStateOfCharge()) && transitions.containsKey(state.getNodeId());
+        return notChargedALot(state.getStateOfCharge());
     }
 
 
-    public int getActionTime(TaxiGraphState state, int toNodeId) {
-        return getTripTime(state.getNodeId(), toNodeId);
-    }
-
-
-    private boolean applicableInState(TaxiGraphState state, int toNodeId){
-        return applicableInState(state) &&  notRunOutOfBattery(state, toNodeId, getActionTime(state, toNodeId))
-                && shiftNotOver(state, this.getActionTime(state, toNodeId));
+    private boolean applicableInState(TaxiGraphState state, int toNodeId, int time){
+        return applicableInState(state) &&  notRunOutOfBattery(state, toNodeId)
+                && shiftNotOver(state, time);
     }
 
 }

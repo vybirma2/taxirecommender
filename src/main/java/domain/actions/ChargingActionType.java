@@ -54,7 +54,7 @@ public class ChargingActionType extends TaxiActionType {
                 for(int i = 1; i <= NUM_OF_CHARGING_LENGTH_POSSIBILITIES; i++){
                     int energyCharged = getEnergyCharged(connection, i * chargingTimeUnit);
                     if (applicableInState(previousState, i * chargingTimeUnit, energyCharged)){
-                        addNewState(states, previousState, i * chargingTimeUnit, energyCharged);
+                        addNewState(states, previousState, previousState.getNodeId(), i * chargingTimeUnit, energyCharged);
                     }
                 }
             }

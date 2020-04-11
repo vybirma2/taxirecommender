@@ -38,8 +38,9 @@ public class NextLocationActionType extends TaxiActionType {
 
         if (trans != null){
             for (int neighbour : trans){
-                if (this.applicableInState(state, neighbour)){
-                    addNewState(states, state, getTripTime(state.getNodeId(), neighbour),
+                int time = getTripTime(state.getNodeId(), neighbour);
+                if (this.applicableInState(state, neighbour, time)){
+                    addNewState(states, state,neighbour, time,
                             getConsumption(state.getNodeId(), neighbour));
                 }
             }
@@ -65,8 +66,8 @@ public class NextLocationActionType extends TaxiActionType {
     }
 
 
-    private boolean applicableInState(TaxiGraphState state, int toNodeId){
-        return applicableInState(state) && shiftNotOver(state, this.getActionTime(state, toNodeId)) &&
-                notRunOutOfBattery(state, toNodeId, getActionTime(state, toNodeId));
+    private boolean applicableInState(TaxiGraphState state, int toNodeId, int time){
+        return shiftNotOver(state, time) &&
+                notRunOutOfBattery(state, toNodeId);
     }
 }

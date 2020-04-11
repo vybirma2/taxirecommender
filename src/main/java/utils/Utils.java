@@ -11,7 +11,7 @@ public class Utils {
     public static final int NUM_OF_CLUSTERS = 100;
 
 
-    public static final int SHIFT_LENGTH = 4 * 60;
+    public static final int SHIFT_LENGTH = 8 * 60;
     public static final int STAYING_INTERVAL = 10;
 
     public static final double COST_FOR_KW = 5.5;
@@ -33,8 +33,8 @@ public class Utils {
 
     public static final int MAX_KMEANS_ITERATIONS = 1000;
 
-    public static final int ONE_GRID_CELL_WIDTH = 10000;
-    public static final int ONE_GRID_CELL_HEIGHT = 10000;
+    public static final int ONE_GRID_CELL_WIDTH = 2500;
+    public static final int ONE_GRID_CELL_HEIGHT = 2500;
 
     public static final double MAX_NODE_FITTING_DISTANCE = 0.2;
 

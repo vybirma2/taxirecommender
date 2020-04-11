@@ -6,10 +6,11 @@ import org.xml.sax.helpers.AttributesImpl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public abstract  class TaxiActionType {
 
-    protected HashMap<Integer, HashMap<Integer, HashMap<Integer, TaxiGraphState>>> visitedStates = new HashMap<>();
+    private static HashMap<Integer, HashMap<Integer, HashMap<Integer, TaxiGraphState>>> visitedStates = new HashMap<>();
     protected HashMap<Integer, ArrayList<Integer>> transitions;
     protected int actionId;
 
@@ -27,11 +28,12 @@ public abstract  class TaxiActionType {
 
 
 
-    protected void addNewState(List<TaxiGraphState> states, TaxiGraphState previousState, int length, int energyConsumption){
+    protected void addNewState(List<TaxiGraphState> states, TaxiGraphState previousState, int toNodeId, int length, int energyConsumption){
 
         int resultTimeStamp = length + previousState.getTimeStamp();
         int resultStateOfCharge = energyConsumption + previousState.getStateOfCharge();
-        int resultNodeId = previousState.getNodeId();
+        int resultNodeId = toNodeId;
+
         if (!alreadyVisited(resultNodeId, resultTimeStamp, resultStateOfCharge)){
             TaxiGraphState newState = new TaxiGraphState(resultNodeId, resultStateOfCharge, resultTimeStamp);
             addPreviousState(newState, previousState.getId());
