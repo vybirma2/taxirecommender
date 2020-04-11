@@ -18,8 +18,6 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static utils.Utils.NUM_OF_CLUSTERS;
-
 
 public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNode, KMeansEnvironmentEdge> {
 
@@ -36,14 +34,31 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
         createNodes();
         setDistances();
         setNodeNeighbours();
-
-
     }
+
 
     @Override
     protected void setEdges() {
+        edges = new HashMap<>();
 
+        for (Map.Entry<Integer, KMeansEnvironmentNode> entry : nodes.entrySet()){
+            KMeansEnvironmentNode node = entry.getValue();
+            HashMap<Integer, KMeansEnvironmentEdge> nodeEdges = new HashMap<>();
+
+            for (Integer neighbour : nodes.get(entry.getKey()).getNeighbours()){
+
+                if (!entry.getKey().equals(neighbour)){
+                    DistanceSpeedPairTime distanceSpeedPairTime = getDistanceSpeedTimeBetweenNodes(entry.getKey(), neighbour);
+                    double distance = distanceSpeedPairTime.getDistance();
+                    float speed = (float) (distanceSpeedPairTime.getSpeed());
+                    nodeEdges.put(neighbour, new KMeansEnvironmentEdge(entry.getKey(), neighbour, speed,
+                            (int)(distance * 1000), DistanceGraphUtils.getTripTime(distance, speed)));
+                }
+            }
+            edges.put(node.getId(), nodeEdges);
+        }
     }
+
 
     private void createNodes(){
         this.nodes = new HashMap<>();
@@ -51,13 +66,14 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
             RoadNode centroidNode = DistanceGraphUtils.chooseRoadNode(centroid.getLongitude(), centroid.getLatitude());
             this.nodes.put(centroidNode.getId(), new KMeansEnvironmentNode(centroidNode.id, centroidNode.sourceId,
                     new GPSLocation(centroidNode.latE6, centroidNode.lonE6, centroidNode.latProjected,
-                            centroidNode.lonProjected, centroidNode.elevation), new HashSet<>()));
+                            centroidNode.lonProjected, centroidNode.elevation), new HashSet<>(), centroid, clusters.get(centroid)));
         }
     }
 
 
     private void setDistances() throws IOException, ClassNotFoundException {
-        File file = new File("data/programdata/" + NUM_OF_CLUSTERS + "KMeansCentroidDistances.fst");
+        String name = "data/programdata/" + Utils.NUM_OF_CLUSTERS + "KMeansCentroidDistances.fst";
+        File file = new File(name);
 
         if(!file.exists()) {
             computeAndSerializeDistances(file);
@@ -65,6 +81,15 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
             loadDistances(file);
         }
 
+    }
+
+
+    public double getDistanceBetweenNodes(int fromNodeId, int toNodeId){
+        return distanceSpeedTime.get(fromNodeId).stream().filter(t-> t.getToNodeId() == toNodeId).findFirst().get().getDistanceSpeedPairTime().getDistance();
+    }
+
+    public DistanceSpeedPairTime getDistanceSpeedTimeBetweenNodes(int fromNodeId, int toNodeId){
+        return distanceSpeedTime.get(fromNodeId).stream().filter(t-> t.getToNodeId() == toNodeId).findFirst().get().getDistanceSpeedPairTime();
     }
 
 
@@ -101,6 +126,7 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
         for (KMeansEnvironmentNode node : nodes.values()){
             Set<Integer> neighbours = distanceSpeedTime.get(node.getId())
                     .stream()
+                    .filter(t -> t.getToNodeId() != node.getId())
                     .sorted()
                     .limit(Utils.NUM_OF_NEIGHBOURS)
                     .map(TripToNode::getToNodeId)

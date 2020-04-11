@@ -10,6 +10,8 @@ import domain.actions.*;
 import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.EnvironmentEdge;
 import domain.environmentrepresentation.EnvironmentNode;
+import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
+import jdk.jshell.execution.Util;
 import org.json.simple.parser.ParseException;
 import org.nustaq.serialization.FSTObjectInput;
 import parameterestimation.ParameterEstimator;
@@ -238,7 +240,12 @@ public class TaxiRecommenderDomainGenerator {
 
 
     private AllDistancesSpeedsPair getChargingStationDistanceSpeedTime(String inputFile) throws IOException, ClassNotFoundException {
-        File file = new File("data/programdata/" + Utils.ONE_GRID_CELL_HEIGHT + "x" + Utils.ONE_GRID_CELL_WIDTH + "_" + inputFile);
+        File file;
+        if (this.environment instanceof KMeansEnvironment) {
+            file = new File("data/programdata/" + Utils.NUM_OF_CLUSTERS + "_" + inputFile);
+        }else {
+            file = new File("data/programdata/" + Utils.ONE_GRID_CELL_HEIGHT + "x" + Utils.ONE_GRID_CELL_WIDTH + "_" + inputFile);
+        }
 
         if(!file.exists()){
             DataSerialization.serializeChargingStationDistancesAndSpeed(chargingStations, environment.getEnvironmentNodes(), file.getPath());

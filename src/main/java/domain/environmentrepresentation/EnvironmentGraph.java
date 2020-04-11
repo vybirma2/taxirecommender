@@ -34,7 +34,7 @@ public abstract class EnvironmentGraph<TNode extends EnvironmentNode, TEdge exte
     protected abstract void setEdges();
 
 
-    public EnvironmentNode getNode(int nodeId){
+    public TNode getNode(int nodeId){
         return nodes.get(nodeId);
     }
 
