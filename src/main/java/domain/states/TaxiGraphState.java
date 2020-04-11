@@ -17,11 +17,11 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
     private int stateOfCharge;
     private int timeStamp;
 
-    private Set<Integer> nextLocationPreviousStates;
-    private Set<Integer> stayingPreviousStates;
-    private Set<Integer> tripPreviousStates;
-    private Set<Integer> chargingPreviousStates;
-    private Set<Integer> goingChargingPreviousStates;
+    private List<Integer> nextLocationPreviousStates;
+    private List<Integer> stayingPreviousStates;
+    private List<Integer> tripPreviousStates;
+    private List<Integer> chargingPreviousStates;
+    private List<Integer> goingChargingPreviousStates;
 
 
     private int maxRewardState;
@@ -103,7 +103,7 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
 
     public void addNextLocationPreviousState(int stateId){
         if (nextLocationPreviousStates == null){
-            nextLocationPreviousStates = new HashSet<>();
+            nextLocationPreviousStates = new ArrayList<>();
         }
         nextLocationPreviousStates.add(stateId);
     }
@@ -111,7 +111,7 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
 
     public void addStayingPreviousState(int stateId){
         if (stayingPreviousStates == null){
-            stayingPreviousStates = new HashSet<>();
+            stayingPreviousStates = new ArrayList<>();
         }
         stayingPreviousStates.add(stateId);
     }
@@ -119,7 +119,7 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
 
     public void addGoingToChargingPreviousState(int stateId){
         if (goingChargingPreviousStates == null){
-            goingChargingPreviousStates = new HashSet<>();
+            goingChargingPreviousStates = new ArrayList<>();
         }
         goingChargingPreviousStates.add(stateId);
     }
@@ -127,7 +127,7 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
 
     public void addChargingPreviousState(int stateId){
         if (chargingPreviousStates == null){
-            chargingPreviousStates = new HashSet<>();
+            chargingPreviousStates = new ArrayList<>();
         }
         chargingPreviousStates.add(stateId);
     }
@@ -135,7 +135,7 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
 
     public void addTripPreviousState(int stateId){
         if (tripPreviousStates == null){
-            tripPreviousStates = new HashSet<>();
+            tripPreviousStates = new ArrayList<>();
         }
         tripPreviousStates.add(stateId);
     }

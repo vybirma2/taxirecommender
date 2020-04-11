@@ -28,7 +28,7 @@ public class StayingInLocationActionType extends TaxiActionType {
         List<TaxiGraphState> states = new ArrayList<>();
 
         if (this.applicableInState(state)) {
-            addNewState(states, state, STAYING_INTERVAL, 0);
+            addNewState(states, state, state.getNodeId(), STAYING_INTERVAL, 0);
         }
 
         return states;
@@ -37,6 +37,6 @@ public class StayingInLocationActionType extends TaxiActionType {
 
     @Override
     boolean applicableInState(TaxiGraphState state) {
-        return transitions.containsKey(state.getNodeId()) && shiftNotOver(state, STAYING_INTERVAL);
+        return shiftNotOver(state, STAYING_INTERVAL);
     }
 }

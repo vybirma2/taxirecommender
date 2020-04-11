@@ -9,8 +9,8 @@ import java.util.*;
 
 public class ReachableStatesGenerator {
 
-    private TaxiGraphStateModel taxiGraphStateModel;
-    private HashSet<TaxiGraphState> reachableStates = new HashSet<>();
+    private final TaxiGraphStateModel taxiGraphStateModel;
+    private final List<TaxiGraphState> reachableStates = new ArrayList<>();
 
     public ReachableStatesGenerator(TaxiGraphStateModel taxiGraphStateModel) {
         this.taxiGraphStateModel = taxiGraphStateModel;
@@ -31,6 +31,7 @@ public class ReachableStatesGenerator {
             }
 
             currentState = openList.poll();
+
             this.reachableStates.add(currentState);
 
             openList.addAll(this.taxiGraphStateModel.stateTransitions(currentState));
