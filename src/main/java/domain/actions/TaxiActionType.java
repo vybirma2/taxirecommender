@@ -1,12 +1,10 @@
 package domain.actions;
 
 import domain.states.TaxiGraphState;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public abstract  class TaxiActionType {
 
