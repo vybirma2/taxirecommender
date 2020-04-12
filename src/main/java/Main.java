@@ -13,7 +13,7 @@ public class Main {
         try {
             taxiRecommenderDomainGenerator = new TaxiRecommenderDomainGenerator(
                     "prague_full.fst",
-                    "prague_charging_stations_full.json", new GridEnvironment());
+                    "prague_charging_stations_full.json", new KMeansEnvironment());
         } catch (Exception e) {
             e.printStackTrace();
         }
