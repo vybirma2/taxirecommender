@@ -52,10 +52,6 @@ public class TaxiRecommenderDomainGenerator {
     private ParameterEstimator parameterEstimator;
     private TaxiGraphStateModel taxiGraphStateModel;
 
-
-    private TaxiGraphTerminalFunction terminalFunction;
-    private TaxiGraphRewardFunction rewardFunction;
-
     private ArrayList<HashMap<Integer, ArrayList<Integer>>> transitions = new ArrayList<>(5);
 
 
@@ -80,8 +76,6 @@ public class TaxiRecommenderDomainGenerator {
             loadData();
             this.taxiGraphStateModel =  new TaxiGraphStateModel(actionTypes);
             addAllActionTypes();
-            setTerminalFunction(new TaxiGraphTerminalFunction(this.actionTypes));
-            setRewardFunction(new TaxiGraphRewardFunction(this.getTerminalFunction(), parameterEstimator));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -267,24 +261,6 @@ public class TaxiRecommenderDomainGenerator {
         return environment;
     }
 
-
-    public void setTerminalFunction(TaxiGraphTerminalFunction terminalFunction) {
-        this.terminalFunction = terminalFunction;
-    }
-
-    public void setRewardFunction(TaxiGraphRewardFunction rewardFunction) {
-        this.rewardFunction = rewardFunction;
-    }
-
-
-    public TaxiGraphTerminalFunction getTerminalFunction() {
-        return terminalFunction;
-    }
-
-    public TaxiGraphRewardFunction getRewardFunction() {
-        return rewardFunction;
-    }
-
     public List<TaxiActionType> getActionTypes() {
         return actionTypes;
     }
@@ -294,5 +270,7 @@ public class TaxiRecommenderDomainGenerator {
         return taxiTrips;
     }
 
-
+    public ParameterEstimator getParameterEstimator() {
+        return parameterEstimator;
+    }
 }

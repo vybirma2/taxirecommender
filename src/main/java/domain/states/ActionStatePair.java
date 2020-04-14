@@ -6,12 +6,12 @@ import domain.actions.MeasurableAction;
 public class ActionStatePair {
 
     private TaxiGraphState state;
-    private MeasurableAction action;
+    private int actionId;
 
 
-    public ActionStatePair(TaxiGraphState state, MeasurableAction action) {
+    public ActionStatePair(TaxiGraphState state, int actionId) {
         this.state = state;
-        this.action = action;
+        this.actionId = actionId;
     }
 
 
@@ -20,7 +20,7 @@ public class ActionStatePair {
     }
 
 
-    public MeasurableAction getAction() {
-        return action;
+    public int getAction() {
+        return actionId;
     }
 }

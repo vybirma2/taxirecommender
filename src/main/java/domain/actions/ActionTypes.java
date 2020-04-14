@@ -29,4 +29,20 @@ public enum ActionTypes {
     public String getName() {
         return name;
     }
+
+    public static String getNameOfAction(int value){
+        switch (value){
+            case 0:
+                return TO_NEXT_LOCATION.name;
+            case 1:
+                return STAYING_IN_LOCATION.name;
+            case 2:
+                return GOING_TO_CHARGING_STATION.name;
+            case 3:
+                return CHARGING_IN_CHARGING_STATION.name;
+            case 4:
+                return PICK_UP_PASSENGER.name;
+        }
+        return "";
+    }
 }
