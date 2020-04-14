@@ -37,4 +37,8 @@ public class ReachableStatesGenerator {
             openList.addAll(this.taxiGraphStateModel.stateTransitions(currentState));
         }
     }
+
+    public List<TaxiGraphState> getReachableStates() {
+        return reachableStates;
+    }
 }

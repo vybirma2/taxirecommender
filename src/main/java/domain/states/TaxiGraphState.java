@@ -10,23 +10,18 @@ import java.util.*;
  */
 public class TaxiGraphState implements Comparable<TaxiGraphState> {
 
+    private static final StatePredecessors statePredecessors = new StatePredecessors();
     private static int stateId = 0;
 
-    private int id;
+    private final int id;
     private int nodeId;
     private int stateOfCharge;
     private int timeStamp;
 
-    private List<Integer> nextLocationPreviousStates;
-    private List<Integer> stayingPreviousStates;
-    private List<Integer> tripPreviousStates;
-    private List<Integer> chargingPreviousStates;
-    private List<Integer> goingChargingPreviousStates;
-
-
-    private int maxRewardState;
-
+    private int maxRewardState = -1;
+    private int maxRewardAction = -1;
     private double maxReward = Double.MIN_VALUE;
+
     private final HashMap<Integer, Double> afterTaxiTripStateRewards = new HashMap<>();
 
 
@@ -93,59 +88,47 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
      * If better than before set value, setting new maximum
      * @param reward potentially received reward
      */
-    public void setActionReward(int actionId, double reward) {
-        if (maxRewardState == Double.MIN_VALUE || this.maxReward < reward){
-            this.maxRewardState = actionId;
+    public void setActionReward(int actionId, int stateId, double reward) {
+        if (this.maxReward == Double.MIN_VALUE || this.maxReward < reward){
+            this.maxRewardAction = actionId;
+            this.maxRewardState = stateId;
             this.maxReward = reward;
         }
     }
 
 
     public void addNextLocationPreviousState(int stateId){
-        if (nextLocationPreviousStates == null){
-            nextLocationPreviousStates = new ArrayList<>();
-        }
-        nextLocationPreviousStates.add(stateId);
+        statePredecessors.addNextLocationPredecessor(this.getId(), stateId);
     }
 
 
     public void addStayingPreviousState(int stateId){
-        if (stayingPreviousStates == null){
-            stayingPreviousStates = new ArrayList<>();
-        }
-        stayingPreviousStates.add(stateId);
+        statePredecessors.addStayingInLocationPredecessor(this.getId(), stateId);
     }
 
 
     public void addGoingToChargingPreviousState(int stateId){
-        if (goingChargingPreviousStates == null){
-            goingChargingPreviousStates = new ArrayList<>();
-        }
-        goingChargingPreviousStates.add(stateId);
+        statePredecessors.addGoingChargingPredecessor(this.getId(), stateId);
     }
 
 
     public void addChargingPreviousState(int stateId){
-        if (chargingPreviousStates == null){
-            chargingPreviousStates = new ArrayList<>();
-        }
-        chargingPreviousStates.add(stateId);
+        statePredecessors.addChargingPredecessor(this.getId(), stateId);
     }
 
 
     public void addTripPreviousState(int stateId){
-        if (tripPreviousStates == null){
-            tripPreviousStates = new ArrayList<>();
-        }
-        tripPreviousStates.add(stateId);
+        statePredecessors.addPickUpPredecessor(this.getId(), stateId);
     }
 
 
     public void addAfterTaxiTripStateReward(int toNodeId, double reward){
-
         this.afterTaxiTripStateRewards.put(toNodeId, reward);
     }
 
+    public List<Integer> getPreviousStateNodesOfAction(int actionId){
+        return statePredecessors.getPreviousStateNodesOfActionInState(actionId, this.getId());
+    }
 
     public Double getAfterTaxiTripStateReward(int toNodeId){
         return this.afterTaxiTripStateRewards.get(toNodeId);
@@ -156,11 +139,9 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
         return maxRewardState;
     }
 
-
-    public boolean isStartingState(){
-        return nextLocationPreviousStates.isEmpty();
+    public int getMaxRewardAction() {
+        return maxRewardAction;
     }
-
 
     @Override
     public String toString() {
