@@ -1,8 +1,10 @@
 import domain.TaxiGraphRewardFunction;
 import domain.TaxiRecommenderDomainGenerator;
 import domain.actions.ActionTypes;
+import domain.environmentrepresentation.fullenvironment.FullEnvironment;
 import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
 import domain.states.TaxiGraphState;
+import evaluation.Simulation;
 import utils.Utils;
 
 import javax.sound.midi.Soundbank;
@@ -12,14 +14,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-        TaxiRecommenderDomainGenerator taxiRecommenderDomainGenerator = null;
-        try {
-            taxiRecommenderDomainGenerator = new TaxiRecommenderDomainGenerator(
-                    "prague_full.fst",
-                    "prague_charging_stations_full.json", new KMeansEnvironment());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Simulation simulation = new Simulation(null, null, 100, 425, 60);
+        simulation.startSimulation();
+        /*TaxiRecommenderDomainGenerator taxiRecommenderDomainGenerator = new TaxiRecommenderDomainGenerator(
+                "prague_full.fst","prague_charging_stations_full.json",
+                new FullEnvironment());
+
         try {
 
             ReachableStatesGenerator planner = new ReachableStatesGenerator(taxiRecommenderDomainGenerator.getTaxiGraphStateModel());
@@ -42,6 +42,6 @@ public class Main {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

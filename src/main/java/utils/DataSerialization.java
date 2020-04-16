@@ -26,8 +26,11 @@ public class DataSerialization {
                                                                  Collection<? extends EnvironmentNode> nodes, String fileName) throws IOException {
         HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> resultDistanceSpeedTime = new HashMap<>();
 
+        int i = 0;
         for (ChargingStation chargingStation : chargingStations) {
             addDistancesAndSpeedsToChargingStation(chargingStation, nodes, resultDistanceSpeedTime);
+            i++;
+            System.out.println("Computed distances for " + i + " charging station.");
         }
 
         serializeData(fileName, resultDistanceSpeedTime);
@@ -40,7 +43,7 @@ public class DataSerialization {
 
         HashMap<Integer, DistanceSpeedPairTime> stationDistanceSpeedTime = new HashMap<>();
 
-        Set<LinkedList<Integer>> paths = nodes.stream().map(node -> aStar(node.getNodeId(), chargingStation.getRoadNode().getId())).collect(Collectors.toSet());
+        Set<LinkedList<Integer>> paths = nodes.parallelStream().map(node -> aStar(node.getNodeId(), chargingStation.getRoadNode().getId())).collect(Collectors.toSet());
 
         for (LinkedList<Integer> path : paths){
             if (path != null){

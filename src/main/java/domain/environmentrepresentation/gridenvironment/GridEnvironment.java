@@ -3,10 +3,12 @@ package domain.environmentrepresentation.gridenvironment;
 import domain.environmentrepresentation.Environment;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
+import parameterestimation.TaxiTrip;
+import utils.DistanceGraphUtils;
 import utils.Utils;
 
 import java.io.*;
-
+import java.util.List;
 
 
 /**
@@ -23,6 +25,14 @@ public class GridEnvironment extends Environment<GridEnvironmentNode, GridEnviro
             createGridEnvironmentAndSerializeIt(file);
         } else {
             loadSerializedEnvironment(file);
+        }
+    }
+
+    @Override
+    public void setTaxiTripEnvironmentNodes(List<TaxiTrip> taxiTrips) {
+        for (TaxiTrip taxiTrip : taxiTrips){
+            taxiTrip.setFromEnvironmentNode(DistanceGraphUtils.chooseEnvironmentNode(taxiTrip.getPickUpLongitude(), taxiTrip.getPickUpLatitude()));
+            taxiTrip.setToEnvironmentNode(DistanceGraphUtils.chooseEnvironmentNode(taxiTrip.getDestinationLongitude(), taxiTrip.getDestinationLatitude()));
         }
     }
 
