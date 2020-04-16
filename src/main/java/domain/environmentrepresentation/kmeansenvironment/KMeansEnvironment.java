@@ -8,6 +8,8 @@ import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPointCent
 import domain.environmentrepresentation.kmeansenvironment.kmeans.TaxiTripPickupPlace;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
+import parameterestimation.TaxiTrip;
+import utils.DistanceGraphUtils;
 import visualization.MapVisualizer;
 
 import java.io.*;
@@ -41,6 +43,14 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
         }
         //System.out.println("shbfsjf");
 
+    }
+
+    @Override
+    public void setTaxiTripEnvironmentNodes(List<TaxiTrip> taxiTrips) {
+        for (TaxiTrip taxiTrip : taxiTrips){
+            taxiTrip.setFromEnvironmentNode(DistanceGraphUtils.chooseEnvironmentNode(taxiTrip.getPickUpLongitude(), taxiTrip.getPickUpLatitude()));
+            taxiTrip.setToEnvironmentNode(DistanceGraphUtils.chooseEnvironmentNode(taxiTrip.getDestinationLongitude(), taxiTrip.getDestinationLatitude()));
+        }
     }
 
 

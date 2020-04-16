@@ -70,6 +70,7 @@ public class ParameterEstimator {
     }
 
 
+
     public double getPickUpProbabilityInNode(int nodeId, double timeStamp){
         Double result = passengerPickUpProbability.get(getIntervalStart(timeStamp)).get(nodeId);
         if (result != null){

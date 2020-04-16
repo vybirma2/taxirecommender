@@ -8,10 +8,10 @@ import java.util.Comparator;
 
 public class Utils {
 
-    public static final int NUM_OF_CLUSTERS = 200;
+    public static final int NUM_OF_CLUSTERS = 100;
 
 
-    public static final int SHIFT_LENGTH = 8 * 60;
+    public static final int SHIFT_LENGTH = 1 * 60;
     public static final int STAYING_INTERVAL = 10;
 
     public static final double COST_FOR_KW = 5.5;
@@ -26,6 +26,9 @@ public class Utils {
     public static final int VISIT_INTERVAL = 30;
 
     public static final int NUM_OF_NEIGHBOURS = 8;
+
+
+    public static final int MINIMAL_STATE_OF_CHARGE = 5;
 
 
     public static final boolean VISUALIZE_ENVIRONMENT = false;

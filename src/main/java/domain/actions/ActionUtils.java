@@ -33,12 +33,12 @@ public class ActionUtils {
 
 
     public static boolean notRunOutOfBattery(TaxiGraphState state, int toNodeId){
-        return state.getStateOfCharge() + getActionEnergyConsumption(state.getNodeId(), toNodeId) > 0;
+        return state.getStateOfCharge() + getActionEnergyConsumption(state.getNodeId(), toNodeId) > MINIMAL_STATE_OF_CHARGE;
     }
 
 
     public static boolean notRunOutOfBattery(int stateOfCharge, int energyConsumption){
-        return stateOfCharge + energyConsumption > 0;
+        return stateOfCharge + energyConsumption > MINIMAL_STATE_OF_CHARGE;
     }
 
 
