@@ -5,22 +5,32 @@ package domain.actions;
  */
 public class StayingInLocationAction extends MeasurableAction {
 
-    private int consumption;
 
-    public StayingInLocationAction(int actionId, int fromNodeId, int toNodeId, int length, int consumption) {
+    public StayingInLocationAction(int actionId, int fromNodeId, int toNodeId, int length) {
         super(actionId, fromNodeId, toNodeId, length);
-        this.consumption = consumption;
     }
 
 
     @Override
     public int getConsumption() {
-        return consumption;
+        return 0;
     }
 
     @Override
+    public double getReward() {
+        return 0;
+    }
+
+
+    @Override
     public MeasurableAction copy() {
-        return new PickUpPassengerAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId(),
-                this.getLength(), this.getConsumption());
+        return new StayingInLocationAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId(),
+                this.getLength());
+    }
+
+
+    @Override
+    public String toString() {
+        return "StayingInLocationAction{}" + super.toString();
     }
 }

@@ -24,7 +24,7 @@ public class ChargingAction extends MeasurableAction {
     }
 
 
-    public double getChargingCost(){
+    private double getChargingCost(){
         return -Utils.COST_FOR_KW * (Utils.BATTERY_CAPACITY*(this.getConsumption()/100.));
     }
 
@@ -47,11 +47,23 @@ public class ChargingAction extends MeasurableAction {
 
     @Override
     public int getConsumption() {
-        return (int)(ChargingStationReader.getChargingConnection(connectionId).getPowerKW() * getLength()/Utils.BATTERY_CAPACITY);
+        return (int)(((ChargingStationReader.getChargingConnection(connectionId).getPowerKW()*(getLength()/60.))/Utils.BATTERY_CAPACITY)*100.);
+    }
+
+    @Override
+    public double getReward() {
+        return getChargingCost();
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(this.getActionId(), this.getFromNodeId(), this.getToNodeId(), this.getLength(), connectionId);
+    }
+
+    @Override
+    public String toString() {
+        return "ChargingAction{" +
+                "connectionId=" + connectionId +
+                '}' + super.toString();
     }
 }

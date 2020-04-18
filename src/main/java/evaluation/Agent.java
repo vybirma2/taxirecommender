@@ -1,27 +1,21 @@
 package evaluation;
 
 
-import charging.ChargingConnection;
+import domain.TaxiModel;
+import domain.actions.MeasurableAction;
+import domain.states.TaxiState;
 
 import java.util.List;
 
-public interface Agent {
+public abstract class Agent {
 
+    protected TaxiModel taxiModel;
 
-    int getNodeToGoTo(SimulationState simulationState);
+    public Agent(TaxiModel taxiModel) {
+        this.taxiModel = taxiModel;
+    }
 
+    public abstract MeasurableAction chooseAction(TaxiState currentState, List<MeasurableAction> actions);
 
-    int getStayingTime(SimulationState simulationState);
-
-
-    int getChargingTime(SimulationState simulationState);
-
-
-    Integer getChargingStation(SimulationState simulationState);
-
-
-    boolean tripOffer(SimulationState simulationState, int tripToNode);
-
-
-    ChargingConnection chooseConnection(SimulationState simulationState, List<ChargingConnection> connections);
+    public abstract boolean tripOffer(TaxiState currentState, int tripToNode);
 }

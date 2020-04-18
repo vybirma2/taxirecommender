@@ -11,7 +11,10 @@ public class Utils {
     public static final int NUM_OF_CLUSTERS = 100;
 
 
-    public static final int SHIFT_LENGTH = 1 * 60;
+    public static final int SHIFT_LENGTH = 12 * 60;
+    public static final int STARTING_STATE_OF_CHARGE = 20;
+
+
     public static final int STAYING_INTERVAL = 10;
 
     public static final double COST_FOR_KW = 5.5;
@@ -55,7 +58,7 @@ public class Utils {
 
     public static final Comparator<ChargingConnection> chargingConnectionComparator = new ChargingConnectionComparator();
 
-    public static final int NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO = 3;
+    public static final int NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO = 20;
 
 
     public static ChargingStationStateOrder CHARGING_STATION_STATE_ORDER = null;

@@ -10,10 +10,8 @@ import domain.actions.*;
 import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.EnvironmentEdge;
 import domain.environmentrepresentation.EnvironmentNode;
-import domain.environmentrepresentation.fullenvironment.FullEnvironment;
 import domain.environmentrepresentation.gridenvironment.GridEnvironment;
 import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
-import jdk.jshell.execution.Util;
 import org.json.simple.parser.ParseException;
 import org.nustaq.serialization.FSTObjectInput;
 import parameterestimation.ParameterEstimator;
@@ -33,9 +31,9 @@ import static domain.actions.ActionTypes.*;
  * Class responsible for loading all needed data, creating all objects needed for planning and generating domain
  * for the following planning
  */
-public class TaxiRecommenderDomainGenerator {
+public class TaxiRecommenderDomain {
 
-    private final static Logger LOGGER = Logger.getLogger(TaxiRecommenderDomainGenerator.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(TaxiRecommenderDomain.class.getName());
     private static ArrayList<TaxiTrip> taxiTrips;
 
 
@@ -52,13 +50,13 @@ public class TaxiRecommenderDomainGenerator {
     private String chargingStationsInputFile;
 
     private ParameterEstimator parameterEstimator;
-    private TaxiGraphStateModel taxiGraphStateModel;
+    private TaxiModel taxiModel;
 
-    private ArrayList<HashMap<Integer, ArrayList<Integer>>> transitions = new ArrayList<>(5);
+    private ArrayList<HashMap<Integer, ArrayList<Integer>>> transitions = new ArrayList<>(Utils.NUM_OF_ACTION_TYPES);
 
 
-    public TaxiRecommenderDomainGenerator(String roadGraphInputFile, String chargingStationsInputFile,
-                                          Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> environment){
+    public TaxiRecommenderDomain(String roadGraphInputFile, String chargingStationsInputFile,
+                                 Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> environment){
         this.roadGraphInputFileFullPath = "data/graphs/" + roadGraphInputFile;
         this.roadGraphInputFile = roadGraphInputFile;
         this.chargingStationsInputFileFullPath = "data/chargingstations/" + chargingStationsInputFile;
@@ -76,7 +74,7 @@ public class TaxiRecommenderDomainGenerator {
     public void generateDomain() {
         try {
             loadData();
-            this.taxiGraphStateModel =  new TaxiGraphStateModel(actionTypes);
+            this.taxiModel =  new TaxiModel(actionTypes);
             addAllActionTypes();
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,12 +98,9 @@ public class TaxiRecommenderDomainGenerator {
 
         setEnvironment();
 
-        this.parameterEstimator = new ParameterEstimator(taxiTrips);
-        this.parameterEstimator.estimateParameters();
-
         loadChargingStations();
 
-        //computeShortestPathsToChargingStations();
+        computeShortestPathsToChargingStations();
 
         setTransitions();
     }
@@ -117,6 +112,9 @@ public class TaxiRecommenderDomainGenerator {
         DistanceGraphUtils.setNodes(this.environment.getEnvironmentNodes());
         DistanceGraphUtils.setGraph(this.environment.getEnvironmentGraph());
         environment.setTaxiTripEnvironmentNodes(taxiTrips);
+
+        this.parameterEstimator = new ParameterEstimator(taxiTrips);
+        this.parameterEstimator.estimateParameters();
     }
 
 
@@ -252,8 +250,8 @@ public class TaxiRecommenderDomainGenerator {
     }
 
 
-    public TaxiGraphStateModel getTaxiGraphStateModel() {
-        return taxiGraphStateModel;
+    public TaxiModel getTaxiModel() {
+        return taxiModel;
     }
 
 

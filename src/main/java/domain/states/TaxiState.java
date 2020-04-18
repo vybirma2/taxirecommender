@@ -8,7 +8,7 @@ import java.util.*;
  * previous actions and states or maximal possible reward achieved by maxReward action which is computed after generating
  * all possible states
  */
-public class TaxiGraphState implements Comparable<TaxiGraphState> {
+public class TaxiState implements Comparable<TaxiState> {
 
     private static final StatePredecessors statePredecessors = new StatePredecessors();
     private static int stateId = 0;
@@ -18,14 +18,14 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
     private int stateOfCharge;
     private int timeStamp;
 
-    private int maxRewardState = -1;
-    private int maxRewardAction = -1;
-    private double maxReward = Double.MIN_VALUE;
+    private int maxRewardStateId = -1;
+    private int maxRewardActionId = -1;
+    private double maxReward = 0;
 
     private final HashMap<Integer, Double> afterTaxiTripStateRewards = new HashMap<>();
 
 
-    public TaxiGraphState(int nodeId, int stateOfCharge, int timeStamp) {
+    public TaxiState(int nodeId, int stateOfCharge, int timeStamp) {
         this.id = stateId++;
         this.nodeId = nodeId;
         this.stateOfCharge = stateOfCharge;
@@ -33,8 +33,8 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
     }
 
 
-    public TaxiGraphState copy() {
-        return new TaxiGraphState(this.nodeId, this.stateOfCharge, this.timeStamp);
+    public TaxiState copy() {
+        return new TaxiState(this.nodeId, this.stateOfCharge, this.timeStamp);
     }
 
 
@@ -76,7 +76,7 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
      * @return maximal possible reward which were set during reward computation in reward function
      */
     public double getReward() {
-        if (maxRewardState == Double.MIN_VALUE){
+        if (maxRewardStateId == Double.MIN_VALUE){
             return 0;
         } else {
             return maxReward;
@@ -89,9 +89,9 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
      * @param reward potentially received reward
      */
     public void setActionReward(int actionId, int stateId, double reward) {
-        if (this.maxReward == Double.MIN_VALUE || this.maxReward < reward){
-            this.maxRewardAction = actionId;
-            this.maxRewardState = stateId;
+        if (this.maxRewardActionId == -1 || this.maxReward < reward){
+            this.maxRewardActionId = actionId;
+            this.maxRewardStateId = stateId;
             this.maxReward = reward;
         }
     }
@@ -135,12 +135,12 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
     }
 
 
-    public int getMaxRewardState() {
-        return maxRewardState;
+    public int getMaxRewardStateId() {
+        return maxRewardStateId;
     }
 
-    public int getMaxRewardAction() {
-        return maxRewardAction;
+    public int getMaxRewardActionId() {
+        return maxRewardActionId;
     }
 
     @Override
@@ -155,7 +155,7 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
 
     @Override
     public boolean equals(Object o) {
-        TaxiGraphState that = (TaxiGraphState) o;
+        TaxiState that = (TaxiState) o;
         return nodeId == that.nodeId &&
                 stateOfCharge == that.stateOfCharge &&
                 timeStamp == that.timeStamp;
@@ -169,7 +169,7 @@ public class TaxiGraphState implements Comparable<TaxiGraphState> {
 
 
     @Override
-    public int compareTo(TaxiGraphState o) {
+    public int compareTo(TaxiState o) {
         return Integer.compare(o.timeStamp, this.timeStamp);
     }
 }

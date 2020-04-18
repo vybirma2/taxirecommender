@@ -1,21 +1,19 @@
 package domain.states;
 
 
-import domain.actions.MeasurableAction;
-
 public class ActionStatePair {
 
-    private TaxiGraphState state;
+    private TaxiState state;
     private int actionId;
 
 
-    public ActionStatePair(TaxiGraphState state, int actionId) {
+    public ActionStatePair(TaxiState state, int actionId) {
         this.state = state;
         this.actionId = actionId;
     }
 
 
-    public TaxiGraphState getState() {
+    public TaxiState getState() {
         return state;
     }
 

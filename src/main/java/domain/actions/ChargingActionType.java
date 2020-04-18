@@ -3,7 +3,7 @@ package domain.actions;
 import charging.ChargingConnection;
 import charging.ChargingStation;
 import charging.ChargingStationReader;
-import domain.states.TaxiGraphState;
+import domain.states.TaxiState;
 import utils.Utils;
 
 import java.util.ArrayList;
@@ -26,35 +26,35 @@ public class ChargingActionType extends TaxiActionType {
     }
 
     @Override
-    void addPreviousState(TaxiGraphState previousState, int stateId) {
+    void addPreviousState(TaxiState previousState, int stateId) {
         previousState.addChargingPreviousState(stateId);
     }
 
 
     /**
      * Choosing the best available connection and producing charging actions of different length.
-     * @param previousState current previousState to be charging done in
+     * @param state current previousState to be charging done in
      * @return charging actions available in current previousState - equally divided into NUM_OF_CHARGING_LENGTH_POSSIBILITIES
      * intervals.
      */
     @Override
-    public List<TaxiGraphState> allReachableStates(TaxiGraphState previousState) {
+    public List<TaxiState> allReachableStates(TaxiState state) {
 
-        List<TaxiGraphState> states = new ArrayList<>();
+        List<TaxiState> states = new ArrayList<>();
 
-        if (this.applicableInState(previousState)) {
-            ChargingStation station = ChargingStationReader.getChargingStation(previousState.getNodeId());
+        if (this.applicableInState(state)) {
+            ChargingStation station = ChargingStationReader.getChargingStation(state.getNodeId());
 
             if (!station.getAvailableConnections().isEmpty()){
                 ChargingConnection connection = chooseBestChargingConnection(station.getAvailableConnections());
 
-                int timeToFullStateOfCharge = timeToFullStateOfCharge(previousState, connection);
+                int timeToFullStateOfCharge = timeToFullStateOfCharge(state, connection);
                 int chargingTimeUnit = timeToFullStateOfCharge/NUM_OF_CHARGING_LENGTH_POSSIBILITIES;
 
                 for(int i = 1; i <= NUM_OF_CHARGING_LENGTH_POSSIBILITIES; i++){
                     int energyCharged = getEnergyCharged(connection, i * chargingTimeUnit);
-                    if (applicableInState(previousState, i * chargingTimeUnit, energyCharged)){
-                        addNewState(states, previousState, previousState.getNodeId(), i * chargingTimeUnit, energyCharged);
+                    if (applicableInState(state, i * chargingTimeUnit, energyCharged)){
+                        addNewState(states, state, state.getNodeId(), i * chargingTimeUnit, energyCharged);
                     }
                 }
             }
@@ -64,12 +64,40 @@ public class ChargingActionType extends TaxiActionType {
     }
 
 
+    @Override
+    public List<MeasurableAction> allApplicableActions(TaxiState state) {
+        List<MeasurableAction> actions = new ArrayList<>();
+
+        if (this.applicableInState(state)) {
+
+            ChargingStation station = ChargingStationReader.getChargingStation(state.getNodeId());
+
+            if (!station.getAvailableConnections().isEmpty()){
+                ChargingConnection connection = chooseBestChargingConnection(station.getAvailableConnections());
+
+                int timeToFullStateOfCharge = timeToFullStateOfCharge(state, connection);
+                int chargingTimeUnit = timeToFullStateOfCharge/NUM_OF_CHARGING_LENGTH_POSSIBILITIES;
+
+                for(int i = 1; i <= NUM_OF_CHARGING_LENGTH_POSSIBILITIES; i++){
+                    int energyCharged = getEnergyCharged(connection, i * chargingTimeUnit);
+                    if (applicableInState(state, i * chargingTimeUnit, energyCharged)){
+                        actions.add(new ChargingAction(actionId, state.getNodeId(), state.getNodeId(),
+                                i * chargingTimeUnit, connection.getId()));
+                    }
+                }
+            }
+        }
+
+        return actions;
+    }
+
+
     private int getEnergyCharged(ChargingConnection connection, double chargingTime){
         return (int)(((connection.getPowerKW()*(chargingTime/60.))/Utils.BATTERY_CAPACITY)*100.);
     }
 
 
-    private int timeToFullStateOfCharge(TaxiGraphState state, ChargingConnection connection){
+    private int timeToFullStateOfCharge(TaxiState state, ChargingConnection connection){
         double currentStateOfChargeInKW = (state.getStateOfCharge()/100.) * Utils.BATTERY_CAPACITY;
         return (int)((Utils.BATTERY_CAPACITY - currentStateOfChargeInKW)/connection.getPowerKW()*60.);
     }
@@ -84,12 +112,12 @@ public class ChargingActionType extends TaxiActionType {
 
 
     @Override
-    protected boolean applicableInState(TaxiGraphState state) {
+    protected boolean applicableInState(TaxiState state) {
         return this.transitions.containsKey(state.getNodeId());
     }
 
 
-    protected boolean applicableInState(TaxiGraphState state, double chargingTime, double energyCharged) {
+    protected boolean applicableInState(TaxiState state, double chargingTime, double energyCharged) {
         return shiftNotOver(state, chargingTime) && notOverCharging(state, energyCharged) && energyCharged > 0;
     }
 

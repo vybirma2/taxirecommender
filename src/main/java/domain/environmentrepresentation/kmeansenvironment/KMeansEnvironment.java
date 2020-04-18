@@ -1,6 +1,6 @@
 package domain.environmentrepresentation.kmeansenvironment;
 
-import domain.TaxiRecommenderDomainGenerator;
+import domain.TaxiRecommenderDomain;
 import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.KMeansAlgorithm;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPlacesDistance;
@@ -118,7 +118,7 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
 
 
     private void computeAndSerializeKMeansClusters(File file) throws IOException {
-        List<TaxiTripPickupPlace> pickupPlaces = TaxiRecommenderDomainGenerator.getTaxiTrips()
+        List<TaxiTripPickupPlace> pickupPlaces = TaxiRecommenderDomain.getTaxiTrips()
                 .stream()
                 .map(t -> new TaxiTripPickupPlace(t.getPickUpLongitude(), t.getPickUpLatitude()))
                 .collect(Collectors.toList());

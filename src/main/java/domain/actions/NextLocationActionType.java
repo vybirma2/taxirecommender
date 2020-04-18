@@ -1,11 +1,10 @@
 package domain.actions;
 
-import domain.states.TaxiGraphState;
+import domain.states.TaxiState;
 import parameterestimation.EnergyConsumptionEstimator;
 
 import java.util.*;
 
-import static domain.actions.ActionTypes.TO_NEXT_LOCATION;
 import static domain.actions.ActionUtils.*;
 import static utils.DistanceGraphUtils.getTripTime;
 
@@ -21,7 +20,7 @@ public class NextLocationActionType extends TaxiActionType {
 
 
     @Override
-    void addPreviousState(TaxiGraphState previousState, int stateId) {
+    void addPreviousState(TaxiState previousState, int stateId) {
         previousState.addNextLocationPreviousState(stateId);
     }
 
@@ -31,8 +30,8 @@ public class NextLocationActionType extends TaxiActionType {
      * in TaxiRecommenderDomainGenerator - check on applicability - not running out of time/battery...
      */
     @Override
-    public List<TaxiGraphState> allReachableStates(TaxiGraphState state) {
-        List<TaxiGraphState> states = new ArrayList<>();
+    public List<TaxiState> allReachableStates(TaxiState state) {
+        List<TaxiState> states = new ArrayList<>();
 
         ArrayList<Integer> trans = transitions.get(state.getNodeId());
 
@@ -51,22 +50,40 @@ public class NextLocationActionType extends TaxiActionType {
     }
 
 
+    @Override
+    public List<MeasurableAction> allApplicableActions(TaxiState state) {
+        List<MeasurableAction> actions = new ArrayList<>();
+        ArrayList<Integer> trans = transitions.get(state.getNodeId());
+
+        if (trans != null){
+            for (int neighbour : trans){
+                int time = getTripTime(state.getNodeId(), neighbour);
+                if (this.applicableInState(state, neighbour, time)){
+                    actions.add(new NextLocationAction(actionId, state.getNodeId(), neighbour));
+                }
+            }
+        }
+
+        return actions;
+    }
+
+
     private int getConsumption(int fromNodeId, int toNodeId) {
         return EnergyConsumptionEstimator.getActionEnergyConsumption(fromNodeId, toNodeId);
     }
 
     @Override
-    protected boolean applicableInState(TaxiGraphState state) {
+    protected boolean applicableInState(TaxiState state) {
         return transitions.containsKey(state.getNodeId());
     }
 
 
-    public int getActionTime(TaxiGraphState state, int toNodeId) {
+    public int getActionTime(TaxiState state, int toNodeId) {
         return getTripTime(state.getNodeId(), toNodeId);
     }
 
 
-    private boolean applicableInState(TaxiGraphState state, int toNodeId, int time){
+    private boolean applicableInState(TaxiState state, int toNodeId, int time){
         return shiftNotOver(state, time) &&
                 notRunOutOfBattery(state, toNodeId);
     }

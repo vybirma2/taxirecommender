@@ -20,8 +20,18 @@ public class GoingToChargingStationAction extends MeasurableAction  {
     }
 
     @Override
+    public double getReward() {
+        return 0;
+    }
+
+    @Override
     public MeasurableAction copy() {
         return new GoingToChargingStationAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId());
     }
 
+
+    @Override
+    public String toString() {
+        return "GoingToChargingStationAction{}" + super.toString();
+    }
 }

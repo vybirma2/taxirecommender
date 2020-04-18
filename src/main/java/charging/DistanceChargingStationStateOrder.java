@@ -1,6 +1,6 @@
 package charging;
 
-import domain.states.TaxiGraphState;
+import domain.states.TaxiState;
 import utils.DistanceSpeedPairTime;
 import utils.Utils;
 
@@ -26,7 +26,7 @@ public class DistanceChargingStationStateOrder implements ChargingStationStateOr
 
 
     @Override
-    public List<Integer> get(TaxiGraphState state, int numOfChargingStations) {
+    public List<Integer> get(TaxiState state, int numOfChargingStations) {
         return this.orders.get(state.getNodeId())
                 .stream()
                 .limit(numOfChargingStations)

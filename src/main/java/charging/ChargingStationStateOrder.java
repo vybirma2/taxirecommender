@@ -1,6 +1,6 @@
 package charging;
 
-import domain.states.TaxiGraphState;
+import domain.states.TaxiState;
 
 import java.util.List;
 
@@ -16,5 +16,5 @@ public interface ChargingStationStateOrder {
      * @param numOfChargingStations number of the best charging stations according to the defined order to return
      * @return list of numOfChargingStations best charging stations - their ids
      */
-    List<Integer> get(TaxiGraphState state, int numOfChargingStations);
+    List<Integer> get(TaxiState state, int numOfChargingStations);
 }

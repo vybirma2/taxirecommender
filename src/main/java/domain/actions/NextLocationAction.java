@@ -20,9 +20,19 @@ public class NextLocationAction extends MeasurableAction {
         return EnergyConsumptionEstimator.getActionEnergyConsumption(getFromNodeId(), getToNodeId());
     }
 
+    @Override
+    public double getReward() {
+        return 0;
+    }
+
 
     @Override
     public MeasurableAction copy() {
         return new NextLocationAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId());
+    }
+
+    @Override
+    public String toString() {
+        return "NextLocationAction{}" + super.toString();
     }
 }

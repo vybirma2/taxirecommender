@@ -48,6 +48,7 @@ public abstract class MeasurableAction {
 
 
     public abstract int getConsumption();
+    public abstract double getReward();
 
 
 
@@ -72,4 +73,16 @@ public abstract class MeasurableAction {
 
 
     abstract MeasurableAction copy();
+
+
+    @Override
+    public String toString() {
+        return "MeasurableAction{" +
+                "id=" + id +
+                ", actionId=" + actionId +
+                ", fromNodeId=" + fromNodeId +
+                ", toNodeId=" + toNodeId +
+                ", length=" + length +
+                '}';
+    }
 }

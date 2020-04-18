@@ -1,6 +1,6 @@
 package domain.actions;
 
-import domain.states.TaxiGraphState;
+import domain.states.TaxiState;
 import parameterestimation.ParameterEstimator;
 
 import java.util.*;
@@ -28,7 +28,7 @@ public class PickUpPassengerActionType  extends TaxiActionType {
 
 
     @Override
-    void addPreviousState(TaxiGraphState previousState, int stateId) {
+    void addPreviousState(TaxiState previousState, int stateId) {
         previousState.addTripPreviousState(stateId);
     }
 
@@ -39,8 +39,8 @@ public class PickUpPassengerActionType  extends TaxiActionType {
      * in TaxiRecommenderDomainGenerator - check on applicability - not running out of time/battery...
      */
     @Override
-    public List<TaxiGraphState> allReachableStates(TaxiGraphState state) {
-        List<TaxiGraphState> states = new ArrayList<>();
+    public List<TaxiState> allReachableStates(TaxiState state) {
+        List<TaxiState> states = new ArrayList<>();
 
         ArrayList<Integer> trans = transitions.get(state.getNodeId());
 
@@ -58,13 +58,20 @@ public class PickUpPassengerActionType  extends TaxiActionType {
         return states;
     }
 
+
     @Override
-    boolean applicableInState(TaxiGraphState state) {
+    public List<MeasurableAction> allApplicableActions(TaxiState state) {
+        return new ArrayList<>();
+    }
+
+
+    @Override
+    boolean applicableInState(TaxiState state) {
         return transitions.containsKey(state.getNodeId());
     }
 
 
-    private boolean applicableInState(TaxiGraphState state, int toNodeId){
+    private boolean applicableInState(TaxiState state, int toNodeId){
         int startInterval = getIntervalStart(state.getTimeStamp());
 
         if (taxiTripLengths.get(startInterval).containsKey(state.getNodeId())){

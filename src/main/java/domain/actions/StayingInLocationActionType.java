@@ -1,6 +1,6 @@
 package domain.actions;
 
-import domain.states.TaxiGraphState;
+import domain.states.TaxiState;
 
 import java.util.*;
 
@@ -19,13 +19,13 @@ public class StayingInLocationActionType extends TaxiActionType {
 
 
     @Override
-    void addPreviousState(TaxiGraphState previousState, int stateId) {
+    void addPreviousState(TaxiState previousState, int stateId) {
         previousState.addStayingPreviousState(stateId);
     }
 
     @Override
-    public List<TaxiGraphState> allReachableStates(TaxiGraphState state) {
-        List<TaxiGraphState> states = new ArrayList<>();
+    public List<TaxiState> allReachableStates(TaxiState state) {
+        List<TaxiState> states = new ArrayList<>();
 
         if (this.applicableInState(state)) {
             addNewState(states, state, state.getNodeId(), STAYING_INTERVAL, 0);
@@ -34,9 +34,20 @@ public class StayingInLocationActionType extends TaxiActionType {
         return states;
     }
 
+    @Override
+    public List<MeasurableAction> allApplicableActions(TaxiState state) {
+        List<MeasurableAction> actions = new ArrayList<>();
+
+        if (this.applicableInState(state)) {
+            actions.add(new StayingInLocationAction(actionId, state.getNodeId(), state.getNodeId(), STAYING_INTERVAL));
+        }
+
+        return actions;
+    }
+
 
     @Override
-    boolean applicableInState(TaxiGraphState state) {
+    boolean applicableInState(TaxiState state) {
         return shiftNotOver(state, STAYING_INTERVAL);
     }
 }

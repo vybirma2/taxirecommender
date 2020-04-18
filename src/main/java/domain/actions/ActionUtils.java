@@ -1,7 +1,7 @@
 package domain.actions;
 
 import utils.Utils;
-import domain.states.TaxiGraphState;
+import domain.states.TaxiState;
 
 import static parameterestimation.EnergyConsumptionEstimator.getActionEnergyConsumption;
 import static utils.Utils.*;
@@ -17,12 +17,12 @@ public class ActionUtils {
     }*/
 
 
-    public static boolean shiftNotOver(TaxiGraphState state, double actionTime){
+    public static boolean shiftNotOver(TaxiState state, double actionTime){
         return state.getTimeStamp() + actionTime < Utils.SHIFT_LENGTH + SHIFT_START_TIME;
     }
 
 
-    public static boolean notOverCharging(TaxiGraphState state, double energyCharged){
+    public static boolean notOverCharging(TaxiState state, double energyCharged){
         return state.getStateOfCharge() + energyCharged <= 100;
     }
 
@@ -32,7 +32,7 @@ public class ActionUtils {
     }
 
 
-    public static boolean notRunOutOfBattery(TaxiGraphState state, int toNodeId){
+    public static boolean notRunOutOfBattery(TaxiState state, int toNodeId){
         return state.getStateOfCharge() + getActionEnergyConsumption(state.getNodeId(), toNodeId) > MINIMAL_STATE_OF_CHARGE;
     }
 

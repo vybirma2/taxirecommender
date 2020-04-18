@@ -1,43 +1,40 @@
-import domain.TaxiGraphRewardFunction;
-import domain.TaxiRecommenderDomainGenerator;
+import domain.TaxiRecommenderDomain;
+import domain.TaxiRewardFunction;
 import domain.actions.ActionTypes;
-import domain.environmentrepresentation.fullenvironment.FullEnvironment;
 import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
-import domain.states.TaxiGraphState;
+import domain.states.TaxiState;
 import evaluation.Simulation;
 import utils.Utils;
-
-import javax.sound.midi.Soundbank;
 
 public class Main {
 
 
     public static void main(String[] args) {
 
-        Simulation simulation = new Simulation(null, null, 100, 425, 60);
+        Simulation simulation = new Simulation();
         simulation.startSimulation();
-        /*TaxiRecommenderDomainGenerator taxiRecommenderDomainGenerator = new TaxiRecommenderDomainGenerator(
+        /*TaxiRecommenderDomain taxiRecommenderDomainGenerator = new TaxiRecommenderDomain(
                 "prague_full.fst","prague_charging_stations_full.json",
-                new FullEnvironment());
+                new KMeansEnvironment());
 
         try {
 
-            ReachableStatesGenerator planner = new ReachableStatesGenerator(taxiRecommenderDomainGenerator.getTaxiGraphStateModel());
-            TaxiGraphState initialState = new TaxiGraphState(taxiRecommenderDomainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getNodeId(), 40, Utils.SHIFT_START_TIME);
+            evaluation.chargingrecommenderagent.ReachableStatesGenerator planner = new evaluation.chargingrecommenderagent.ReachableStatesGenerator(taxiRecommenderDomainGenerator.getTaxiModel());
+            TaxiState initialState = new TaxiState(taxiRecommenderDomainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getNodeId(), Utils.STARTING_STATE_OF_CHARGE, Utils.SHIFT_START_TIME);
             planner.performReachabilityFrom(initialState);
 
-            TaxiGraphRewardFunction rewardFunction = new TaxiGraphRewardFunction(planner.getReachableStates(), taxiRecommenderDomainGenerator.getParameterEstimator());
+            TaxiRewardFunction rewardFunction = new TaxiRewardFunction(planner.getReachableStates(), taxiRecommenderDomainGenerator.getParameterEstimator());
             rewardFunction.computeReward();
 
 
-            TaxiGraphState state = initialState;
-            while (state.getMaxRewardState() != -1){
+            TaxiState state = initialState;
+            while (state.getMaxRewardStateId() != -1){
                 System.out.println("FROM: " + state);
-                System.out.println("TO: " + planner.getReachableStates().get(state.getMaxRewardState()));
-                System.out.println("ACTION: " + ActionTypes.getNameOfAction(state.getMaxRewardAction()));
+                System.out.println("TO: " + planner.getReachableStates().get(state.getMaxRewardStateId()));
+                System.out.println("ACTION: " + ActionTypes.getNameOfAction(state.getMaxRewardActionId()));
                 System.out.println();
                 System.out.println();
-                state = planner.getReachableStates().get(state.getMaxRewardState());
+                state = planner.getReachableStates().get(state.getMaxRewardStateId());
             }
 
         } catch (Exception e) {

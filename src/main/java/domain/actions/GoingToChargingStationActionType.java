@@ -2,7 +2,7 @@ package domain.actions;
 
 import charging.ChargingStationReader;
 import charging.TripToChargingStation;
-import domain.states.TaxiGraphState;
+import domain.states.TaxiState;
 import parameterestimation.EnergyConsumptionEstimator;
 import utils.Utils;
 
@@ -23,7 +23,7 @@ public class GoingToChargingStationActionType extends TaxiActionType {
     }
 
     @Override
-    void addPreviousState(TaxiGraphState previousState, int stateId) {
+    void addPreviousState(TaxiState previousState, int stateId) {
         previousState.addGoingToChargingPreviousState(stateId);
     }
 
@@ -34,8 +34,8 @@ public class GoingToChargingStationActionType extends TaxiActionType {
      * charging station order - distance/prize...
      */
     @Override
-    public List<TaxiGraphState> allReachableStates(TaxiGraphState state) {
-        List<TaxiGraphState> states = new ArrayList<>();
+    public List<TaxiState> allReachableStates(TaxiState state) {
+        List<TaxiState> states = new ArrayList<>();
 
         List<Integer> trans = this.transitions.get(state.getNodeId());
 
@@ -53,6 +53,25 @@ public class GoingToChargingStationActionType extends TaxiActionType {
         return states;
     }
 
+    @Override
+    public List<MeasurableAction> allApplicableActions(TaxiState state) {
+        List<MeasurableAction> actions = new ArrayList<>();
+
+        List<Integer> trans = this.transitions.get(state.getNodeId());
+
+        if (trans != null){
+            List<Integer> stations = chooseBestChargingStation(state, trans);
+            for (Integer chargingStation : stations){
+                int time = getTripTime(state.getNodeId(), chargingStation);
+                if (this.applicableInState(state, chargingStation, time)){
+                    actions.add(new GoingToChargingStationAction(actionId, state.getNodeId(), chargingStation));
+                }
+            }
+        }
+
+        return actions;
+    }
+
 
     private int getConsumption(int fromNodeId, int toNodeId) {
         return EnergyConsumptionEstimator.getActionEnergyConsumption(fromNodeId, toNodeId);
@@ -60,7 +79,7 @@ public class GoingToChargingStationActionType extends TaxiActionType {
 
 
 
-    private List<Integer> chooseBestChargingStation(TaxiGraphState state, List<Integer> transitions){
+    private List<Integer> chooseBestChargingStation(TaxiState state, List<Integer> transitions){
 
         if (Utils.CHARGING_STATION_STATE_ORDER == null){
             return transitions
@@ -78,12 +97,12 @@ public class GoingToChargingStationActionType extends TaxiActionType {
 
 
     @Override
-    protected boolean applicableInState(TaxiGraphState state) {
+    protected boolean applicableInState(TaxiState state) {
         return notChargedALot(state.getStateOfCharge());
     }
 
 
-    private boolean applicableInState(TaxiGraphState state, int toNodeId, int time){
+    private boolean applicableInState(TaxiState state, int toNodeId, int time){
         return applicableInState(state) &&  notRunOutOfBattery(state, toNodeId)
                 && shiftNotOver(state, time);
     }
