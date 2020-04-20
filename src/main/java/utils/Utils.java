@@ -8,10 +8,10 @@ import java.util.Comparator;
 
 public class Utils {
 
-    public static final int NUM_OF_CLUSTERS = 100;
+    public static final int NUM_OF_CLUSTERS = 150;
 
 
-    public static final int SHIFT_LENGTH = 12 * 60;
+    public static final int SHIFT_LENGTH = 8 * 60;
     public static final int STARTING_STATE_OF_CHARGE = 20;
 
 
@@ -22,6 +22,8 @@ public class Utils {
     public static final double MINIMAL_CHARGING_STATE_OF_CHARGE = 80;
 
     public static final int NUM_OF_ACTION_TYPES = 5;
+
+    public static final int NUM_OF_NODES = NUM_OF_CLUSTERS + 123;
 
     public static final double TAXI_COST_FOR_KM = 30;
     public static final double TAXI_START_JOURNEY_FEE = 30;
@@ -34,7 +36,7 @@ public class Utils {
     public static final int MINIMAL_STATE_OF_CHARGE = 5;
 
 
-    public static final boolean VISUALIZE_ENVIRONMENT = false;
+    public static final boolean VISUALIZE_ENVIRONMENT = true;
 
 
     public static final int MAX_KMEANS_ITERATIONS = 1000;
@@ -58,7 +60,7 @@ public class Utils {
 
     public static final Comparator<ChargingConnection> chargingConnectionComparator = new ChargingConnectionComparator();
 
-    public static final int NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO = 20;
+    public static final int NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO = 10;
 
 
     public static ChargingStationStateOrder CHARGING_STATION_STATE_ORDER = null;

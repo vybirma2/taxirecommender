@@ -1,8 +1,9 @@
 package domain.actions;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class MeasurableAction {
+public abstract class MeasurableAction implements Serializable {
 
     public static int ids;
 
@@ -77,12 +78,8 @@ public abstract class MeasurableAction {
 
     @Override
     public String toString() {
-        return "MeasurableAction{" +
-                "id=" + id +
-                ", actionId=" + actionId +
-                ", fromNodeId=" + fromNodeId +
-                ", toNodeId=" + toNodeId +
-                ", length=" + length +
-                '}';
+        return "fromNodeId: " + fromNodeId +
+                ", toNodeId: " + toNodeId +
+                ", length: " + length;
     }
 }

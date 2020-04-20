@@ -1,16 +1,21 @@
+import com.esri.arcgisruntime.geometry.CoordinateFormatter;
 import domain.TaxiRecommenderDomain;
 import domain.TaxiRewardFunction;
 import domain.actions.ActionTypes;
 import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
 import domain.states.TaxiState;
 import evaluation.Simulation;
+import parameterestimation.LongitudeLatitudeReader;
 import utils.Utils;
+
+import java.io.IOException;
 
 public class Main {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
 
+        LongitudeLatitudeReader longitudeLatitudeReader = new LongitudeLatitudeReader();
         Simulation simulation = new Simulation();
         simulation.startSimulation();
         /*TaxiRecommenderDomain taxiRecommenderDomainGenerator = new TaxiRecommenderDomain(

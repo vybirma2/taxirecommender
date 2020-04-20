@@ -31,6 +31,6 @@ public class StayingInLocationAction extends MeasurableAction {
 
     @Override
     public String toString() {
-        return "StayingInLocationAction{}" + super.toString();
+        return "StayingInLocationAction: " + super.toString();
     }
 }

@@ -33,6 +33,6 @@ public class NextLocationAction extends MeasurableAction {
 
     @Override
     public String toString() {
-        return "NextLocationAction{}" + super.toString();
+        return "NextLocationAction: " + super.toString();
     }
 }

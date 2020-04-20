@@ -17,6 +17,7 @@ import org.nustaq.serialization.FSTObjectInput;
 import parameterestimation.ParameterEstimator;
 import parameterestimation.TaxiTrip;
 import utils.*;
+import visualization.MapVisualizer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -90,9 +91,36 @@ public class TaxiRecommenderDomain {
         actionTypes.add(new PickUpPassengerActionType(PICK_UP_PASSENGER.getValue(), transitions.get(PICK_UP_PASSENGER.getValue()), parameterEstimator));
     }
 
+    private void visualizeEnvironment(){
+
+        new Thread() {
+            @Override
+            public void run() {
+                MapVisualizer.main(null);
+            }
+        }.start();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        MapVisualizer.addRoadNodesToMap(this.osmNodes);
+
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
     private void loadData() throws Exception {
         loadGraph();
+
+        //visualizeEnvironment();
 
         loadTaxiTripDataset();
 

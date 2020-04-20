@@ -31,18 +31,13 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
     @Override
     protected void setEnvironmentGraph() throws IOException, ClassNotFoundException {
         setClusters();
-        /*if (VISUALIZE_ENVIRONMENT){
-            visualizeEnvironment();
-        }*/
 
         this.environmentGraph = new KMeansEnvironmentGraph(this.getOsmGraph());
 
 
-        if (VISUALIZE_ENVIRONMENT){
+        /*if (VISUALIZE_ENVIRONMENT){
             visualizeEnvironment();
-        }
-        //System.out.println("shbfsjf");
-
+        }*/
     }
 
     @Override
@@ -74,7 +69,7 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
         for (KMeansEnvironmentNode node : this.environmentGraph.getNodes()){
             List<KMeansEnvironmentNode> neighbours = new ArrayList<>();
             MapVisualizer.nodeGraphicsOverlay.getGraphics().removeAll(MapVisualizer.nodeGraphicsOverlay.getGraphics());
-            MapVisualizer.addKMeansNodeToMap(node);
+            MapVisualizer.addEnvironmentNodeToMap(node);
             MapVisualizer.addPickUpPointsToMap(node.getPickupPlaceList());
             double distance = 0;
             for (Integer neighbour : node.getNeighbours()){
@@ -83,7 +78,7 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
             }
             distance /= 7;
             System.out.println("distance is: " + distance);
-            MapVisualizer.addKMeansNodesToMap(neighbours);
+            MapVisualizer.addEnvironmentNodesToMap(neighbours);
             /*List<TaxiTripPickupPlace> hull = ConvexHullFinder.getConvexHull(clusters.get(entry.getKey()));
             MapVisualizer.addHullPointsToMap(hull, entry.getKey());
             MapVisualizer.addPickUpPointsToMap(entry.getValue());*/

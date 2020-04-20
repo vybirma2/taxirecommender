@@ -1,6 +1,7 @@
 package evaluation;
 
 
+import charging.ChargingStationReader;
 import domain.TaxiRecommenderDomain;
 import domain.TaxiRewardFunction;
 import domain.actions.MeasurableAction;
@@ -9,7 +10,9 @@ import domain.states.TaxiState;
 import evaluation.chargingrecommenderagent.ChargingRecommenderAgent;
 import utils.DistanceGraphUtils;
 import utils.Utils;
+import visualization.MapVisualizer;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Simulation {
@@ -18,40 +21,78 @@ public class Simulation {
 
     TaxiRecommenderDomain domainGenerator;
 
-    private final int startingStateOfCharge;
     private final int startingTimeStamp;
     private final int shiftLength;
-    private TaxiState currentState;
+    private final TaxiState currentState;
 
     private double resultReward = 0;
 
-    public Simulation() {
+    public Simulation() throws IOException, ClassNotFoundException {
 
-        domainGenerator = new TaxiRecommenderDomain("prague_full.fst",
-                    "prague_charging_stations_full.json", new KMeansEnvironment());
+        domainGenerator = new TaxiRecommenderDomain("new_york_full.fst",
+                    "new_york_chargingstations.json", new KMeansEnvironment());
 
-        this.startingStateOfCharge = Utils.STARTING_STATE_OF_CHARGE;
+        int startingStateOfCharge = Utils.STARTING_STATE_OF_CHARGE;
         this.startingTimeStamp = Utils.SHIFT_START_TIME;
         this.shiftLength = Utils.SHIFT_LENGTH;
-        currentState = new TaxiState(domainGenerator.getEnvironment().getOsmGraph().getNode(13384).getId(),
+        currentState = new TaxiState(domainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getNodeId(),
                 startingStateOfCharge, startingTimeStamp);
         this.agent = new ChargingRecommenderAgent(domainGenerator.getTaxiModel(), domainGenerator.getParameterEstimator(), currentState);
     }
 
 
-    public void startSimulation(){
+    public void startSimulation() {
+        visualizeEnvironment();
+        printSimulationStep();
 
         while (currentState.getTimeStamp() <= startingTimeStamp + shiftLength){
-            printCurrentSimulationState();
+            MapVisualizer.setCurrentStateNode(domainGenerator.getEnvironment().getOsmGraph().getNode(currentState.getNodeId()));
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             if (tripDone()){
                 continue;
             }
+
             List<MeasurableAction> applicableActions = domainGenerator.getTaxiModel().allApplicableActionsFromState(currentState);
             if (applicableActions.isEmpty()){
                 return;
             }
-            applyAction(agent.chooseAction(currentState, applicableActions));
+            MeasurableAction actionDone = agent.chooseAction(currentState, applicableActions);
+            applyAction(actionDone);
+
+            printSimulationStep(actionDone);
         }
+    }
+
+    private void visualizeEnvironment(){
+
+        new Thread() {
+            @Override
+            public void run() {
+                MapVisualizer.main(null);
+            }
+        }.start();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        MapVisualizer.initSimulation(domainGenerator.getEnvironment().getEnvironmentNodes(), ChargingStationReader.getChargingStations());
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
@@ -60,9 +101,7 @@ public class Simulation {
         currentState.setStateOfCharge(currentState.getStateOfCharge() + action.getConsumption());
         currentState.setTimeStamp(currentState.getTimeStamp() + action.getLength());
         this.resultReward += action.getReward();
-        System.out.println("Action done: " + action);
     }
-
 
 
     private boolean tripDone(){
@@ -79,9 +118,9 @@ public class Simulation {
                 int time = domainGenerator.getParameterEstimator().getTaxiTripLengths()
                         .get(DistanceGraphUtils.getIntervalStart(currentState.getTimeStamp()))
                         .get(currentState.getNodeId()).get(trip).intValue();
+                double reward = TaxiRewardFunction.getTripReward(distance);
 
-
-                this.resultReward += TaxiRewardFunction.getTripReward(distance);
+                this.resultReward += reward;
 
                 currentState.setNodeId(trip);
 
@@ -89,7 +128,7 @@ public class Simulation {
 
                 currentState.setStateOfCharge(currentState.getStateOfCharge() + consumption);
 
-                System.out.println("Trip to destination done: " + trip);
+                printSimulationStep(trip, distance, time, consumption, reward);
                 return true;
             }
         }
@@ -111,7 +150,6 @@ public class Simulation {
     }
 
 
-
     private int chooseToNode(){
         HashMap<Integer, Double> destinationProbabilities =
                 domainGenerator.getParameterEstimator().getDestinationProbabilitiesInNode(currentState.getNodeId(), currentState.getTimeStamp());
@@ -129,10 +167,25 @@ public class Simulation {
         return nodes.get(random.nextInt(nodes.size()));
     }
 
-
-    private void printCurrentSimulationState(){
+    private void printSimulationStep(MeasurableAction action){
+        System.out.println("Action done: " + action);
         System.out.println("Current state: " + this.currentState);
         System.out.println("Current achieved reward: " + this.resultReward);
+        System.out.println();
+    }
+
+    private void printSimulationStep(int toNodeId, double distance, int time, int consumption, double reward){
+        System.out.println("Trip done: toNodeId: " + toNodeId + ", distance: " + distance + ", time: "
+                + time + ", consumption: " + consumption + ", reward: " + reward);
+        System.out.println("Current state: " + this.currentState);
+        System.out.println("Current achieved reward: " + this.resultReward);
+        System.out.println();
+    }
+
+    private void printSimulationStep(){
+        System.out.println("Current state: " + this.currentState);
+        System.out.println("Current achieved reward: " + this.resultReward);
+        System.out.println();
     }
 
 }

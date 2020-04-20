@@ -1,6 +1,7 @@
 package domain.states;
 
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -8,10 +9,10 @@ import java.util.*;
  * previous actions and states or maximal possible reward achieved by maxReward action which is computed after generating
  * all possible states
  */
-public class TaxiState implements Comparable<TaxiState> {
+public class TaxiState implements Comparable<TaxiState>, Serializable {
 
     private static final StatePredecessors statePredecessors = new StatePredecessors();
-    private static int stateId = 0;
+    public static int stateId = 0;
 
     private final int id;
     private int nodeId;
@@ -145,11 +146,9 @@ public class TaxiState implements Comparable<TaxiState> {
 
     @Override
     public String toString() {
-        return "TaxiGraphState{" +
-                "stateOfCharge=" + stateOfCharge +
-                ", timeStamp=" + timeStamp +
-                ", nodeId=" + nodeId +
-                '}';
+        return "stateOfCharge: " + stateOfCharge +
+                ", timeStamp: " + timeStamp +
+                ", nodeId: " + nodeId;
     }
 
 

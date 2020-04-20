@@ -6,6 +6,7 @@ import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.AStarNode;
+import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.EnvironmentEdge;
 import domain.environmentrepresentation.EnvironmentGraph;
 import domain.environmentrepresentation.EnvironmentNode;
@@ -236,6 +237,17 @@ public class DistanceGraphUtils {
     }
 
 
+    public static DistanceSpeedPairTime getDistancesAndSpeedBetweenEnvironmentNodes(int fromNodeId, int toNodeId){
+        LinkedList<Integer> nodePath = aStarEnvironment(fromNodeId, toNodeId);
+
+        if (nodePath != null){
+            return getDistanceSpeedPairOfPathEnvironment(nodePath);
+        } else {
+            throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
+        }
+    }
+
+
     public static double getTimeBetweenOsmNodes(int fromNodeId, int toNodeId){
         if (fromNodeId == toNodeId){
             return 0;
@@ -321,6 +333,61 @@ public class DistanceGraphUtils {
     }
 
 
+
+    public static LinkedList<Integer> aStarEnvironment(int start, int goal){
+        AStarNode fromNode = new AStarNode(start, 0., getEuclideanDistanceBetweenOsmNodes(start, goal));
+        AStarNode toNode = new AStarNode(goal, Double.MAX_VALUE, 0.);
+
+        HashMap<Integer,Integer> parentMap = new HashMap<>();
+        HashSet<Integer> visited = new HashSet<>();
+        Map<Integer, Double> distances = new HashMap<>();
+
+        PriorityQueue<AStarNode> priorityQueue = new PriorityQueue<>();
+
+
+        distances.put(fromNode.getNodeId(), 0.);
+        priorityQueue.add(fromNode);
+        AStarNode current = null;
+
+        while (!priorityQueue.isEmpty()) {
+            current = priorityQueue.remove();
+
+            if (!visited.contains(current.getNodeId()) ){
+                visited.add(current.getNodeId());
+
+                if (current.getNodeId() == toNode.getNodeId()){
+                    return reconstructPath(parentMap, fromNode.getNodeId(), toNode.getNodeId());
+                }
+
+                EnvironmentNode node = getEnvironmentNode(current.getNodeId());
+                if (node == null){
+                    System.out.println("srfs");
+                }
+                Set<Integer> neighbors = node.getNeighbours();
+                for (Integer neighbor : neighbors) {
+                    if (!visited.contains(neighbor) ){
+
+                        double predictedDistance = getEuclideanDistanceBetweenOsmNodes(neighbor, toNode.getNodeId());
+
+                        double neighborDistance = getDistanceBetweenNodes(current.getNodeId(), neighbor);
+                        double totalDistance = current.getDistanceToStart() + neighborDistance;
+
+
+                        if(!distances.containsKey(neighbor) || totalDistance + predictedDistance < distances.get(neighbor) ){
+                            distances.put(neighbor, totalDistance + predictedDistance);
+                            AStarNode neighbourNode = new AStarNode(neighbor, totalDistance, predictedDistance);
+
+                            parentMap.put(neighbourNode.getNodeId(), current.getNodeId());
+                            priorityQueue.add(neighbourNode);
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
     private static LinkedList<Integer> reconstructPath(HashMap<Integer, Integer> parentMap, Integer fromNodeId, Integer toNodeId){
         LinkedList<Integer> path = new LinkedList<>();
         Integer current = toNodeId;
@@ -343,6 +410,23 @@ public class DistanceGraphUtils {
     }
 
 
+    public static DistanceSpeedPairTime getDistanceSpeedPairOfPathEnvironment(LinkedList<Integer> nodePath){
+        double distance = 0;
+        double speed = 0;
+        double time = 0;
+        Integer current = nodePath.getFirst();
+
+        for (Integer node : nodePath){
+            distance += getDistanceBetweenNodes(current, node);
+            speed += getSpeedBetweenNodes(current, node);
+            time += getTripTime(current, node);
+            current = node;
+        }
+
+        return new DistanceSpeedPairTime(distance, speed/(nodePath.size() - 1), (int) Math.ceil(time));
+    }
+
+
     public static DistanceSpeedPairTime getDistanceSpeedPairOfPath(LinkedList<Integer> nodePath){
         double distance = 0;
         double speed = 0;
@@ -357,5 +441,16 @@ public class DistanceGraphUtils {
         }
 
         return new DistanceSpeedPairTime(distance, speed/(nodePath.size() - 1), (int) Math.ceil(time));
+    }
+
+
+
+    private static EnvironmentNode getEnvironmentNode(int nodeId){
+        for (EnvironmentNode node : nodes){
+            if (node.getNodeId() == nodeId){
+                return node;
+            }
+        }
+        return null;
     }
 }

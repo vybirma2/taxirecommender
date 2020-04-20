@@ -1,5 +1,6 @@
 package visualization;
 
+import charging.ChargingStation;
 import com.esri.arcgisruntime.geometry.*;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -8,7 +9,9 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
-import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironmentNode;
+import cz.agents.multimodalstructures.nodes.RoadNode;
+import domain.environmentrepresentation.Environment;
+import domain.environmentrepresentation.EnvironmentNode;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPoint;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPointCentroid;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.TaxiTripPickupPlace;
@@ -17,16 +20,19 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 
 public class MapVisualizer extends Application {
 
     private MapView mapView;
     public static GraphicsOverlay nodeGraphicsOverlay;
 
-    private static SimpleMarkerSymbol centroidSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000, 8.0f);
+    private static SimpleMarkerSymbol environmentNode = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000, 6.0f);
+    private static SimpleMarkerSymbol chargingStation = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF00FF00, 6.0f);
+    private static SimpleMarkerSymbol currentNode = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF800080, 15.0f);
+    private static SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH_DOT_DOT, 0xFFFF0000, 3);
 
 
     private static SimpleMarkerSymbol pickUpPointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF00FF00, 2.0f);
@@ -34,12 +40,14 @@ public class MapVisualizer extends Application {
 
     private static SimpleMarkerSymbol hullPointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF800080, 8.0f);
 
-    private static SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFFFF0000, 3);
 
+
+    private static Graphic current = null;
+    private static RoadNode currentRoadNode = null;
 
 
     public static void main(String[] args) {
-        centroidSymbol.setOutline(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFFFF0000, 8.0f));
+        environmentNode.setOutline(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFFFF0000, 8.0f));
 
         Application.launch();
     }
@@ -65,6 +73,23 @@ public class MapVisualizer extends Application {
     }
 
 
+    public static void initSimulation(Collection<? extends EnvironmentNode> nodes, Collection<ChargingStation> chargingStations){
+        addEnvironmentNodesToMap(nodes);
+        addChargingStationsToMap(chargingStations);
+    }
+
+
+    public static void setCurrentStateNode(RoadNode node){
+        if (current != null){
+            nodeGraphicsOverlay.getGraphics().remove(current);
+            addBetweenStatesLine(currentRoadNode, node);
+        }
+
+        currentRoadNode = node;
+        nodeGraphicsOverlay.getGraphics().add(createCurrentNodePoint(node));
+    }
+
+
     public static void addPickUpPointsToMap(List<TaxiTripPickupPlace> allNodes){
         //nodeGraphicsOverlay.getGraphics().removeAll(nodeGraphicsOverlay.getGraphics());
         for (TaxiTripPickupPlace node: allNodes) {
@@ -83,6 +108,14 @@ public class MapVisualizer extends Application {
         Graphic pointGraphic = new Graphic(point, pickUpPointSymbol);
 
         return pointGraphic;
+    }
+
+
+    private static Graphic createCurrentNodePoint(RoadNode node) {
+        Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
+        current = new Graphic(point, currentNode);
+
+        return current;
     }
 
 
@@ -113,13 +146,21 @@ public class MapVisualizer extends Application {
     }
 
 
+    public static void addBetweenStatesLine(RoadNode fromNode, RoadNode toNode){
+        PointCollection points = new PointCollection(SpatialReferences.getWgs84());
+        points.add(fromNode.getLongitude(), fromNode.getLatitude());
+        points.add(toNode.getLongitude(), toNode.getLatitude());
+        Polyline line = new Polyline(points);
+
+        nodeGraphicsOverlay.getGraphics().add(new Graphic(line, lineSymbol));
+    }
+
     private static Graphic createGraphicHullPoint(PickUpPoint node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
         Graphic pointGraphic = new Graphic(point, hullPointSymbol);
 
         return pointGraphic;
     }
-
 
 
     public static void addCentroidsToMap(Set<PickUpPointCentroid> allNodes){
@@ -130,10 +171,21 @@ public class MapVisualizer extends Application {
     }
 
 
-    public static void addKMeansNodesToMap(List<KMeansEnvironmentNode> allNodes){
-        //nodeGraphicsOverlay.getGraphics().removeAll(nodeGraphicsOverlay.getGraphics());
-        for (KMeansEnvironmentNode node: allNodes) {
-            addKMeansNodeToMap(node);
+    public static void addEnvironmentNodesToMap(Collection<? extends EnvironmentNode> allNodes){
+        for (EnvironmentNode node: allNodes) {
+            addEnvironmentNodeToMap(node);
+        }
+    }
+
+    public static void addRoadNodesToMap(Collection<RoadNode> allNodes){
+        for (RoadNode node: allNodes) {
+            addRoadNodeToMap(node);
+        }
+    }
+
+    public static void addChargingStationsToMap(Collection<ChargingStation> chargingStations){
+        for (ChargingStation station: chargingStations) {
+            addChargingStationToMap(station);
         }
     }
 
@@ -142,14 +194,37 @@ public class MapVisualizer extends Application {
         nodeGraphicsOverlay.getGraphics().add(createGraphicCentroid(node));
     }
 
-    public static void addKMeansNodeToMap(KMeansEnvironmentNode node){
-        nodeGraphicsOverlay.getGraphics().add(createGraphicKMeansNode(node));
+    public static void addEnvironmentNodeToMap(EnvironmentNode node){
+        nodeGraphicsOverlay.getGraphics().add(createGraphicEnvironmentNode(node));
     }
 
 
-    private static Graphic createGraphicKMeansNode(KMeansEnvironmentNode node) {
+    public static void addRoadNodeToMap(RoadNode node){
+        nodeGraphicsOverlay.getGraphics().add(createGraphicRoadNode(node));
+    }
+
+    public static void addChargingStationToMap(ChargingStation station){
+        nodeGraphicsOverlay.getGraphics().add(createGraphicEChargingStation(station));
+    }
+
+
+    private static Graphic createGraphicEnvironmentNode(EnvironmentNode node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
-        Graphic pointGraphic = new Graphic(point, centroidSymbol);
+        Graphic pointGraphic = new Graphic(point, environmentNode);
+
+        return pointGraphic;
+    }
+
+    private static Graphic createGraphicRoadNode(RoadNode node) {
+        Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
+        Graphic pointGraphic = new Graphic(point, environmentNode);
+
+        return pointGraphic;
+    }
+
+    private static Graphic createGraphicEChargingStation(ChargingStation station) {
+        Point point = new Point(station.getLongitude(), station.getLatitude(), SpatialReferences.getWgs84());
+        Graphic pointGraphic = new Graphic(point, chargingStation);
 
         return pointGraphic;
     }
@@ -157,7 +232,7 @@ public class MapVisualizer extends Application {
 
     private static Graphic createGraphicCentroid(PickUpPoint node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
-        Graphic pointGraphic = new Graphic(point, centroidSymbol);
+        Graphic pointGraphic = new Graphic(point, environmentNode);
 
         return pointGraphic;
     }

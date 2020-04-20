@@ -126,4 +126,9 @@ public class ChargingStationReader {
     public static ChargingConnection getChargingConnection(int connectionId) {
         return chargingConnections.get(connectionId);
     }
+
+
+    public static Collection<ChargingStation> getChargingStations(){
+        return chargingStations.values();
+    }
 }

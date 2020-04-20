@@ -62,8 +62,6 @@ public class ChargingAction extends MeasurableAction {
 
     @Override
     public String toString() {
-        return "ChargingAction{" +
-                "connectionId=" + connectionId +
-                '}' + super.toString();
+        return "ChargingAction: " + super.toString();
     }
 }

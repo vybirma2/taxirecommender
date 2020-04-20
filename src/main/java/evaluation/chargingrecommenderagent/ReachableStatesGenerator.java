@@ -1,16 +1,18 @@
 package evaluation.chargingrecommenderagent;
 
 import domain.TaxiModel;
+import domain.actions.TaxiActionType;
 import domain.states.TaxiState;
 
+import java.io.Serializable;
 import java.util.*;
 
 
-public class ReachableStatesGenerator {
+public class ReachableStatesGenerator implements Serializable {
 
     private final TaxiModel taxiModel;
-    private final List<TaxiState> reachableStates = new ArrayList<>();
-    private final HashMap<TaxiState, TaxiState> reachableStatesMap = new HashMap<>();
+    private final HashMap<TaxiState, Integer> visitedStates = new HashMap<>();
+    public final List<TaxiState> reachableStates = new ArrayList<>();
 
     public ReachableStatesGenerator(TaxiModel taxiModel) {
         this.taxiModel = taxiModel;
@@ -23,17 +25,15 @@ public class ReachableStatesGenerator {
         LinkedList<TaxiState> openList = new LinkedList<>();
         TaxiState currentState;
         openList.offer(startingState);
+        addReachableState(startingState);
 
         while(true) {
             if (openList.isEmpty()) {
-                System.out.println("Finished reachability analysis; # states: " + this.reachableStates.size());
+                System.out.println("Finished reachability analysis; # states: " + reachableStates.size());
                 return;
             }
 
             currentState = openList.poll();
-
-            this.reachableStates.add(currentState);
-            //this.reachableStatesMap.put(currentState, currentState);
 
             openList.addAll(this.taxiModel.allReachableStatesFromState(currentState));
         }
@@ -43,7 +43,25 @@ public class ReachableStatesGenerator {
         return reachableStates;
     }
 
-    public HashMap<TaxiState, TaxiState> getReachableStatesMap() {
-        return /*reachableStatesMap*/null;
+    public TaxiState getState(TaxiState state) {
+        return getVisitedState(state);
     }
+
+    public boolean alreadyVisited(TaxiState state){
+        return visitedStates.containsKey(state);
+    }
+
+    public TaxiState getVisitedState(TaxiState state){
+        Integer taxiState = visitedStates.get(state);
+        if (taxiState == null){
+            return null;
+        }
+        return reachableStates.get(taxiState);
+    }
+
+    public void addReachableState(TaxiState state){
+        reachableStates.add(state);
+        visitedStates.put(state, state.getId());
+    }
+
 }

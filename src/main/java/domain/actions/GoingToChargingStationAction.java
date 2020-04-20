@@ -32,6 +32,6 @@ public class GoingToChargingStationAction extends MeasurableAction  {
 
     @Override
     public String toString() {
-        return "GoingToChargingStationAction{}" + super.toString();
+        return "GoingToChargingStationAction: " + super.toString();
     }
 }
