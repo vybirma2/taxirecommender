@@ -11,8 +11,6 @@ import java.util.Date;
  */
 public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
 
-    private String orderId;
-
     private double pickUpLongitude;
     private double pickUpLatitude;
     private double destinationLongitude;
@@ -33,10 +31,9 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
     private Date finishDate;
 
 
-    public TaxiTrip(String orderId, double pickUpLongitude, double pickUpLatitude, double destinationLongitude,
+    public TaxiTrip(double pickUpLongitude, double pickUpLatitude, double destinationLongitude,
                     double destinationLatitude, double distance, long tripLength , RoadNode pickUpNode,
                     RoadNode destinationRoadNode, Date startDate, Date finishDate, EnvironmentNode fromNode, EnvironmentNode toNode) {
-        this.orderId = orderId;
         this.pickUpLongitude = pickUpLongitude;
         this.pickUpLatitude = pickUpLatitude;
         this.destinationLongitude = destinationLongitude;
@@ -50,16 +47,6 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
         this.tripEnergyConsumption = computeEnergyConsumption();
         fromEnvironmentNode = fromNode;
         toEnvironmentNode = toNode;
-    }
-
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
     }
 
 
@@ -185,8 +172,7 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
     @Override
     public String toString() {
         return "TaxiTrip{" +
-                "orderId='" + orderId + '\'' +
-                ", pickUpLongitude=" + pickUpLongitude +
+                "pickUpLongitude=" + pickUpLongitude +
                 ", pickUpLatitude=" + pickUpLatitude +
                 ", destinationLongitude=" + destinationLongitude +
                 ", destinationLatitude=" + destinationLatitude +

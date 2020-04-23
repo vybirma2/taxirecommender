@@ -10,15 +10,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class NewYorkDataSetReader implements DataSetReader {
-    String inputFile = "data\\taxitrips\\prague\\liftago_prague.csv";
+    private HashMap<Integer, RoadNode> zoneLatLongs;
+    private String inputFile = "data/taxitrips/newyork/new_york_taxi_trips.csv";
+
 
 
     @Override
     public ArrayList<TaxiTrip> readDataSet() throws IOException, ClassNotFoundException {
-        File file = new File("data/programdata/liftago_prague.fst");
+        File file = new File("data/programdata/new_york.fst");
         ArrayList<TaxiTrip> taxiTrips = null;
 
         if(!file.exists()) {
@@ -31,10 +34,13 @@ public class NewYorkDataSetReader implements DataSetReader {
     }
 
 
-    private ArrayList<TaxiTrip> parseTaxiTripsFromOriginalDataFileAndSerialize(File file){
+    private ArrayList<TaxiTrip> parseTaxiTripsFromOriginalDataFileAndSerialize(File file) throws IOException, ClassNotFoundException {
         ArrayList<TaxiTrip> taxiTrips = null;
         BufferedReader csvReader;
         String row;
+
+        NewYorkLongitudeLatitudeReader newYorkLongitudeLatitudeReader = new NewYorkLongitudeLatitudeReader();
+        zoneLatLongs = newYorkLongitudeLatitudeReader.getZoneLatLongs();
 
         try {
             int numOfRows = 0;
@@ -74,30 +80,34 @@ public class NewYorkDataSetReader implements DataSetReader {
 
     private TaxiTrip parseTaxiTrip(String [] trip) throws ParseException {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String orderId = trip[0];
 
-        double pickUpLatitude = Double.parseDouble(trip[1]);
-        double pickUpLongitude = Double.parseDouble(trip[2]);
-        double destinationLatitude = Double.parseDouble(trip[3]);
-        double destinationLongitude = Double.parseDouble(trip[4]);
 
-        double distance = Integer.parseInt(trip[5])/1000.;
 
-        RoadNode pickUpNode = DistanceGraphUtils.chooseRoadNode(pickUpLongitude, pickUpLatitude);
-        RoadNode destinationNode = DistanceGraphUtils.chooseRoadNode(destinationLongitude, destinationLatitude);
+        /*for (String string : trip){
+            System.out.println(string);
+        }
+        return null;*/
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss a");
+
+        int pickupZone = Integer.parseInt(trip[7]);
+        int dropOffZone = Integer.parseInt(trip[8]);
+
+        double distance = Integer.parseInt(trip[4]);
+
+        RoadNode pickUpNode = zoneLatLongs.get(pickupZone);
+        RoadNode destinationNode = zoneLatLongs.get(dropOffZone);
 
         if (pickUpNode == null || destinationNode == null){
             return null;
         }
 
-        Date startDate = dateFormat.parse(trip[6]);
-        Date finishDate = dateFormat.parse(trip[7]);
+        Date startDate = dateFormat.parse(trip[1]);
+        Date finishDate = dateFormat.parse(trip[2]);
 
         long tripLengthMilliseconds = Math.abs(finishDate.getTime() - startDate.getTime());
         long tripLengthMinutes = TimeUnit.MINUTES.convert(tripLengthMilliseconds, TimeUnit.MILLISECONDS);
 
-        return new TaxiTrip(orderId, pickUpLongitude, pickUpLatitude, destinationLongitude,
-                destinationLatitude, distance,tripLengthMinutes , pickUpNode, destinationNode, startDate, finishDate, null, null);
+        return null /*new TaxiTrip(orderId, pickUpLongitude, pickUpLatitude, destinationLongitude,
+                destinationLatitude, distance,tripLengthMinutes , pickUpNode, destinationNode, startDate, finishDate, null, null)*/;
     }
 }

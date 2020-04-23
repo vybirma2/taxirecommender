@@ -2,6 +2,7 @@ package utils;
 
 import charging.*;
 import parameterestimation.DataSetReader;
+import parameterestimation.NewYorkDataSetReader;
 import parameterestimation.PragueDataSetReader;
 
 import java.util.Comparator;
@@ -46,7 +47,8 @@ public class Utils {
 
     public static final double MAX_NODE_FITTING_DISTANCE = 0.2;
 
-    public static final DataSetReader DATA_SET_READER = new PragueDataSetReader();
+    public static final DataSetReader DATA_SET_READER = new NewYorkDataSetReader();
+    public static final String DATA_SET_FILE_NAME = "new_york.fst";
 
     public static final int ESTIMATION_EPISODE_LENGTH = 30;
 

@@ -120,8 +120,6 @@ public class TaxiRecommenderDomain {
     private void loadData() throws Exception {
         loadGraph();
 
-        //visualizeEnvironment();
-
         loadTaxiTripDataset();
 
         setEnvironment();

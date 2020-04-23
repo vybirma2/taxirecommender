@@ -1,23 +1,17 @@
-import com.esri.arcgisruntime.geometry.CoordinateFormatter;
-import domain.TaxiRecommenderDomain;
-import domain.TaxiRewardFunction;
-import domain.actions.ActionTypes;
-import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
-import domain.states.TaxiState;
+import cz.agents.multimodalstructures.nodes.RoadNode;
 import evaluation.Simulation;
-import parameterestimation.LongitudeLatitudeReader;
-import utils.Utils;
+import parameterestimation.NewYorkLongitudeLatitudeReader;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class Main {
 
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
-        LongitudeLatitudeReader longitudeLatitudeReader = new LongitudeLatitudeReader();
-        Simulation simulation = new Simulation();
-        simulation.startSimulation();
+         Simulation simulation = new Simulation();
+        //simulation.startSimulation();
         /*TaxiRecommenderDomain taxiRecommenderDomainGenerator = new TaxiRecommenderDomain(
                 "prague_full.fst","prague_charging_stations_full.json",
                 new KMeansEnvironment());

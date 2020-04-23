@@ -10,6 +10,7 @@ import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
 import parameterestimation.TaxiTrip;
 import utils.DistanceGraphUtils;
+import utils.Utils;
 import visualization.MapVisualizer;
 
 import java.io.*;
@@ -33,11 +34,6 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
         setClusters();
 
         this.environmentGraph = new KMeansEnvironmentGraph(this.getOsmGraph());
-
-
-        /*if (VISUALIZE_ENVIRONMENT){
-            visualizeEnvironment();
-        }*/
     }
 
     @Override
@@ -95,7 +91,7 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
 
 
     private void setClusters() throws IOException, ClassNotFoundException {
-        File file = new File("data/programdata/" + NUM_OF_CLUSTERS + "xKMeansLiftago_prague.fst");
+        File file = new File("data/programdata/" + NUM_OF_CLUSTERS + "xKMeans" + DATA_SET_FILE_NAME);
 
         if(!file.exists()) {
             computeAndSerializeKMeansClusters(file);

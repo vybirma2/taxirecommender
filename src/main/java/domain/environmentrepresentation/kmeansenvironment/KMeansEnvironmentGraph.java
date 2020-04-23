@@ -60,7 +60,7 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
     }
 
 
-    private void createNodes(){
+    private void createNodes() {
         this.nodes = new HashMap<>();
         for (PickUpPointCentroid centroid : clusters.keySet()) {
             RoadNode centroidNode = DistanceGraphUtils.chooseRoadNode(centroid.getLongitude(), centroid.getLatitude());
