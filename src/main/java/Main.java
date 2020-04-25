@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
          Simulation simulation = new Simulation();
-        //simulation.startSimulation();
+         simulation.startSimulation();
         /*TaxiRecommenderDomain taxiRecommenderDomainGenerator = new TaxiRecommenderDomain(
                 "prague_full.fst","prague_charging_stations_full.json",
                 new KMeansEnvironment());

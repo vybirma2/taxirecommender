@@ -19,34 +19,24 @@ public class NextLocationActionType extends TaxiActionType {
     }
 
 
-    @Override
-    void addPreviousState(TaxiState previousState, int stateId) {
-        previousState.addNextLocationPreviousState(stateId);
-    }
-
     /**
      * @param state
      * @return list of all possible actions of moving to the neighbouring node defined by transitions set
      * in TaxiRecommenderDomainGenerator - check on applicability - not running out of time/battery...
      */
     @Override
-    public List<TaxiState> allReachableStates(TaxiState state) {
-        List<TaxiState> states = new ArrayList<>();
-
+    public void addAsPredecessorToAllReachableStates(TaxiState state) {
         ArrayList<Integer> trans = transitions.get(state.getNodeId());
 
         if (trans != null){
             for (int neighbour : trans){
                 int time = getTripTime(state.getNodeId(), neighbour);
                 if (this.applicableInState(state, neighbour, time)){
-                    addNewState(states, state,neighbour, time,
-                            getConsumption(state.getNodeId(), neighbour));
+                    addStateStateAsPreviousToState(state,neighbour, time,
+                            getConsumption(state.getNodeId(), neighbour), actionId);
                 }
             }
         }
-
-
-        return states;
     }
 
 

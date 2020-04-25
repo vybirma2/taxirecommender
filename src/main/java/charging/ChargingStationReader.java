@@ -36,7 +36,7 @@ public class ChargingStationReader {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public static List<ChargingStation> readChargingStations(String fullPathToSourceFile, String sourceFileName)
+    public static Collection<ChargingStation> readChargingStations(String fullPathToSourceFile, String sourceFileName)
             throws ParseException, IOException, ClassNotFoundException {
 
         File file = new File("data/programdata/" + sourceFileName +".fst");
@@ -48,7 +48,19 @@ public class ChargingStationReader {
             readSerializedDataFromFile(file);
         }
 
-        return new ArrayList<>(ChargingStationReader.chargingStations.values());
+        return ChargingStationReader.chargingStations.values();
+    }
+
+
+    private static void reduceChargingStations() {
+        List<ChargingStation> chargingStations = new ArrayList<>(ChargingStationReader.chargingStations.values());
+        Collections.shuffle(chargingStations);
+        List<ChargingStation> result = new ArrayList<>();
+        ChargingStationReader.chargingStations.clear();
+        for (int i = 0; i < Utils.NUM_OF_CHARGING_STATIONS; i++){
+            result.add(chargingStations.get(i));
+            ChargingStationReader.chargingStations.put(chargingStations.get(i).getRoadNode().getId(), chargingStations.get(i));
+        }
     }
 
 
@@ -65,6 +77,7 @@ public class ChargingStationReader {
 
 
     private static void writeSerializedDataToFile(File file) throws IOException {
+        reduceChargingStations();
         FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));
         out.writeObject(ChargingStationReader.chargingStations);
         out.writeObject(ChargingStationReader.chargingConnections);

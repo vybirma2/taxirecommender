@@ -1,6 +1,7 @@
 package parameterestimation;
 
 import cz.agents.multimodalstructures.nodes.RoadNode;
+import domain.environmentrepresentation.EnvironmentNode;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
 import utils.DistanceGraphUtils;
@@ -79,20 +80,15 @@ public class NewYorkDataSetReader implements DataSetReader {
 
 
     private TaxiTrip parseTaxiTrip(String [] trip) throws ParseException {
-
-
-
-
-        /*for (String string : trip){
-            System.out.println(string);
+        if (trip.length < 9){
+            return null;
         }
-        return null;*/
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss a");
 
         int pickupZone = Integer.parseInt(trip[7]);
         int dropOffZone = Integer.parseInt(trip[8]);
 
-        double distance = Integer.parseInt(trip[4]);
+        double distance = Double.parseDouble(trip[4]);
 
         RoadNode pickUpNode = zoneLatLongs.get(pickupZone);
         RoadNode destinationNode = zoneLatLongs.get(dropOffZone);
@@ -101,13 +97,17 @@ public class NewYorkDataSetReader implements DataSetReader {
             return null;
         }
 
-        Date startDate = dateFormat.parse(trip[1]);
-        Date finishDate = dateFormat.parse(trip[2]);
+        Date startDate = dateFormat.parse(trip[1].substring(0, trip[1].length() ));
+        Date finishDate = dateFormat.parse(trip[2].substring(0, trip[1].length() ));
 
         long tripLengthMilliseconds = Math.abs(finishDate.getTime() - startDate.getTime());
         long tripLengthMinutes = TimeUnit.MINUTES.convert(tripLengthMilliseconds, TimeUnit.MILLISECONDS);
 
-        return null /*new TaxiTrip(orderId, pickUpLongitude, pickUpLatitude, destinationLongitude,
-                destinationLatitude, distance,tripLengthMinutes , pickUpNode, destinationNode, startDate, finishDate, null, null)*/;
+
+        EnvironmentNode fromNode = DistanceGraphUtils.chooseEnvironmentNode(pickUpNode.getLongitude(), pickUpNode.getLatitude());
+        EnvironmentNode toNode = DistanceGraphUtils.chooseEnvironmentNode(destinationNode.getLongitude(), destinationNode.getLatitude());
+
+        return new TaxiTrip(pickUpNode.getLongitude(), destinationNode.getLatitude(), distance,
+                tripLengthMinutes, startDate, finishDate, fromNode.getNodeId(), toNode.getNodeId());
     }
 }

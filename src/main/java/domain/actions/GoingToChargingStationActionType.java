@@ -22,11 +22,6 @@ public class GoingToChargingStationActionType extends TaxiActionType {
         super(actionId, transitions);
     }
 
-    @Override
-    void addPreviousState(TaxiState previousState, int stateId) {
-        previousState.addGoingToChargingPreviousState(stateId);
-    }
-
 
     /**
      * @param state Current state to go to charging station from
@@ -34,8 +29,7 @@ public class GoingToChargingStationActionType extends TaxiActionType {
      * charging station order - distance/prize...
      */
     @Override
-    public List<TaxiState> allReachableStates(TaxiState state) {
-        List<TaxiState> states = new ArrayList<>();
+    public void addAsPredecessorToAllReachableStates(TaxiState state) {
 
         List<Integer> trans = this.transitions.get(state.getNodeId());
 
@@ -44,13 +38,11 @@ public class GoingToChargingStationActionType extends TaxiActionType {
             for (Integer chargingStation : stations){
                 int time = getTripTime(state.getNodeId(), chargingStation);
                 if (this.applicableInState(state, chargingStation, time)){
-                    addNewState(states, state,chargingStation, time,
-                            getConsumption(state.getNodeId(), chargingStation));
+                    addStateStateAsPreviousToState(state,chargingStation, time,
+                            getConsumption(state.getNodeId(), chargingStation), actionId);
                 }
             }
         }
-
-        return states;
     }
 
     @Override

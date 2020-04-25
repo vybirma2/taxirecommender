@@ -1,19 +1,14 @@
 package evaluation.chargingrecommenderagent;
 
-import domain.TaxiModel;
+import domain.TaxiRecommenderDomain;
 import domain.TaxiRewardFunction;
 import domain.actions.ActionTypes;
 import domain.actions.MeasurableAction;
 import domain.actions.TaxiActionType;
 import domain.states.TaxiState;
 import evaluation.Agent;
-import jdk.jshell.execution.Util;
 import org.nustaq.serialization.FSTObjectInput;
-import org.nustaq.serialization.FSTObjectOutput;
-import parameterestimation.ParameterEstimator;
-import parameterestimation.TaxiTrip;
 import utils.DistanceGraphUtils;
-import utils.Utils;
 
 
 import java.io.*;
@@ -24,29 +19,20 @@ public class ChargingRecommenderAgent extends Agent {
 
     private ReachableStatesGenerator reachableStatesGenerator;
     private TaxiRewardFunction rewardFunction;
-    private ParameterEstimator parameterEstimator;
     private final TaxiState startingState;
     private TaxiState currentState;
 
 
-    public ChargingRecommenderAgent(TaxiModel taxiModel, ParameterEstimator parameterEstimator, TaxiState startingState) throws IOException, ClassNotFoundException {
-        super(taxiModel);
-        this.parameterEstimator = parameterEstimator;
+
+    public ChargingRecommenderAgent(TaxiRecommenderDomain domain, TaxiState startingState) throws IOException, ClassNotFoundException {
+        super(domain);
         this.startingState = startingState;
         init();
     }
 
     private void init() throws IOException, ClassNotFoundException {
 
-        File file = new File("data/generatedstates/fN"+ startingState.getNodeId() + "tS" +
-                startingState.getTimeStamp() + "sC" + startingState.getStateOfCharge() +"sL" + Utils.SHIFT_LENGTH  + ".fst");
-
-
-        if(!file.exists()) {
-            computeAndSerializeReachableStates(file);
-        } else {
-            readSerializedFile(file);
-        }
+        generateReachableStates();
 
         currentState = startingState;
     }
@@ -64,17 +50,11 @@ public class ChargingRecommenderAgent extends Agent {
     }
 
 
-    private void computeAndSerializeReachableStates(File file) throws IOException {
-        reachableStatesGenerator = new ReachableStatesGenerator(this.taxiModel);
+    private void generateReachableStates() throws IOException, ClassNotFoundException {
+        reachableStatesGenerator = new ReachableStatesGenerator(domain.getActionTypes(),
+                new ArrayList<>(domain.getEnvironment().getNodes()), startingState, domain.getParameterEstimator());
         TaxiActionType.setReachableStatesGenerator(reachableStatesGenerator);
-        reachableStatesGenerator.performReachabilityFrom(startingState);
-        rewardFunction = new TaxiRewardFunction(reachableStatesGenerator.getReachableStates(), parameterEstimator);
-        rewardFunction.computeReward();
-
-        FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));
-        out.writeObject(reachableStatesGenerator);
-        out.close();
-
+        reachableStatesGenerator.collectReachableStates();
     }
 
     private void readSerializedFile(File file) throws IOException, ClassNotFoundException {
@@ -124,7 +104,7 @@ public class ChargingRecommenderAgent extends Agent {
 
     private boolean beneficialTrip(TaxiState resultState){
 
-        int distance = parameterEstimator.getTaxiTripDistances()
+        int distance = domain.getParameterEstimator().getTaxiTripDistances()
                 .get(DistanceGraphUtils.getIntervalStart(currentState.getTimeStamp()))
                 .get(currentState.getNodeId()).get(resultState.getNodeId()).intValue();
 
@@ -136,10 +116,10 @@ public class ChargingRecommenderAgent extends Agent {
 
 
     private TaxiState getResultTripState(Integer trip) {
-        int consumption = parameterEstimator.getTaxiTripConsumptions()
+        int consumption = domain.getParameterEstimator().getTaxiTripConsumptions()
                 .get(DistanceGraphUtils.getIntervalStart(currentState.getTimeStamp()))
                 .get(currentState.getNodeId()).get(trip).intValue();
-        int time = parameterEstimator.getTaxiTripLengths()
+        int time = domain.getParameterEstimator().getTaxiTripLengths()
                 .get(DistanceGraphUtils.getIntervalStart(currentState.getTimeStamp()))
                 .get(currentState.getNodeId()).get(trip).intValue();
 

@@ -27,7 +27,7 @@ public class BaseMethodAgent extends Agent {
     private LinkedList<Integer> pathToCenterNode;
 
     public BaseMethodAgent(TaxiModel taxiModel, ParameterEstimator parameterEstimator) {
-        super(taxiModel);
+        super(null);
         this.parameterEstimator = parameterEstimator;
         init();
     }
@@ -36,17 +36,17 @@ public class BaseMethodAgent extends Agent {
     private void init(){
         int maxValue = 0;
         for (TaxiTrip trip : parameterEstimator.getTaxiTrips()){
-            if (pickupsInNodes.containsKey(trip.getFromEnvironmentNode().getNodeId())){
-                pickupsInNodes.replace(trip.getFromEnvironmentNode().getNodeId(), pickupsInNodes.get(trip.getFromEnvironmentNode().getNodeId()) + 1);
-                if (maxValue < pickupsInNodes.get(trip.getFromEnvironmentNode().getNodeId()) + 1){
-                    maxValue = pickupsInNodes.get(trip.getFromEnvironmentNode().getNodeId()) + 1;
-                    centreNode = trip.getFromEnvironmentNode().getNodeId();
+            if (pickupsInNodes.containsKey(trip.getFromEnvironmentNode())){
+                pickupsInNodes.replace(trip.getFromEnvironmentNode(), pickupsInNodes.get(trip.getFromEnvironmentNode()) + 1);
+                if (maxValue < pickupsInNodes.get(trip.getFromEnvironmentNode()) + 1){
+                    maxValue = pickupsInNodes.get(trip.getFromEnvironmentNode()) + 1;
+                    centreNode = trip.getFromEnvironmentNode();
                 }
             } else {
-                pickupsInNodes.put(trip.getFromEnvironmentNode().getNodeId(), 1);
+                pickupsInNodes.put(trip.getFromEnvironmentNode(), 1);
                 if (maxValue < 1){
                     maxValue = 1;
-                    centreNode = trip.getFromEnvironmentNode().getNodeId();
+                    centreNode = trip.getFromEnvironmentNode();
                 }
             }
         }

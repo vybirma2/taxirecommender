@@ -28,14 +28,6 @@ public class GridEnvironment extends Environment<GridEnvironmentNode, GridEnviro
         }
     }
 
-    @Override
-    public void setTaxiTripEnvironmentNodes(List<TaxiTrip> taxiTrips) {
-        for (TaxiTrip taxiTrip : taxiTrips){
-            taxiTrip.setFromEnvironmentNode(DistanceGraphUtils.chooseEnvironmentNode(taxiTrip.getPickUpLongitude(), taxiTrip.getPickUpLatitude()));
-            taxiTrip.setToEnvironmentNode(DistanceGraphUtils.chooseEnvironmentNode(taxiTrip.getDestinationLongitude(), taxiTrip.getDestinationLatitude()));
-        }
-    }
-
 
     private void createGridEnvironmentAndSerializeIt(File file) throws IOException, ClassNotFoundException {
         this.environmentGraph = new GridEnvironmentGraph(this.getOsmGraph());

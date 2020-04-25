@@ -36,9 +36,9 @@ public class TaxiTerminalFunction {
 
     private boolean noActionAvailable(TaxiState state) {
         for (TaxiActionType actionType : actionTypes){
-            if (!actionType.allReachableStates(state).isEmpty()){
+           // if (!actionType.addAsPredecessorToAllReachableStates(state).isEmpty()){
                 return false;
-            }
+            //}
         }
 
         return true;

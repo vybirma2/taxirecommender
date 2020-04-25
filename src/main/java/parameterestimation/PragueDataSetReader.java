@@ -51,6 +51,7 @@ public class PragueDataSetReader implements DataSetReader {
 
             while ((row = csvReader.readLine()) != null) {
                 if (numOfRows > 0){
+                    System.out.println(numOfRows);
                     TaxiTrip taxiTrip = parseTaxiTrip(row.split(","));
                     if (taxiTrip != null && taxiTrip.getTripLength() != 0){
                         taxiTrips.add(taxiTrip);
@@ -83,7 +84,6 @@ public class PragueDataSetReader implements DataSetReader {
     private TaxiTrip parseTaxiTrip(String [] trip) throws ParseException {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String orderId = trip[0];
 
         double pickUpLatitude = Double.parseDouble(trip[1]);
         double pickUpLongitude = Double.parseDouble(trip[2]);
@@ -99,13 +99,16 @@ public class PragueDataSetReader implements DataSetReader {
             return null;
         }
 
+        EnvironmentNode fromNode = DistanceGraphUtils.chooseEnvironmentNode(pickUpLongitude, pickUpLatitude);
+        EnvironmentNode toNode = DistanceGraphUtils.chooseEnvironmentNode(destinationLongitude, destinationLatitude);
+
         Date startDate = dateFormat.parse(trip[6]);
         Date finishDate = dateFormat.parse(trip[7]);
 
         long tripLengthMilliseconds = Math.abs(finishDate.getTime() - startDate.getTime());
         long tripLengthMinutes = TimeUnit.MINUTES.convert(tripLengthMilliseconds, TimeUnit.MILLISECONDS);
 
-        return new TaxiTrip(pickUpLongitude, pickUpLatitude, destinationLongitude,
-                destinationLatitude, distance,tripLengthMinutes , pickUpNode, destinationNode, startDate, finishDate, null, null);
+        return new TaxiTrip(pickUpLongitude, pickUpLatitude, distance,tripLengthMinutes, startDate, finishDate,
+                fromNode.getNodeId(), toNode.getNodeId());
     }
 }

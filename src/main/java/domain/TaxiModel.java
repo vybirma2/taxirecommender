@@ -29,20 +29,4 @@ public class TaxiModel implements Serializable {
         }
         return result;
     }
-
-
-    /**
-     * @param state current state
-     * @return all possible transitions - future states - i.e. generator of new states, if generated state already
-     * exist only updates its previous actions and previous states
-     */
-    public List<TaxiState> allReachableStatesFromState(TaxiState state) {
-        List<TaxiState> result = new ArrayList<>();
-
-        for (TaxiActionType a : actionTypes) {
-            result.addAll(a.allReachableStates(state));
-        }
-
-        return result;
-    }
 }

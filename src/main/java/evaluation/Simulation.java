@@ -5,9 +5,11 @@ import charging.ChargingStationReader;
 import domain.TaxiRecommenderDomain;
 import domain.TaxiRewardFunction;
 import domain.actions.MeasurableAction;
+import domain.environmentrepresentation.gridenvironment.GridEnvironment;
 import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
 import domain.states.TaxiState;
 import evaluation.chargingrecommenderagent.ChargingRecommenderAgent;
+import jdk.jshell.execution.Util;
 import utils.DistanceGraphUtils;
 import utils.Utils;
 import visualization.MapVisualizer;
@@ -15,31 +17,35 @@ import visualization.MapVisualizer;
 import java.io.IOException;
 import java.util.*;
 
+import static utils.Utils.INPUT_STATION_FILE_NAME;
+
 public class Simulation {
 
-    private final Agent agent;
+    private Agent agent;
 
     TaxiRecommenderDomain domainGenerator;
 
-    private final int startingTimeStamp;
-    private final int shiftLength;
-    private final TaxiState currentState;
+    private int startingTimeStamp;
+    private int shiftLength;
+    private TaxiState currentState;
 
     private double resultReward = 0;
 
     public Simulation() throws IOException, ClassNotFoundException {
+        initSimulation();
+    }
 
-        domainGenerator = new TaxiRecommenderDomain("new_york_full.fst",
-                    "new_york_chargingstations.json", new KMeansEnvironment());
+
+    private void initSimulation() throws IOException, ClassNotFoundException {
+        domainGenerator = new TaxiRecommenderDomain();
 
         int startingStateOfCharge = Utils.STARTING_STATE_OF_CHARGE;
         this.startingTimeStamp = Utils.SHIFT_START_TIME;
         this.shiftLength = Utils.SHIFT_LENGTH;
         currentState = new TaxiState(domainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getNodeId(),
                 startingStateOfCharge, startingTimeStamp);
-        this.agent = new ChargingRecommenderAgent(domainGenerator.getTaxiModel(), domainGenerator.getParameterEstimator(), currentState);
+        this.agent = new ChargingRecommenderAgent(domainGenerator, currentState);
     }
-
 
     public void startSimulation() {
         visualizeEnvironment();

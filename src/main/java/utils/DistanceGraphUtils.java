@@ -10,6 +10,7 @@ import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.EnvironmentEdge;
 import domain.environmentrepresentation.EnvironmentGraph;
 import domain.environmentrepresentation.EnvironmentNode;
+import jdk.jshell.execution.Util;
 
 
 import java.util.*;
@@ -144,6 +145,9 @@ public class DistanceGraphUtils {
     public static int getTripTime(int fromNodeId, int toNodeId){
         if (fromNodeId == toNodeId){
             return 0;
+        }
+        if (fromNodeId == 61478 && toNodeId == 103294){
+            System.out.println("shjb");
         }
         EnvironmentEdge edge = graph.getEdge(fromNodeId, toNodeId);
         if (edge != null){
@@ -406,6 +410,9 @@ public class DistanceGraphUtils {
     public static int getIntervalStart(double timeStamp){
         int intTime = (int)timeStamp;
         int rest = intTime % Utils.ESTIMATION_EPISODE_LENGTH;
+        if (intTime - rest == Utils.SHIFT_START_TIME + Utils.SHIFT_LENGTH){
+            return intTime - rest - Utils.ESTIMATION_EPISODE_LENGTH;
+        }
         return intTime - rest;
     }
 

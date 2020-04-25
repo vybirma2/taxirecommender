@@ -1,6 +1,7 @@
 package domain;
 
 import domain.actions.ActionTypes;
+import domain.states.StatePredecessors;
 import domain.states.TaxiState;
 import domain.states.TaxiGraphStateComparator;
 import parameterestimation.ParameterEstimator;
@@ -21,11 +22,13 @@ public class TaxiRewardFunction {
 
     private List<TaxiState> states;
     private ParameterEstimator parameterEstimator;
+    private StatePredecessors predecessors;
 
 
-    public TaxiRewardFunction(List<TaxiState> states, ParameterEstimator parameterEstimator) {
+    public TaxiRewardFunction(List<TaxiState> states, StatePredecessors predecessors, ParameterEstimator parameterEstimator) {
         this.states = states;
         this.parameterEstimator = parameterEstimator;
+        this.predecessors = predecessors;
     }
 
 
@@ -39,7 +42,6 @@ public class TaxiRewardFunction {
 
         while (openedSet.size() > 1){
             TaxiState state = openedSet.poll();
-
             setPreviousStateReward(state);
         }
     }
@@ -58,11 +60,11 @@ public class TaxiRewardFunction {
      * @param state
      * @return set of visited states to add to openSet
      */
-    private void  /*Set<TaxiGraphState> */setPreviousStateReward(TaxiState state){
+    private void setPreviousStateReward(TaxiState state){
 
 
         for (int actionId = 0; actionId < Utils.NUM_OF_ACTION_TYPES; actionId++){
-            List<Integer> previousStateNodesOfAction = state.getPreviousStateNodesOfAction(actionId);
+            List<Integer> previousStateNodesOfAction = predecessors.getPreviousStateNodesOfActionInState(actionId, state.getId());
             if (previousStateNodesOfAction != null){
                 for (Integer previousStateNode : previousStateNodesOfAction){
                     setPreviousStateReward(actionId, states.get(previousStateNode), state);
@@ -70,7 +72,6 @@ public class TaxiRewardFunction {
             }
 
         }
-        /*return visitedStates;*/
     }
 
 

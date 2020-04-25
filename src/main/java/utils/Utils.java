@@ -1,16 +1,16 @@
 package utils;
 
 import charging.*;
+import domain.environmentrepresentation.Environment;
+import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
 import parameterestimation.DataSetReader;
 import parameterestimation.NewYorkDataSetReader;
-import parameterestimation.PragueDataSetReader;
 
 import java.util.Comparator;
 
 public class Utils {
 
-    public static final int NUM_OF_CLUSTERS = 150;
-
+    public static final int NUM_OF_CLUSTERS = 100;
 
     public static final int SHIFT_LENGTH = 8 * 60;
     public static final int STARTING_STATE_OF_CHARGE = 20;
@@ -33,6 +33,8 @@ public class Utils {
 
     public static final int NUM_OF_NEIGHBOURS = 8;
 
+    public static final int NUM_OF_CHARGING_STATIONS = 75;
+
 
     public static final int MINIMAL_STATE_OF_CHARGE = 5;
 
@@ -47,12 +49,16 @@ public class Utils {
 
     public static final double MAX_NODE_FITTING_DISTANCE = 0.2;
 
+    public static final Environment ENVIRONMENT = new KMeansEnvironment();
     public static final DataSetReader DATA_SET_READER = new NewYorkDataSetReader();
-    public static final String DATA_SET_FILE_NAME = "new_york.fst";
+    public static final String INPUT_GRAPH_FILE_NAME = "new_york_full.fst";
+    public static final String INPUT_STATION_FILE_NAME = "new_york_chargingstations.json";
+    public static final String DATA_SET_NAME = "new_york";
+
 
     public static final int ESTIMATION_EPISODE_LENGTH = 30;
 
-    public static final int SHIFT_START_TIME = 7*60;
+    public static final int SHIFT_START_TIME = 1*60;
 
     public static final int CAR_FULL_BATTERY_DISTANCE = 300;
 

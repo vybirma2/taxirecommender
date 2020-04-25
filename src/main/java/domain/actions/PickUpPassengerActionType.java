@@ -27,11 +27,6 @@ public class PickUpPassengerActionType  extends TaxiActionType {
     }
 
 
-    @Override
-    void addPreviousState(TaxiState previousState, int stateId) {
-        previousState.addTripPreviousState(stateId);
-    }
-
 
     /**
      * @param state
@@ -39,23 +34,19 @@ public class PickUpPassengerActionType  extends TaxiActionType {
      * in TaxiRecommenderDomainGenerator - check on applicability - not running out of time/battery...
      */
     @Override
-    public List<TaxiState> allReachableStates(TaxiState state) {
-        List<TaxiState> states = new ArrayList<>();
-
+    public void addAsPredecessorToAllReachableStates(TaxiState state) {
         ArrayList<Integer> trans = transitions.get(state.getNodeId());
 
         if (trans != null) {
             for (Integer neighbour : trans) {
                 if (this.applicableInState(state, neighbour)) {
                     int startInterval = getIntervalStart(state.getTimeStamp());
-                    addNewState(states, state, neighbour,
+                    addStateStateAsPreviousToState(state, neighbour,
                             taxiTripLengths.get(startInterval).get(state.getNodeId()).get(neighbour).intValue(),
-                            taxiTripConsumptions.get(startInterval).get(state.getNodeId()).get(neighbour).intValue());
+                            taxiTripConsumptions.get(startInterval).get(state.getNodeId()).get(neighbour).intValue(), actionId);
                 }
             }
         }
-
-        return states;
     }
 
 
@@ -74,6 +65,9 @@ public class PickUpPassengerActionType  extends TaxiActionType {
     private boolean applicableInState(TaxiState state, int toNodeId){
         int startInterval = getIntervalStart(state.getTimeStamp());
 
+        if (taxiTripLengths.get(startInterval) == null){
+            System.out.println("suyc");
+        }
         if (taxiTripLengths.get(startInterval).containsKey(state.getNodeId())){
             if (taxiTripLengths.get(startInterval).get(state.getNodeId()).containsKey(toNodeId)){
                 return applicableInState(state) && shiftNotOver(state, taxiTripLengths.get(startInterval).get(state.getNodeId()).get(toNodeId).longValue()) &&

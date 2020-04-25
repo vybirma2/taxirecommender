@@ -1,6 +1,5 @@
 package domain.environmentrepresentation.kmeansenvironment;
 
-import cz.agents.basestructures.GPSLocation;
 import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
@@ -70,7 +69,7 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
 
 
     private void setDistances() throws IOException, ClassNotFoundException {
-        String name = "data/programdata/" + Utils.NUM_OF_CLUSTERS + "KMeansCentroidDistances.fst";
+        String name = "data/programdata/" + Utils.NUM_OF_CLUSTERS +"KMeansCentroidDistances" + Utils.DATA_SET_NAME;
         File file = new File(name);
 
         if(!file.exists()) {

@@ -19,16 +19,10 @@ import static utils.Utils.NUM_OF_CHARGING_LENGTH_POSSIBILITIES;
  */
 public class ChargingActionType extends TaxiActionType {
 
-
-
     public ChargingActionType(int actionId, HashMap<Integer, ArrayList<Integer>> transitions) {
         super(actionId, transitions);
     }
 
-    @Override
-    void addPreviousState(TaxiState previousState, int stateId) {
-        previousState.addChargingPreviousState(stateId);
-    }
 
 
     /**
@@ -38,9 +32,7 @@ public class ChargingActionType extends TaxiActionType {
      * intervals.
      */
     @Override
-    public List<TaxiState> allReachableStates(TaxiState state) {
-
-        List<TaxiState> states = new ArrayList<>();
+    public void addAsPredecessorToAllReachableStates(TaxiState state) {
 
         if (this.applicableInState(state)) {
             ChargingStation station = ChargingStationReader.getChargingStation(state.getNodeId());
@@ -54,13 +46,11 @@ public class ChargingActionType extends TaxiActionType {
                 for(int i = 1; i <= NUM_OF_CHARGING_LENGTH_POSSIBILITIES; i++){
                     int energyCharged = getEnergyCharged(connection, i * chargingTimeUnit);
                     if (applicableInState(state, i * chargingTimeUnit, energyCharged)){
-                        addNewState(states, state, state.getNodeId(), i * chargingTimeUnit, energyCharged);
+                        addStateStateAsPreviousToState(state, state.getNodeId(), i * chargingTimeUnit, energyCharged, actionId);
                     }
                 }
             }
         }
-
-        return states;
     }
 
 

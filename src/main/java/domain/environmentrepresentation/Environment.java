@@ -51,9 +51,6 @@ public abstract class Environment<TNode extends EnvironmentNode, TEdge extends E
     protected abstract void setEnvironmentGraph() throws IOException, ClassNotFoundException;
 
 
-    public abstract void setTaxiTripEnvironmentNodes(List<TaxiTrip> taxiTrips);
-
-
     public static double getNodeLongitude(int nodeId){
         return Environment.osmGraph.getNode(nodeId).getLongitude();
     }

@@ -11,7 +11,6 @@ import java.util.*;
  */
 public class TaxiState implements Comparable<TaxiState>, Serializable {
 
-    private static final StatePredecessors statePredecessors = new StatePredecessors();
     public static int stateId = 0;
 
     private final int id;
@@ -98,38 +97,10 @@ public class TaxiState implements Comparable<TaxiState>, Serializable {
     }
 
 
-    public void addNextLocationPreviousState(int stateId){
-        statePredecessors.addNextLocationPredecessor(this.getId(), stateId);
-    }
-
-
-    public void addStayingPreviousState(int stateId){
-        statePredecessors.addStayingInLocationPredecessor(this.getId(), stateId);
-    }
-
-
-    public void addGoingToChargingPreviousState(int stateId){
-        statePredecessors.addGoingChargingPredecessor(this.getId(), stateId);
-    }
-
-
-    public void addChargingPreviousState(int stateId){
-        statePredecessors.addChargingPredecessor(this.getId(), stateId);
-    }
-
-
-    public void addTripPreviousState(int stateId){
-        statePredecessors.addPickUpPredecessor(this.getId(), stateId);
-    }
-
-
     public void addAfterTaxiTripStateReward(int toNodeId, double reward){
         this.afterTaxiTripStateRewards.put(toNodeId, reward);
     }
 
-    public List<Integer> getPreviousStateNodesOfAction(int actionId){
-        return statePredecessors.getPreviousStateNodesOfActionInState(actionId, this.getId());
-    }
 
     public Double getAfterTaxiTripStateReward(int toNodeId){
         return this.afterTaxiTripStateRewards.get(toNodeId);

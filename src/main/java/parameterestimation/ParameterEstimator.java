@@ -246,8 +246,8 @@ public class ParameterEstimator {
 
     private void addTripParameterComplete(TaxiTrip taxiTrip, HashMap<Integer, HashMap<Integer, Double>> result,
                                   HashMap<Integer, HashMap<Integer, Integer>> nums, Double parameter){
-        int fromNode = taxiTrip.getFromEnvironmentNode().getNodeId();
-        int toNode = taxiTrip.getToEnvironmentNode().getNodeId();
+        int fromNode = taxiTrip.getFromEnvironmentNode();
+        int toNode = taxiTrip.getToEnvironmentNode();
         if (result.containsKey(fromNode)) {
             if (result.get(fromNode).containsKey(toNode)){
                 result.get(fromNode).replace(toNode, result.get(fromNode).get(toNode) + parameter);
@@ -273,7 +273,7 @@ public class ParameterEstimator {
                                                   HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result,
                                                   HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums, Double parameter){
 
-        if (result.get(intervalStart).containsKey(taxiTrip.getFromEnvironmentNode().getNodeId())){
+        if (result.get(intervalStart).containsKey(taxiTrip.getFromEnvironmentNode())){
             addExistingPickupNodeTripParameter(intervalStart, taxiTrip, result, nums, parameter);
         } else {
             addNewPickUpNodeTripParameter(intervalStart, taxiTrip, result, nums, parameter);
@@ -290,11 +290,11 @@ public class ParameterEstimator {
         HashMap<Integer, Integer> nodeTripNums = new HashMap<>();
         HashMap<Integer, HashMap<Integer, Integer>> tripParameterNums= new HashMap<>();
 
-        nodeTrips.put(taxiTrip.getToEnvironmentNode().getNodeId(), parameter);
-        tripLengths.put(taxiTrip.getFromEnvironmentNode().getNodeId(), nodeTrips);
+        nodeTrips.put(taxiTrip.getToEnvironmentNode(), parameter);
+        tripLengths.put(taxiTrip.getFromEnvironmentNode(), nodeTrips);
 
-        nodeTripNums.put(taxiTrip.getToEnvironmentNode().getNodeId(), 1);
-        tripParameterNums.put(taxiTrip.getFromEnvironmentNode().getNodeId(), nodeTripNums);
+        nodeTripNums.put(taxiTrip.getToEnvironmentNode(), 1);
+        tripParameterNums.put(taxiTrip.getFromEnvironmentNode(), nodeTripNums);
 
         result.put(intervalStart, tripLengths);
         nums.put(intervalStart, tripParameterNums);
@@ -305,16 +305,16 @@ public class ParameterEstimator {
                                                     HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result,
                                                     HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums, Double parameter){
 
-        if (result.get(intervalStart).get(taxiTrip.getFromEnvironmentNode().getNodeId()).containsKey(taxiTrip.getToEnvironmentNode().getNodeId())){
-            double num = result.get(intervalStart).get(taxiTrip.getFromEnvironmentNode().getNodeId()).get(taxiTrip.getToEnvironmentNode().getNodeId());
-            int size = nums.get(intervalStart).get(taxiTrip.getFromEnvironmentNode().getNodeId()).get(taxiTrip.getToEnvironmentNode().getNodeId());
+        if (result.get(intervalStart).get(taxiTrip.getFromEnvironmentNode()).containsKey(taxiTrip.getToEnvironmentNode())){
+            double num = result.get(intervalStart).get(taxiTrip.getFromEnvironmentNode()).get(taxiTrip.getToEnvironmentNode());
+            int size = nums.get(intervalStart).get(taxiTrip.getFromEnvironmentNode()).get(taxiTrip.getToEnvironmentNode());
 
-            result.get(intervalStart).get(taxiTrip.getFromEnvironmentNode().getNodeId()).replace(taxiTrip.getToEnvironmentNode().getNodeId(), num + parameter);
-            nums.get(intervalStart).get(taxiTrip.getFromEnvironmentNode().getNodeId()).replace(taxiTrip.getToEnvironmentNode().getNodeId(), size + 1);
+            result.get(intervalStart).get(taxiTrip.getFromEnvironmentNode()).replace(taxiTrip.getToEnvironmentNode(), num + parameter);
+            nums.get(intervalStart).get(taxiTrip.getFromEnvironmentNode()).replace(taxiTrip.getToEnvironmentNode(), size + 1);
 
         } else {
-            result.get(intervalStart).get(taxiTrip.getFromEnvironmentNode().getNodeId()).put(taxiTrip.getToEnvironmentNode().getNodeId(), parameter);
-            nums.get(intervalStart).get(taxiTrip.getFromEnvironmentNode().getNodeId()).put(taxiTrip.getToEnvironmentNode().getNodeId(), 1);
+            result.get(intervalStart).get(taxiTrip.getFromEnvironmentNode()).put(taxiTrip.getToEnvironmentNode(), parameter);
+            nums.get(intervalStart).get(taxiTrip.getFromEnvironmentNode()).put(taxiTrip.getToEnvironmentNode(), 1);
         }
     }
 
@@ -325,11 +325,11 @@ public class ParameterEstimator {
 
         HashMap<Integer, Double> parameters = new HashMap<>();
         HashMap<Integer, Integer> toDestNums = new HashMap<>();
-        parameters.put(taxiTrip.getToEnvironmentNode().getNodeId(), parameter);
-        toDestNums.put(taxiTrip.getToEnvironmentNode().getNodeId(), 1);
+        parameters.put(taxiTrip.getToEnvironmentNode(), parameter);
+        toDestNums.put(taxiTrip.getToEnvironmentNode(), 1);
 
-        result.get(intervalStart).put(taxiTrip.getFromEnvironmentNode().getNodeId(), parameters);
-        nums.get(intervalStart).put(taxiTrip.getFromEnvironmentNode().getNodeId(), toDestNums);
+        result.get(intervalStart).put(taxiTrip.getFromEnvironmentNode(), parameters);
+        nums.get(intervalStart).put(taxiTrip.getFromEnvironmentNode(), toDestNums);
     }
 
 

@@ -16,11 +16,4 @@ public class FullEnvironment extends Environment<FullEnvironmentNode, FullEnviro
         this.environmentGraph = new FullEnvironmentGraph(this.getOsmGraph());
     }
 
-    @Override
-    public void setTaxiTripEnvironmentNodes(List<TaxiTrip> taxiTrips) {
-        for (TaxiTrip taxiTrip : taxiTrips){
-            taxiTrip.setFromEnvironmentNode(environmentGraph.getNode(taxiTrip.getPickUpNode().getId()));
-            taxiTrip.setToEnvironmentNode(environmentGraph.getNode(taxiTrip.getDestinationRoadNode().getId()));
-        }
-    }
 }

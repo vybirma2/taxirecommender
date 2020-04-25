@@ -22,21 +22,16 @@ public abstract  class TaxiActionType implements Serializable {
     }
 
 
-    protected void addNewState(List<TaxiState> states, TaxiState previousState, int toNodeId, int length, int energyConsumption){
-
-        int resultTimeStamp = length + previousState.getTimeStamp();
-        int resultStateOfCharge = energyConsumption + previousState.getStateOfCharge();
+    protected void addStateStateAsPreviousToState(TaxiState predecessor, int toNodeId, int length, int energyConsumption, int actionId){
+        int resultTimeStamp = length + predecessor.getTimeStamp();
+        int resultStateOfCharge = energyConsumption + predecessor.getStateOfCharge();
         int resultNodeId = toNodeId;
 
         TaxiState newState = new TaxiState(resultNodeId, resultStateOfCharge, resultTimeStamp);
-        if (!reachableStatesGenerator.alreadyVisited(newState)){
-            reachableStatesGenerator.addReachableState(newState);
-            addPreviousState(newState, previousState.getId());
-            states.add(newState);
-        } else {
-            TaxiState.stateId--;
-            addPreviousState(reachableStatesGenerator.getVisitedState(newState), previousState.getId());
+        if (reachableStatesGenerator.getState(newState) == null){
+            System.out.println("shgvf");
         }
+        reachableStatesGenerator.addPreviousStateConnection(reachableStatesGenerator.getState(newState).getId(), predecessor.getId(), actionId);
     }
 
 
@@ -50,9 +45,7 @@ public abstract  class TaxiActionType implements Serializable {
     }
 
 
-    abstract void addPreviousState(TaxiState previousState, int stateId);
-
-    public abstract List<TaxiState> allReachableStates(TaxiState state);
+    public abstract void addAsPredecessorToAllReachableStates(TaxiState state);
 
     public abstract List<MeasurableAction> allApplicableActions(TaxiState state);
 

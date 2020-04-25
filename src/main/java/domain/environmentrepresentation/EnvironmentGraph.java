@@ -23,8 +23,12 @@ public abstract class EnvironmentGraph<TNode extends EnvironmentNode, TEdge exte
 
     public EnvironmentGraph(Graph<RoadNode, RoadEdge> osmGraph) throws IOException, ClassNotFoundException {
         this.osmGraph = osmGraph;
+        System.out.println("Setting environment nodes...");
         setNodes();
+        System.out.println("Setting finished.");
+        System.out.println("Setting environment edges...");
         setEdges();
+        System.out.println("Setting finished.");
     }
 
 

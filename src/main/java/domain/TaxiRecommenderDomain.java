@@ -22,47 +22,47 @@ import visualization.MapVisualizer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static domain.actions.ActionTypes.*;
+import static utils.Utils.ENVIRONMENT;
+import static utils.Utils.INPUT_STATION_FILE_NAME;
 
 /**
  * Class responsible for loading all needed data, creating all objects needed for planning and generating domain
  * for the following planning
  */
-public class TaxiRecommenderDomain {
+public class TaxiRecommenderDomain implements Serializable {
 
-    private final static Logger LOGGER = Logger.getLogger(TaxiRecommenderDomain.class.getName());
     private static ArrayList<TaxiTrip> taxiTrips;
 
-
-    private Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> environment;
+    private final Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> environment;
     private Graph<RoadNode, RoadEdge> osmGraph;
     private Collection<RoadNode> osmNodes;
     private List<ChargingStation> chargingStations;
 
-    private List<TaxiActionType> actionTypes = new ArrayList<>();
+    private final List<TaxiActionType> actionTypes = new ArrayList<>();
 
-    private String roadGraphInputFileFullPath;
-    private String roadGraphInputFile;
-    private String chargingStationsInputFileFullPath;
-    private String chargingStationsInputFile;
+    private final String roadGraphInputFileFullPath;
+    private final String roadGraphInputFile;
+    private final String chargingStationsInputFileFullPath;
+    private final String chargingStationsInputFile;
 
     private ParameterEstimator parameterEstimator;
     private TaxiModel taxiModel;
 
-    private ArrayList<HashMap<Integer, ArrayList<Integer>>> transitions = new ArrayList<>(Utils.NUM_OF_ACTION_TYPES);
+    private final ArrayList<HashMap<Integer, ArrayList<Integer>>> transitions = new ArrayList<>(Utils.NUM_OF_ACTION_TYPES);
 
 
-    public TaxiRecommenderDomain(String roadGraphInputFile, String chargingStationsInputFile,
-                                 Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> environment){
-        this.roadGraphInputFileFullPath = "data/graphs/" + roadGraphInputFile;
-        this.roadGraphInputFile = roadGraphInputFile;
-        this.chargingStationsInputFileFullPath = "data/chargingstations/" + chargingStationsInputFile;
-        this.chargingStationsInputFile = chargingStationsInputFile;
-        this.environment = environment;
+    public TaxiRecommenderDomain(){
+        this.roadGraphInputFileFullPath = "data/graphs/" + Utils.INPUT_GRAPH_FILE_NAME;
+        this.roadGraphInputFile = INPUT_STATION_FILE_NAME;
+        this.chargingStationsInputFileFullPath = "data/chargingstations/" + INPUT_STATION_FILE_NAME;
+        this.chargingStationsInputFile = INPUT_STATION_FILE_NAME;
+        this.environment = ENVIRONMENT;
         generateDomain();
     }
 
@@ -120,9 +120,11 @@ public class TaxiRecommenderDomain {
     private void loadData() throws Exception {
         loadGraph();
 
+        setEnvironment();
+
         loadTaxiTripDataset();
 
-        setEnvironment();
+        estimateParameters();
 
         loadChargingStations();
 
@@ -131,16 +133,35 @@ public class TaxiRecommenderDomain {
         setTransitions();
     }
 
+    private void estimateParameters(){
+        long startTime;
+        long stopTime;
+
+        System.out.println("Estimating parameters started...");
+        startTime = System.nanoTime();
+
+        this.parameterEstimator = new ParameterEstimator(taxiTrips);
+        this.parameterEstimator.estimateParameters();
+        stopTime  = System.nanoTime();
+
+        System.out.println("Estimating finished in " + (stopTime - startTime)/1000000000. + " s.");
+    }
 
     private void setEnvironment() throws IOException, ClassNotFoundException {
+        long startTime;
+        long stopTime;
+
+        System.out.println("Setting environment..");
+        startTime = System.nanoTime();
+
         this.environment.setOsmGraph(osmGraph);
 
         DistanceGraphUtils.setNodes(this.environment.getEnvironmentNodes());
         DistanceGraphUtils.setGraph(this.environment.getEnvironmentGraph());
-        environment.setTaxiTripEnvironmentNodes(taxiTrips);
 
-        this.parameterEstimator = new ParameterEstimator(taxiTrips);
-        this.parameterEstimator.estimateParameters();
+        stopTime  = System.nanoTime();
+        System.out.println("Setting finished in " + (stopTime - startTime)/1000000000. + " s.");
+
     }
 
 
@@ -148,7 +169,7 @@ public class TaxiRecommenderDomain {
         long startTime;
         long stopTime;
 
-        LOGGER.log(Level.INFO, "Loading graph...");
+        System.out.println("Loading graph...");
         startTime = System.nanoTime();
         osmGraph = GraphLoader.loadGraph(roadGraphInputFileFullPath);
 
@@ -158,7 +179,7 @@ public class TaxiRecommenderDomain {
 
         stopTime  = System.nanoTime();
 
-        LOGGER.log(Level.INFO, "Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + osmNodes.size() + " nodes, " + osmGraph.getAllEdges().size() + " edges.");
+        System.out.println("Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + osmNodes.size() + " nodes, " + osmGraph.getAllEdges().size() + " edges.");
     }
 
 
@@ -166,12 +187,12 @@ public class TaxiRecommenderDomain {
         long startTime;
         long stopTime;
 
-        LOGGER.log(Level.INFO, "Loading charging stations...");
+        System.out.println("Loading charging stations...");
         startTime = System.nanoTime();
-        chargingStations = ChargingStationReader.readChargingStations(chargingStationsInputFileFullPath, chargingStationsInputFile);
+        chargingStations = new ArrayList<>(ChargingStationReader.readChargingStations(chargingStationsInputFileFullPath, chargingStationsInputFile));
         DistanceGraphUtils.setChargingStations(chargingStations);
         stopTime  = System.nanoTime();
-        LOGGER.log(Level.INFO, "Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + chargingStations.size() + " charging stations.");
+        System.out.println("Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + chargingStations.size() + " charging stations.");
     }
 
 
@@ -179,14 +200,14 @@ public class TaxiRecommenderDomain {
         long startTime;
         long stopTime;
 
-        LOGGER.log(Level.INFO, "Computing shortest paths to charging stations...");
+        System.out.println( "Computing shortest paths to charging stations...");
         startTime = System.nanoTime();
         AllDistancesSpeedsPair allDistancesSpeedsPair = getChargingStationDistanceSpeedTime("distance_speed_" + roadGraphInputFile);
         DistanceGraphUtils.setChargingStationDistancesSpeedTime(allDistancesSpeedsPair.getDistanceSpeedTime());
         Utils.setChargingStationStateOrder(new DistanceChargingStationStateOrder(allDistancesSpeedsPair.getDistanceSpeedTime(), this
         .environment.getNodes()));
         stopTime  = System.nanoTime();
-        LOGGER.log(Level.INFO, "Computing finished in " + (stopTime - startTime)/1000000000. + "s.");
+        System.out.println("Computing finished in " + (stopTime - startTime)/1000000000. + "s.");
     }
 
 
@@ -194,11 +215,11 @@ public class TaxiRecommenderDomain {
         long startTime;
         long stopTime;
 
-        LOGGER.log(Level.INFO, "Reading taxi trip dataset...");
+        System.out.println("Reading taxi trip dataset...");
         startTime = System.nanoTime();
         taxiTrips = Utils.DATA_SET_READER.readDataSet();
         stopTime  = System.nanoTime();
-        LOGGER.log(Level.INFO, "Reading finished in " + (stopTime - startTime)/1000000000. + "s.");
+        System.out.println("Reading finished in " + (stopTime - startTime)/1000000000. + "s.");
     }
 
 
