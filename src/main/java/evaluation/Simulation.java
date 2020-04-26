@@ -5,19 +5,21 @@ import charging.ChargingStationReader;
 import domain.TaxiRecommenderDomain;
 import domain.TaxiRewardFunction;
 import domain.actions.MeasurableAction;
-import domain.environmentrepresentation.gridenvironment.GridEnvironment;
-import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
 import domain.states.TaxiState;
 import evaluation.chargingrecommenderagent.ChargingRecommenderAgent;
-import jdk.jshell.execution.Util;
+import parameterestimation.EnergyConsumptionEstimator;
+import parameterestimation.ParameterEstimationUtils;
+import parameterestimation.TaxiTrip;
 import utils.DistanceGraphUtils;
+import utils.DistanceSpeedPairTime;
 import utils.Utils;
 import visualization.MapVisualizer;
 
 import java.io.IOException;
 import java.util.*;
 
-import static utils.Utils.INPUT_STATION_FILE_NAME;
+import static utils.Utils.*;
+
 
 public class Simulation {
 
@@ -25,11 +27,15 @@ public class Simulation {
 
     TaxiRecommenderDomain domainGenerator;
 
-    private int startingTimeStamp;
-    private int shiftLength;
+
     private TaxiState currentState;
+    private List<Integer> tripDestinations = new ArrayList<>();
+    private List<Integer> tripPickups = new ArrayList<>();
+    private HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTrips;
+
 
     private double resultReward = 0;
+
 
     public Simulation() throws IOException, ClassNotFoundException {
         initSimulation();
@@ -38,33 +44,48 @@ public class Simulation {
 
     private void initSimulation() throws IOException, ClassNotFoundException {
         domainGenerator = new TaxiRecommenderDomain();
-
-        int startingStateOfCharge = Utils.STARTING_STATE_OF_CHARGE;
-        this.startingTimeStamp = Utils.SHIFT_START_TIME;
-        this.shiftLength = Utils.SHIFT_LENGTH;
         currentState = new TaxiState(domainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getNodeId(),
-                startingStateOfCharge, startingTimeStamp);
-        this.agent = new ChargingRecommenderAgent(domainGenerator, currentState);
+                STARTING_STATE_OF_CHARGE, SHIFT_START_TIME);
+
+        initTripChoosing();
+
+        this.agent = new BaseMethodAgent(domainGenerator.getParameterEstimator(), currentState);
+    }
+
+    private void initTripChoosing(){
+        timeSortedTrips = ParameterEstimationUtils.getTimeSortedTrips(TaxiRecommenderDomain.getTaxiTrips());
+    }
+
+    public void clearSimulationResults(){
+        resultReward = 0;
+        currentState = new TaxiState(domainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getNodeId(),
+                STARTING_STATE_OF_CHARGE, SHIFT_START_TIME);
+        this.agent.setCurrentState(currentState);
     }
 
     public void startSimulation() {
-        visualizeEnvironment();
+       // visualizeEnvironment();
         printSimulationStep();
 
-        while (currentState.getTimeStamp() <= startingTimeStamp + shiftLength){
-            MapVisualizer.setCurrentStateNode(domainGenerator.getEnvironment().getOsmGraph().getNode(currentState.getNodeId()));
+        while (currentState.getTimeStamp() <= SHIFT_START_TIME + SHIFT_LENGTH){
+           // MapVisualizer.setCurrentStateNode(domainGenerator.getEnvironment().getOsmGraph().getNode(currentState.getNodeId()));
 
-            try {
+            /*try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+            }*/
 
             if (tripDone()){
                 continue;
             }
 
             List<MeasurableAction> applicableActions = domainGenerator.getTaxiModel().allApplicableActionsFromState(currentState);
+
+            /*TaxiState state = new TaxiState(102701, 14, 712);
+            domainGenerator.getTaxiModel().allApplicableActionsFromState(state);
+*/
+
             if (applicableActions.isEmpty()){
                 return;
             }
@@ -111,30 +132,25 @@ public class Simulation {
 
 
     private boolean tripDone(){
-        Integer trip = tripToDestination();
+        SimulationTaxiTrip trip = tripToDestination();
 
         if (trip != null) {
-            if (agent.tripOffer(currentState, trip)){
-                int distance = domainGenerator.getParameterEstimator().getTaxiTripDistances()
-                        .get(DistanceGraphUtils.getIntervalStart(currentState.getTimeStamp()))
-                        .get(currentState.getNodeId()).get(trip).intValue();
-                int consumption = domainGenerator.getParameterEstimator().getTaxiTripConsumptions()
-                        .get(DistanceGraphUtils.getIntervalStart(currentState.getTimeStamp()))
-                        .get(currentState.getNodeId()).get(trip).intValue();
-                int time = domainGenerator.getParameterEstimator().getTaxiTripLengths()
-                        .get(DistanceGraphUtils.getIntervalStart(currentState.getTimeStamp()))
-                        .get(currentState.getNodeId()).get(trip).intValue();
-                double reward = TaxiRewardFunction.getTripReward(distance);
+            if (agent.tripOffer(currentState, trip)) {
+                int tripDistance = new Double(trip.getDistance()).intValue();
+                int tripConsumption = trip.getTripEnergyConsumption();
+                int tripTime = new Double(trip.getTripLength()).intValue();
+                double tripReward = TaxiRewardFunction.getTripReward(tripDistance);
+                DistanceSpeedPairTime toPickUpPath = DistanceGraphUtils.getDistanceSpeedPairOfPath(DistanceGraphUtils.aStar(currentState.getNodeId(), trip.getFromEnvironmentNode()));
 
-                this.resultReward += reward;
+                this.resultReward += tripReward;
 
-                currentState.setNodeId(trip);
+                currentState.setNodeId(trip.getToEnvironmentNode());
 
-                currentState.setTimeStamp(currentState.getTimeStamp() + time);
+                currentState.setTimeStamp(currentState.getTimeStamp() + tripTime + toPickUpPath.getTime());
 
-                currentState.setStateOfCharge(currentState.getStateOfCharge() + consumption);
+                currentState.setStateOfCharge(currentState.getStateOfCharge() + tripConsumption + EnergyConsumptionEstimator.getEnergyConsumption(toPickUpPath.getDistance()));
 
-                printSimulationStep(trip, distance, time, consumption, reward);
+                printSimulationStep(trip.getToEnvironmentNode(), tripDistance, tripTime, tripConsumption, tripReward);
                 return true;
             }
         }
@@ -142,35 +158,25 @@ public class Simulation {
     }
 
 
-
-    private Integer tripToDestination(){
-        double pickUpProbability =
-                domainGenerator.getParameterEstimator().getPickUpProbabilityInNode(currentState.getNodeId(), currentState.getTimeStamp());
+    private SimulationTaxiTrip tripToDestination(){
         double randomNumber = Math.random();
 
-        if (pickUpProbability > randomNumber && pickUpProbability > 0){
-            return chooseToNode();
+        if (randomNumber > Utils.TRIP_OFFER_PROBABILITY){
+            return chooseTrip();
         } else {
             return null;
         }
     }
 
 
-    private int chooseToNode(){
-        HashMap<Integer, Double> destinationProbabilities =
-                domainGenerator.getParameterEstimator().getDestinationProbabilitiesInNode(currentState.getNodeId(), currentState.getTimeStamp());
-        Random random = new Random();
-        ArrayList<Integer> nodes = new ArrayList<>();
+    private SimulationTaxiTrip chooseTrip(){
+        int intervalStart = DistanceGraphUtils.getIntervalStart(currentState.getTimeStamp());
+        List<TaxiTrip> trips = timeSortedTrips.get(intervalStart);
+        Collections.shuffle(trips);
+        TaxiTrip result = trips.get(0);
 
-        for (Map.Entry<Integer, Double> entry : destinationProbabilities.entrySet()){
-            for (int i = 0; i < (int)(100 * entry.getValue()); i++){
-                nodes.add(entry.getKey());
-            }
-        }
-
-        Collections.shuffle(nodes);
-
-        return nodes.get(random.nextInt(nodes.size()));
+        return new SimulationTaxiTrip(result.getDistance(), result.getTripLength(),result.getTripEnergyConsumption(),
+                result.getFromEnvironmentNode(), result.getToEnvironmentNode());
     }
 
     private void printSimulationStep(MeasurableAction action){
@@ -194,4 +200,7 @@ public class Simulation {
         System.out.println();
     }
 
+    public double getResultReward() {
+        return resultReward;
+    }
 }

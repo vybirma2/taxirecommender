@@ -1,5 +1,6 @@
 package parameterestimation;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static parameterestimation.ParameterEstimationUtils.*;
@@ -7,7 +8,7 @@ import static parameterestimation.ParameterEstimationUtils.*;
 /**
  * Class responsible for estimation of passenger destination parameters
  */
-public class PassengerDestinationEstimator {
+public class PassengerDestinationEstimator  implements Serializable {
 
     private ArrayList<TaxiTrip> taxiTrips;
 

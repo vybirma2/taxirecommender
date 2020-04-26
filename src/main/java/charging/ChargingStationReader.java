@@ -111,6 +111,10 @@ public class ChargingStationReader {
             }
         }
 
+        if (connections.isEmpty()){
+            return null;
+        }
+
         RoadNode node = DistanceGraphUtils.chooseRoadNode(longitude, latitude);
 
         if (node != null) {

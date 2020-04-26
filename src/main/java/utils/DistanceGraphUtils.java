@@ -137,6 +137,11 @@ public class DistanceGraphUtils {
     }
 
 
+    public static Set<Integer> getEnvironmentNeighbours(int node){
+        return graph.getNode(node).getNeighbours();
+    }
+
+
     public static List<ChargingStation> getChargingStations(){
         return chargingStations;
     }
@@ -146,15 +151,13 @@ public class DistanceGraphUtils {
         if (fromNodeId == toNodeId){
             return 0;
         }
-        if (fromNodeId == 61478 && toNodeId == 103294){
-            System.out.println("shjb");
-        }
+
         EnvironmentEdge edge = graph.getEdge(fromNodeId, toNodeId);
         if (edge != null){
-            return (int)(edge.getTime()* (1/0.8));
+            return edge.getTime();
         } else {
             DistanceSpeedPairTime distanceSpeedPairTime = getChargingStationParameters(fromNodeId, toNodeId, chargingStationDistancesSpeedTime);
-            return (int)(distanceSpeedPairTime.getTime() * (1/0.8));
+            return distanceSpeedPairTime.getTime();
         }
     }
 
@@ -425,7 +428,7 @@ public class DistanceGraphUtils {
 
         for (Integer node : nodePath){
             distance += getDistanceBetweenNodes(current, node);
-            speed += getSpeedBetweenNodes(current, node);
+            speed += getSpeedBetweenNodes(current, node)/3.6;
             time += getTripTime(current, node);
             current = node;
         }

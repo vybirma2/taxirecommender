@@ -5,13 +5,12 @@ import domain.environmentrepresentation.EnvironmentNode;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
 import utils.DistanceGraphUtils;
+import utils.Utils;
 
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class NewYorkDataSetReader implements DataSetReader {
@@ -59,9 +58,14 @@ public class NewYorkDataSetReader implements DataSetReader {
             }
 
             csvReader.close();
+            Collections.shuffle(taxiTrips);
+            ArrayList<TaxiTrip> result = new ArrayList<>();
+            for (int i = 0; i < Utils.SIZE_OF_DATASET; i++){
+                result.add(taxiTrips.get(i));
+            }
 
             FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));
-            out.writeObject(taxiTrips);
+            out.writeObject(result);
             out.close();
         } catch (IOException | ParseException e) {
             e.printStackTrace();
@@ -83,7 +87,7 @@ public class NewYorkDataSetReader implements DataSetReader {
         if (trip.length < 9){
             return null;
         }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss a");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss aa", Locale.US);
 
         int pickupZone = Integer.parseInt(trip[7]);
         int dropOffZone = Integer.parseInt(trip[8]);
@@ -97,12 +101,15 @@ public class NewYorkDataSetReader implements DataSetReader {
             return null;
         }
 
-        Date startDate = dateFormat.parse(trip[1].substring(0, trip[1].length() ));
-        Date finishDate = dateFormat.parse(trip[2].substring(0, trip[1].length() ));
+        Date startDate = dateFormat.parse(trip[1]);
+        Date finishDate = dateFormat.parse(trip[2]);
 
         long tripLengthMilliseconds = Math.abs(finishDate.getTime() - startDate.getTime());
         long tripLengthMinutes = TimeUnit.MINUTES.convert(tripLengthMilliseconds, TimeUnit.MILLISECONDS);
 
+        if (tripLengthMinutes >= Utils.MAX_TRIP_LENGTH){
+            return null;
+        }
 
         EnvironmentNode fromNode = DistanceGraphUtils.chooseEnvironmentNode(pickUpNode.getLongitude(), pickUpNode.getLatitude());
         EnvironmentNode toNode = DistanceGraphUtils.chooseEnvironmentNode(destinationNode.getLongitude(), destinationNode.getLatitude());

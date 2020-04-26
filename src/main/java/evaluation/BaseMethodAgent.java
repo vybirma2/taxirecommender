@@ -1,6 +1,7 @@
 package evaluation;
 
 import domain.TaxiModel;
+import domain.TaxiRecommenderDomain;
 import domain.actions.ActionTypes;
 import domain.actions.MeasurableAction;
 import domain.environmentrepresentation.EnvironmentNode;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class BaseMethodAgent extends Agent {
 
-    private final int BATTERY_LOW_LEVEL_VALUE = 10;
+    private final int BATTERY_LOW_LEVEL_VALUE = 15;
 
     private ParameterEstimator parameterEstimator;
     private int centreNode;
@@ -26,8 +27,8 @@ public class BaseMethodAgent extends Agent {
 
     private LinkedList<Integer> pathToCenterNode;
 
-    public BaseMethodAgent(TaxiModel taxiModel, ParameterEstimator parameterEstimator) {
-        super(null);
+    public BaseMethodAgent(ParameterEstimator parameterEstimator, TaxiState state) {
+        super(null, state);
         this.parameterEstimator = parameterEstimator;
         init();
     }
@@ -35,7 +36,7 @@ public class BaseMethodAgent extends Agent {
 
     private void init(){
         int maxValue = 0;
-        for (TaxiTrip trip : parameterEstimator.getTaxiTrips()){
+        for (TaxiTrip trip : TaxiRecommenderDomain.getTaxiTrips()){
             if (pickupsInNodes.containsKey(trip.getFromEnvironmentNode())){
                 pickupsInNodes.replace(trip.getFromEnvironmentNode(), pickupsInNodes.get(trip.getFromEnvironmentNode()) + 1);
                 if (maxValue < pickupsInNodes.get(trip.getFromEnvironmentNode()) + 1){
@@ -149,7 +150,7 @@ public class BaseMethodAgent extends Agent {
 
 
     @Override
-    public boolean tripOffer(TaxiState currentState, Integer trip) {
+    public boolean tripOffer(TaxiState currentState, SimulationTaxiTrip trip) {
         pathToCenterNode = null;
         return currentState.getStateOfCharge() > this.BATTERY_LOW_LEVEL_VALUE;
     }

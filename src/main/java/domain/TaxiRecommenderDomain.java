@@ -14,15 +14,13 @@ import domain.environmentrepresentation.gridenvironment.GridEnvironment;
 import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
 import org.json.simple.parser.ParseException;
 import org.nustaq.serialization.FSTObjectInput;
+import org.nustaq.serialization.FSTObjectOutput;
 import parameterestimation.ParameterEstimator;
 import parameterestimation.TaxiTrip;
 import utils.*;
 import visualization.MapVisualizer;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,12 +35,12 @@ import static utils.Utils.INPUT_STATION_FILE_NAME;
  */
 public class TaxiRecommenderDomain implements Serializable {
 
-    private static ArrayList<TaxiTrip> taxiTrips;
 
     private final Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> environment;
     private Graph<RoadNode, RoadEdge> osmGraph;
     private Collection<RoadNode> osmNodes;
     private List<ChargingStation> chargingStations;
+    private static ArrayList<TaxiTrip>  taxiTrips;
 
     private final List<TaxiActionType> actionTypes = new ArrayList<>();
 
@@ -124,7 +122,7 @@ public class TaxiRecommenderDomain implements Serializable {
 
         loadTaxiTripDataset();
 
-        estimateParameters();
+        setParameterEstimator();
 
         loadChargingStations();
 
@@ -133,7 +131,7 @@ public class TaxiRecommenderDomain implements Serializable {
         setTransitions();
     }
 
-    private void estimateParameters(){
+    private void estimateParameters(File file) throws IOException, ClassNotFoundException {
         long startTime;
         long stopTime;
 
@@ -144,7 +142,29 @@ public class TaxiRecommenderDomain implements Serializable {
         this.parameterEstimator.estimateParameters();
         stopTime  = System.nanoTime();
 
+        FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));
+        out.writeObject(parameterEstimator);
+        out.close();
+
         System.out.println("Estimating finished in " + (stopTime - startTime)/1000000000. + " s.");
+    }
+
+    private void readParameterEstimator(File file) throws IOException, ClassNotFoundException {
+        FSTObjectInput in = new FSTObjectInput(new FileInputStream(file));
+        parameterEstimator = (ParameterEstimator) in.readObject();
+        in.close();
+    }
+
+
+    private void setParameterEstimator() throws IOException, ClassNotFoundException {
+        File file = new File("data/programdata/estimated_parameters_tS" + Utils.SHIFT_START_TIME +
+                "sL" + Utils.SHIFT_LENGTH + ".fst");
+
+        if (!file.exists()){
+            estimateParameters(file);
+        } else {
+            readParameterEstimator(file);
+        }
     }
 
     private void setEnvironment() throws IOException, ClassNotFoundException {
@@ -202,7 +222,7 @@ public class TaxiRecommenderDomain implements Serializable {
 
         System.out.println( "Computing shortest paths to charging stations...");
         startTime = System.nanoTime();
-        AllDistancesSpeedsPair allDistancesSpeedsPair = getChargingStationDistanceSpeedTime("distance_speed_" + roadGraphInputFile);
+        AllDistancesSpeedsPair allDistancesSpeedsPair = getChargingStationDistanceSpeedTime("distance_speed_" + Utils.DATA_SET_NAME);
         DistanceGraphUtils.setChargingStationDistancesSpeedTime(allDistancesSpeedsPair.getDistanceSpeedTime());
         Utils.setChargingStationStateOrder(new DistanceChargingStationStateOrder(allDistancesSpeedsPair.getDistanceSpeedTime(), this
         .environment.getNodes()));

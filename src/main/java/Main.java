@@ -5,13 +5,27 @@ import parameterestimation.NewYorkLongitudeLatitudeReader;
 import java.io.IOException;
 import java.util.HashMap;
 
+import static utils.Utils.SHIFT_LENGTH;
+
 public class Main {
 
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
          Simulation simulation = new Simulation();
-         simulation.startSimulation();
+
+         double reward = 0;
+         for (int i = 0; i < 1000; i++){
+             simulation.startSimulation();
+             reward += simulation.getResultReward();
+             System.out.println();
+             System.out.println();
+             System.out.println();
+             System.out.println();
+             simulation.clearSimulationResults();
+         }
+
+        System.out.println(reward/1000);
         /*TaxiRecommenderDomain taxiRecommenderDomainGenerator = new TaxiRecommenderDomain(
                 "prague_full.fst","prague_charging_stations_full.json",
                 new KMeansEnvironment());

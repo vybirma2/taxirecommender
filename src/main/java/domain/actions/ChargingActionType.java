@@ -75,6 +75,14 @@ public class ChargingActionType extends TaxiActionType {
                                 i * chargingTimeUnit, connection.getId()));
                     }
                 }
+
+                for(int i = 5; i <= 30; i+=5){
+                    int energyCharged = getEnergyCharged(connection, i);
+                    if (applicableInState(state, i, energyCharged)){
+                        actions.add(new ChargingAction(actionId, state.getNodeId(), state.getNodeId(),
+                                i, connection.getId()));
+                    }
+                }
             }
         }
 
@@ -107,7 +115,7 @@ public class ChargingActionType extends TaxiActionType {
     }
 
 
-    protected boolean applicableInState(TaxiState state, double chargingTime, double energyCharged) {
+    protected boolean applicableInState(TaxiState state, int chargingTime, int energyCharged) {
         return shiftNotOver(state, chargingTime) && notOverCharging(state, energyCharged) && energyCharged > 0;
     }
 

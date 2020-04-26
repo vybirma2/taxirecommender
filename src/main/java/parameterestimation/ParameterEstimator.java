@@ -1,5 +1,6 @@
 package parameterestimation;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static utils.DistanceGraphUtils.getIntervalStart;
@@ -9,20 +10,19 @@ import static utils.DistanceGraphUtils.getIntervalStart;
  * Class responsible for whole parameter estimation, containing process of parameter estimation, and also all estimated
  * parameters
  */
-public class ParameterEstimator {
+public class ParameterEstimator implements Serializable {
 
-    private PassengerPickUpEstimator passengerPickUpEstimator;
-    private PassengerDestinationEstimator passengerDestinationEstimator;
+    private final PassengerPickUpEstimator passengerPickUpEstimator;
+    private final PassengerDestinationEstimator passengerDestinationEstimator;
 
-    private ArrayList<TaxiTrip> taxiTrips;
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripLengths;
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripDistances;
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripConsumptions;
+    private final HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripLengths;
+    private final HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripDistances;
+    private final HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripConsumptions;
 
 
-    private HashMap<Integer, HashMap<Integer, Double>> taxiTripLengthsComplete;
-    private HashMap<Integer, HashMap<Integer, Double>> taxiTripDistancesComplete;
-    private HashMap<Integer, HashMap<Integer, Double>> taxiTripConsumptionsComplete;
+    private final HashMap<Integer, HashMap<Integer, Double>> taxiTripLengthsComplete;
+    private final HashMap<Integer, HashMap<Integer, Double>> taxiTripDistancesComplete;
+    private final HashMap<Integer, HashMap<Integer, Double>> taxiTripConsumptionsComplete;
 
 
     private HashMap<Integer, HashMap<Integer, Double>> passengerPickUpProbability;
@@ -34,15 +34,14 @@ public class ParameterEstimator {
 
 
     public ParameterEstimator(ArrayList<TaxiTrip> taxiTrips) {
-        this.taxiTrips = taxiTrips;
         this.passengerPickUpEstimator = new PassengerPickUpEstimator(taxiTrips);
         this.passengerDestinationEstimator = new PassengerDestinationEstimator(taxiTrips);
-        this.taxiTripLengths = computeTaxiTripsLengths();
-        this.taxiTripDistances = computeTaxiTripsDistances();
-        this.taxiTripConsumptions = computeTaxiTripsConsumptions();
-        this.taxiTripLengthsComplete = computeTaxiTripsLengthsComplete();
-        this.taxiTripDistancesComplete = computeTaxiTripsDistancesComplete();
-        this.taxiTripConsumptionsComplete = computeTaxiTripsConsumptionsComplete();
+        this.taxiTripLengths = computeTaxiTripsLengths(taxiTrips);
+        this.taxiTripDistances = computeTaxiTripsDistances(taxiTrips);
+        this.taxiTripConsumptions = computeTaxiTripsConsumptions(taxiTrips);
+        this.taxiTripLengthsComplete = computeTaxiTripsLengthsComplete(taxiTrips);
+        this.taxiTripDistancesComplete = computeTaxiTripsDistancesComplete(taxiTrips);
+        this.taxiTripConsumptionsComplete = computeTaxiTripsConsumptionsComplete(taxiTrips);
     }
 
     
@@ -60,9 +59,9 @@ public class ParameterEstimator {
     }
 
 
-    public ArrayList<TaxiTrip> getTaxiTrips() {
+    /*public ArrayList<TaxiTrip> getTaxiTrips() {
         return taxiTrips;
-    }
+    }*/
 
 
     public HashMap<Integer, HashMap<Integer, Double>> getPassengerPickUpProbability() {
@@ -134,7 +133,7 @@ public class ParameterEstimator {
     }
 
 
-    private HashMap<Integer, HashMap<Integer, Double>> computeTaxiTripsLengthsComplete(){
+    private HashMap<Integer, HashMap<Integer, Double>> computeTaxiTripsLengthsComplete(List<TaxiTrip> taxiTrips){
         HashMap<Integer, HashMap<Integer, Double>> result = new HashMap<>();
         HashMap<Integer, HashMap<Integer, Integer>> nums = new HashMap<>();
 
@@ -150,7 +149,7 @@ public class ParameterEstimator {
     }
 
 
-    private HashMap<Integer, HashMap<Integer, Double>> computeTaxiTripsDistancesComplete(){
+    private HashMap<Integer, HashMap<Integer, Double>> computeTaxiTripsDistancesComplete(List<TaxiTrip> taxiTrips){
         HashMap<Integer, HashMap<Integer, Double>> result = new HashMap<>();
         HashMap<Integer, HashMap<Integer, Integer>> nums = new HashMap<>();
 
@@ -166,7 +165,7 @@ public class ParameterEstimator {
     }
 
 
-    private HashMap<Integer, HashMap<Integer, Double>> computeTaxiTripsConsumptionsComplete(){
+    private HashMap<Integer, HashMap<Integer, Double>> computeTaxiTripsConsumptionsComplete(List<TaxiTrip> taxiTrips){
         HashMap<Integer, HashMap<Integer, Double>> result = new HashMap<>();
         HashMap<Integer, HashMap<Integer, Integer>> nums = new HashMap<>();
 
@@ -182,7 +181,7 @@ public class ParameterEstimator {
     }
 
 
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> computeTaxiTripsLengths(){
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> computeTaxiTripsLengths(List<TaxiTrip> taxiTrips){
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result = new HashMap<>();
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums = new HashMap<>();
 
@@ -198,7 +197,7 @@ public class ParameterEstimator {
     }
 
 
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> computeTaxiTripsDistances(){
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> computeTaxiTripsDistances(List<TaxiTrip> taxiTrips){
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result = new HashMap<>();
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums = new HashMap<>();
 
@@ -215,7 +214,7 @@ public class ParameterEstimator {
     }
 
 
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> computeTaxiTripsConsumptions(){
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> computeTaxiTripsConsumptions(List<TaxiTrip> taxiTrips){
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result = new HashMap<>();
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums = new HashMap<>();
 

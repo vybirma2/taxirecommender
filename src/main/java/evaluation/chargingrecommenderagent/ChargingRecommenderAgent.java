@@ -7,8 +7,11 @@ import domain.actions.MeasurableAction;
 import domain.actions.TaxiActionType;
 import domain.states.TaxiState;
 import evaluation.Agent;
+import evaluation.SimulationTaxiTrip;
 import org.nustaq.serialization.FSTObjectInput;
+import parameterestimation.EnergyConsumptionEstimator;
 import utils.DistanceGraphUtils;
+import utils.DistanceSpeedPairTime;
 
 
 import java.io.*;
@@ -18,25 +21,16 @@ import java.util.List;
 public class ChargingRecommenderAgent extends Agent {
 
     private ReachableStatesGenerator reachableStatesGenerator;
-    private TaxiRewardFunction rewardFunction;
-    private final TaxiState startingState;
-    private TaxiState currentState;
-
 
 
     public ChargingRecommenderAgent(TaxiRecommenderDomain domain, TaxiState startingState) throws IOException, ClassNotFoundException {
-        super(domain);
-        this.startingState = startingState;
+        super(domain, startingState);
         init();
     }
 
     private void init() throws IOException, ClassNotFoundException {
-
         generateReachableStates();
-
-        currentState = startingState;
     }
-
 
     private void printCurrentPolicy(){
         TaxiState state = currentState;
@@ -52,7 +46,7 @@ public class ChargingRecommenderAgent extends Agent {
 
     private void generateReachableStates() throws IOException, ClassNotFoundException {
         reachableStatesGenerator = new ReachableStatesGenerator(domain.getActionTypes(),
-                new ArrayList<>(domain.getEnvironment().getNodes()), startingState, domain.getParameterEstimator());
+                new ArrayList<>(domain.getEnvironment().getNodes()), currentState, domain.getParameterEstimator());
         TaxiActionType.setReachableStatesGenerator(reachableStatesGenerator);
         reachableStatesGenerator.collectReachableStates();
     }
@@ -83,30 +77,26 @@ public class ChargingRecommenderAgent extends Agent {
 
 
     @Override
-    public boolean tripOffer(TaxiState currSt, Integer trip) {
+    public boolean tripOffer(TaxiState currSt, SimulationTaxiTrip trip) {
         assert currentState.equals(currSt);
 
         TaxiState resultState = getResultTripState(trip);
 
         TaxiState existingState = reachableStatesGenerator.getState(resultState);
         if (existingState != null){
-            if (beneficialTrip(existingState)) {
+            if (beneficialTrip(existingState, trip)) {
                 currentState = existingState;
                 return true;
             }
-        } else {
-            System.out.println("Trip destination state not found!");
         }
 
         return false;
     }
 
 
-    private boolean beneficialTrip(TaxiState resultState){
+    private boolean beneficialTrip(TaxiState resultState, SimulationTaxiTrip simulationTaxiTrip){
 
-        int distance = domain.getParameterEstimator().getTaxiTripDistances()
-                .get(DistanceGraphUtils.getIntervalStart(currentState.getTimeStamp()))
-                .get(currentState.getNodeId()).get(resultState.getNodeId()).intValue();
+        double distance = simulationTaxiTrip.getDistance();
 
         double resultStateReward = resultState.getReward();
         double tripReward = TaxiRewardFunction.getTripReward(distance);
@@ -115,17 +105,15 @@ public class ChargingRecommenderAgent extends Agent {
     }
 
 
-    private TaxiState getResultTripState(Integer trip) {
-        int consumption = domain.getParameterEstimator().getTaxiTripConsumptions()
-                .get(DistanceGraphUtils.getIntervalStart(currentState.getTimeStamp()))
-                .get(currentState.getNodeId()).get(trip).intValue();
-        int time = domain.getParameterEstimator().getTaxiTripLengths()
-                .get(DistanceGraphUtils.getIntervalStart(currentState.getTimeStamp()))
-                .get(currentState.getNodeId()).get(trip).intValue();
+    private TaxiState getResultTripState(SimulationTaxiTrip trip) {
+        int tripConsumption = trip.getTripEnergyConsumption();
+        int tripTime = new Long(trip.getTripLength()).intValue();
+        DistanceSpeedPairTime toPickupPath = DistanceGraphUtils.getDistanceSpeedPairOfPath(DistanceGraphUtils.aStar(currentState.getNodeId(), trip.getFromEnvironmentNode()));
 
 
-        return new TaxiState(trip, currentState.getStateOfCharge() + consumption,
-                currentState.getTimeStamp() + time);
+        return new TaxiState(trip.getToEnvironmentNode(), currentState.getStateOfCharge() + tripConsumption +
+                EnergyConsumptionEstimator.getEnergyConsumption(toPickupPath.getDistance()),
+                currentState.getTimeStamp() + tripTime + toPickupPath.getTime());
     }
 
 

@@ -17,12 +17,12 @@ public class ActionUtils {
     }*/
 
 
-    public static boolean shiftNotOver(TaxiState state, double actionTime){
+    public static boolean shiftNotOver(TaxiState state, int actionTime){
         return state.getTimeStamp() + actionTime < Utils.SHIFT_LENGTH + SHIFT_START_TIME;
     }
 
 
-    public static boolean notOverCharging(TaxiState state, double energyCharged){
+    public static boolean notOverCharging(TaxiState state, int energyCharged){
         return state.getStateOfCharge() + energyCharged <= 100;
     }
 

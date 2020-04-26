@@ -70,7 +70,7 @@ public class PickUpPassengerActionType  extends TaxiActionType {
         }
         if (taxiTripLengths.get(startInterval).containsKey(state.getNodeId())){
             if (taxiTripLengths.get(startInterval).get(state.getNodeId()).containsKey(toNodeId)){
-                return applicableInState(state) && shiftNotOver(state, taxiTripLengths.get(startInterval).get(state.getNodeId()).get(toNodeId).longValue()) &&
+                return applicableInState(state) && shiftNotOver(state, taxiTripLengths.get(startInterval).get(state.getNodeId()).get(toNodeId).intValue()) &&
                         notRunOutOfBattery(state.getStateOfCharge(), taxiTripConsumptions.get(startInterval).get(state.getNodeId()).get(toNodeId).intValue());
             }
         }

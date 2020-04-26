@@ -12,17 +12,21 @@ public class Utils {
 
     public static final int NUM_OF_CLUSTERS = 100;
 
-    public static final int SHIFT_LENGTH = 8 * 60;
+    public static final int SHIFT_LENGTH = 12 * 60;
     public static final int STARTING_STATE_OF_CHARGE = 20;
 
 
-    public static final int STAYING_INTERVAL = 10;
+    public static final int STAYING_INTERVAL = 1;
 
     public static final double COST_FOR_KW = 5.5;
     public static final double BATTERY_CAPACITY = 40;
     public static final double MINIMAL_CHARGING_STATE_OF_CHARGE = 80;
 
     public static final int NUM_OF_ACTION_TYPES = 5;
+
+    public static final int SIZE_OF_DATASET = 1000000;
+
+    public static final double TRIP_OFFER_PROBABILITY = 0.5;
 
     public static final int NUM_OF_NODES = NUM_OF_CLUSTERS + 123;
 
@@ -40,6 +44,8 @@ public class Utils {
 
 
     public static final boolean VISUALIZE_ENVIRONMENT = true;
+
+    public static final int MAX_TRIP_LENGTH = 180;
 
 
     public static final int MAX_KMEANS_ITERATIONS = 1000;
@@ -62,12 +68,13 @@ public class Utils {
 
     public static final int CAR_FULL_BATTERY_DISTANCE = 300;
 
-    public static final int NUM_OF_CHARGING_LENGTH_POSSIBILITIES = 3;
+    public static final int NUM_OF_CHARGING_LENGTH_POSSIBILITIES = 10;
 
     public static final Comparator<TripToChargingStation> tripToChargingStationComparator = new ClosestStationComparator();
 
     public static final Comparator<ChargingConnection> chargingConnectionComparator = new ChargingConnectionComparator();
 
+    public static double ejnhd = 87.9;
     public static final int NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO = 10;
 
 

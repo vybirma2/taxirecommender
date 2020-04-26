@@ -180,7 +180,7 @@ public class TaxiRewardFunction {
 
         if (destinationProbabilities != null){
             for (Map.Entry<Integer, Double> entry : destinationProbabilities.entrySet()){
-                if (!shiftNotOver(state, tripLengths.get(startInterval).get(state.getNodeId()).get(entry.getKey()).longValue())
+                if (!shiftNotOver(state, tripLengths.get(startInterval).get(state.getNodeId()).get(entry.getKey()).intValue())
                         || !notRunOutOfBattery(state.getStateOfCharge(), tripConsumptions.get(startInterval).get(state.getNodeId()).get(entry.getKey()).intValue())) {
                     result.add(entry.getValue());
                 }
@@ -210,7 +210,7 @@ public class TaxiRewardFunction {
         if (destinationProbabilities != null){
             for (Map.Entry<Integer, Double> entry : destinationProbabilities.entrySet()){
                 int consumption = tripConsumptions.get(startInterval).get(state.getNodeId()).get(entry.getKey()).intValue();
-                long tripLength = tripLengths.get(startInterval).get(state.getNodeId()).get(entry.getKey()).longValue();
+                int tripLength = tripLengths.get(startInterval).get(state.getNodeId()).get(entry.getKey()).intValue();
 
                 if (shiftNotOver(state, tripLength) && notRunOutOfBattery(state.getStateOfCharge(), consumption)){
                     probabilities.add(entry.getValue());
