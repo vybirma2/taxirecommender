@@ -4,13 +4,13 @@ import charging.*;
 import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
 import parameterestimation.DataSetReader;
-import parameterestimation.NewYorkDataSetReader;
+import parameterestimation.PragueDataSetReader;
 
 import java.util.Comparator;
 
 public class Utils {
 
-    public static final int NUM_OF_CLUSTERS = 100;
+    public static final int NUM_OF_CLUSTERS = 500;
 
     public static final int SHIFT_LENGTH = 12 * 60;
     public static final int STARTING_STATE_OF_CHARGE = 20;
@@ -50,16 +50,16 @@ public class Utils {
 
     public static final int MAX_KMEANS_ITERATIONS = 1000;
 
-    public static final int ONE_GRID_CELL_WIDTH = 3000;
-    public static final int ONE_GRID_CELL_HEIGHT = 3000;
+    public static final int ONE_GRID_CELL_WIDTH = 2000;
+    public static final int ONE_GRID_CELL_HEIGHT = 2000;
 
     public static final double MAX_NODE_FITTING_DISTANCE = 0.2;
 
     public static final Environment ENVIRONMENT = new KMeansEnvironment();
-    public static final DataSetReader DATA_SET_READER = new NewYorkDataSetReader();
-    public static final String INPUT_GRAPH_FILE_NAME = "new_york_full.fst";
-    public static final String INPUT_STATION_FILE_NAME = "new_york_chargingstations.json";
-    public static final String DATA_SET_NAME = "new_york";
+    public static final DataSetReader DATA_SET_READER = new PragueDataSetReader();
+    public static final String INPUT_GRAPH_FILE_NAME = "prague.fst";
+    public static final String INPUT_STATION_FILE_NAME = "prague_charging_stations_full.json";
+    public static final String DATA_SET_NAME = "prague";
 
 
     public static final int ESTIMATION_EPISODE_LENGTH = 30;

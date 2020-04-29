@@ -20,7 +20,7 @@ import static utils.Utils.*;
 
 public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeansEnvironmentEdge> {
 
-    private static Map<PickUpPointCentroid, List<TaxiTripPickupPlace>> clusters;
+    public static Map<PickUpPointCentroid, List<TaxiTripPickupPlace>> clusters;
 
     public KMeansEnvironment() {
 
@@ -31,6 +31,8 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
         setClusters();
         this.environmentGraph = new KMeansEnvironmentGraph(this.getOsmGraph());
     }
+
+
 
 
     private void visualizeEnvironment(){

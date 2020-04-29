@@ -41,4 +41,8 @@ public abstract class EnvironmentNode implements Serializable {
     public double getLongitude() {
         return Environment.getNodeLongitude(nodeId);
     }
+
+    public void setNeighbours(Set<Integer> neighbours) {
+        this.neighbours = neighbours;
+    }
 }

@@ -98,6 +98,9 @@ public class DistanceGraphUtils {
                 environmentNode = node;
             }
         }
+        if (environmentNode == null){
+            System.out.println("sf");
+        }
 
         return environmentNode;
     }
@@ -367,9 +370,6 @@ public class DistanceGraphUtils {
                 }
 
                 EnvironmentNode node = getEnvironmentNode(current.getNodeId());
-                if (node == null){
-                    System.out.println("srfs");
-                }
                 Set<Integer> neighbors = node.getNeighbours();
                 for (Integer neighbor : neighbors) {
                     if (!visited.contains(neighbor) ){

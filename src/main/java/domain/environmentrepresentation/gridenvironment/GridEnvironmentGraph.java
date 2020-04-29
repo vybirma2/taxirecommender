@@ -439,7 +439,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
      * @param node
      * @return row coordinate of node corresponding to grid latitude borders
      */
-    private Integer getRowCoordinate(RoadNode node){
+    public Integer getRowCoordinate(RoadNode node){
         for (int i = numOfRows - 1; i >= 0; i--){
             if (node.getLatitude() >= latitudeGridBorders.get(i) ){
                 return i;
@@ -453,7 +453,7 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
      * @param node
      * @return column coordinate of node corresponding to grid longitude borders
      */
-    private Integer getColumnCoordinate(RoadNode node){
+    public Integer getColumnCoordinate(RoadNode node){
         for (int i = numOfColumns - 1; i >= 0; i--){
             if (node.getLongitude() >= longitudeGridBorders.get(i) ){
                 return i;
@@ -499,6 +499,14 @@ public class GridEnvironmentGraph extends EnvironmentGraph<GridEnvironmentNode, 
         }
     }
 
+
+    public int getNumOfColumns() {
+        return numOfColumns;
+    }
+
+    public int getNumOfRows() {
+        return numOfRows;
+    }
 
     @Override
     public String toString() {

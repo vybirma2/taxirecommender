@@ -1,9 +1,27 @@
+import charging.ChargingStationReader;
+import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
+import de.alsclo.voronoi.Voronoi;
+import de.alsclo.voronoi.graph.Edge;
+import de.alsclo.voronoi.graph.Graph;
+import de.alsclo.voronoi.graph.Point;
+import domain.TaxiRecommenderDomain;
+import domain.environmentrepresentation.EnvironmentEdge;
+import domain.environmentrepresentation.EnvironmentNode;
+import domain.environmentrepresentation.gridenvironment.GridEnvironment;
+import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
+import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPointCentroid;
+import domain.environmentrepresentation.kmeansenvironment.kmeans.TaxiTripPickupPlace;
+import domain.environmentrepresentation.kmeansenvironment.kmeansenvironmentutils.ConvexHullFinder;
 import evaluation.Simulation;
 import parameterestimation.NewYorkLongitudeLatitudeReader;
+import utils.DistanceGraphUtils;
+import utils.GraphLoader;
+import visualization.MapVisualizer;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static utils.Utils.SHIFT_LENGTH;
 
@@ -12,7 +30,63 @@ public class Main {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
-         Simulation simulation = new Simulation();
+
+        try {
+            TaxiRecommenderDomain domain = new TaxiRecommenderDomain();
+
+            //Graph<RoadNode, RoadEdge> graph = new Graph<>();
+            new Thread() {
+                @Override
+                public void run() {
+                    MapVisualizer.main(null);
+                }
+            }.start();
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+            for (EnvironmentEdge edge : domain.getEnvironment().getEnvironmentGraph().getEdges()){
+
+                MapVisualizer.addBetweenStatesLine(domain.getEnvironment().getOsmGraph().getNode(edge.getFromId()), domain.getEnvironment().getOsmGraph().getNode(edge.getToId()));
+
+            }
+
+            for (EnvironmentNode node : domain.getEnvironment().getEnvironmentGraph().getNodes()){
+                if (domain.getEnvironment().getOsmGraph().getNode(node.getNodeId()) != null){
+                    MapVisualizer.addRoadNodeToMap(domain.getEnvironment().getOsmGraph().getNode(node.getNodeId()));
+                }
+            }
+
+
+           /*for (Map.Entry<PickUpPointCentroid, List<TaxiTripPickupPlace>>  entry: KMeansEnvironment.clusters.entrySet()){
+                List<TaxiTripPickupPlace> hull =
+                        ConvexHullFinder.getConvexHull(KMeansEnvironment.clusters.get(entry.getKey()));
+                MapVisualizer.addHullPointsToMap(hull, entry.getKey());
+                MapVisualizer.addPickUpPointsToMap(KMeansEnvironment.clusters.get(entry.getKey()));
+            }
+
+            List<TaxiTripPickupPlace> pickupPlaces = TaxiRecommenderDomain.getTaxiTrips()
+                    .stream()
+                    .map(t -> new TaxiTripPickupPlace(t.getPickUpLongitude(), t.getPickUpLatitude()))
+                    .collect(Collectors.toList());
+
+            MapVisualizer.addPickUpPointsToMap(pickupPlaces);*/
+
+            try {
+                Thread.sleep(20000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+         /*Simulation simulation = new Simulation();
 
          double reward = 0;
          for (int i = 0; i < 1000; i++){
@@ -25,7 +99,7 @@ public class Main {
              simulation.clearSimulationResults();
          }
 
-        System.out.println(reward/1000);
+        System.out.println(reward/1000);*/
         /*TaxiRecommenderDomain taxiRecommenderDomainGenerator = new TaxiRecommenderDomain(
                 "prague_full.fst","prague_charging_stations_full.json",
                 new KMeansEnvironment());

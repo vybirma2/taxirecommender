@@ -3,10 +3,17 @@ package domain.environmentrepresentation.kmeansenvironment;
 import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
+import de.alsclo.voronoi.Voronoi;
+import de.alsclo.voronoi.graph.Edge;
+import de.alsclo.voronoi.graph.Point;
 import domain.environmentrepresentation.EnvironmentGraph;
+import domain.environmentrepresentation.EnvironmentNode;
+import domain.environmentrepresentation.gridenvironment.GridEnvironment;
+import domain.environmentrepresentation.gridenvironment.GridEnvironmentGraph;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPointCentroid;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.TaxiTripPickupPlace;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.TripToNode;
+import domain.environmentrepresentation.kmeansenvironment.kmeansenvironmentutils.ClusterGridCell;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
 import utils.DistanceGraphUtils;
@@ -16,6 +23,8 @@ import utils.Utils;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static utils.DistanceGraphUtils.getEuclideanDistance;
 
 
 public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNode, KMeansEnvironmentEdge> {
@@ -31,6 +40,8 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
     protected void setNodes() throws IOException, ClassNotFoundException {
         this.clusters = KMeansEnvironment.getClusters();
         createNodes();
+        DistanceGraphUtils.setNodes(getNodes());
+        DistanceGraphUtils.setGraph(this);
         setDistances();
         setNodeNeighbours();
     }
@@ -120,17 +131,22 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
     }
 
 
-    private void setNodeNeighbours(){
-        for (KMeansEnvironmentNode node : nodes.values()){
-            Set<Integer> neighbours = distanceSpeedTime.get(node.getNodeId())
-                    .stream()
-                    .filter(t -> t.getToNodeId() != node.getNodeId())
-                    .sorted()
-                    .limit(Utils.NUM_OF_NEIGHBOURS)
-                    .map(TripToNode::getToNodeId)
-                    .collect(Collectors.toSet());
+    private void setNodeNeighbours() {
+        Collection<Point> points = new ArrayList<>();
+        for (KMeansEnvironmentNode node : getNodes()){
+            points.add(new Point(node.getLongitude(), node.getLatitude()));
+        }
 
-            node.addNeighbours(neighbours);
+        Voronoi voronoi = new Voronoi(points);
+        de.alsclo.voronoi.graph.Graph graph = voronoi.getGraph();
+
+        List<Edge> collect = graph.edgeStream().collect(Collectors.toList());
+
+        for (Edge edge : collect){
+            EnvironmentNode fromNode = DistanceGraphUtils.chooseEnvironmentNode(edge.getSite1().x, edge.getSite1().y);
+            EnvironmentNode toNode = DistanceGraphUtils.chooseEnvironmentNode(edge.getSite2().x, edge.getSite2().y);
+            fromNode.addNeighbour(toNode.getNodeId());
+            toNode.addNeighbour(fromNode.getNodeId());
         }
     }
 }

@@ -111,10 +111,11 @@ public class NewYorkDataSetReader implements DataSetReader {
             return null;
         }
 
-        EnvironmentNode fromNode = DistanceGraphUtils.chooseEnvironmentNode(pickUpNode.getLongitude(), pickUpNode.getLatitude());
+        /*EnvironmentNode fromNode = DistanceGraphUtils.chooseEnvironmentNode(pickUpNode.getLongitude(), pickUpNode.getLatitude());
         EnvironmentNode toNode = DistanceGraphUtils.chooseEnvironmentNode(destinationNode.getLongitude(), destinationNode.getLatitude());
-
-        return new TaxiTrip(pickUpNode.getLongitude(), destinationNode.getLatitude(), distance,
-                tripLengthMinutes, startDate, finishDate, fromNode.getNodeId(), toNode.getNodeId());
+*/
+        return new TaxiTrip(pickUpNode.getLongitude(), destinationNode.getLatitude(), destinationNode.getLongitude(),
+                destinationNode.getLatitude(), distance, tripLengthMinutes, startDate, finishDate,
+                null, null);
     }
 }

@@ -156,6 +156,13 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>de.alsclo</groupId>
+            <artifactId>voronoi-java</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+
     </dependencies>
 
     <repositories>

@@ -5,9 +5,8 @@ import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
+import java.time.temporal.Temporal;
+import java.util.*;
 
 /**
  * Graph structure to plan on
@@ -51,6 +50,17 @@ public abstract class EnvironmentGraph<TNode extends EnvironmentNode, TEdge exte
 
     public Collection<TNode> getNodes() {
         return nodes.values();
+    }
+
+    public Collection<TEdge> getEdges(){
+        Set<TEdge> ed = new HashSet<>();
+
+        for (Map.Entry<Integer, HashMap<Integer, TEdge>> entry : edges.entrySet()){
+            for (Map.Entry<Integer, TEdge> edge : entry.getValue().entrySet()){
+                ed.add(edge.getValue());
+            }
+        }
+        return ed;
     }
 
 

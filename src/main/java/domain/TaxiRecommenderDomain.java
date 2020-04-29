@@ -118,9 +118,9 @@ public class TaxiRecommenderDomain implements Serializable {
     private void loadData() throws Exception {
         loadGraph();
 
-        setEnvironment();
-
         loadTaxiTripDataset();
+
+        setEnvironment();
 
         setParameterEstimator();
 
@@ -176,8 +176,10 @@ public class TaxiRecommenderDomain implements Serializable {
 
         this.environment.setOsmGraph(osmGraph);
 
-        DistanceGraphUtils.setNodes(this.environment.getEnvironmentNodes());
-        DistanceGraphUtils.setGraph(this.environment.getEnvironmentGraph());
+        for (TaxiTrip trip : taxiTrips){
+            trip.setFromEnvironmentNode(DistanceGraphUtils.chooseEnvironmentNode(trip.getPickUpLongitude(), trip.getPickUpLatitude()).getNodeId());
+            trip.setToEnvironmentNode(DistanceGraphUtils.chooseEnvironmentNode(trip.getDestinationLongitude(), trip.getDestinationLatitude()).getNodeId());
+        }
 
         stopTime  = System.nanoTime();
         System.out.println("Setting finished in " + (stopTime - startTime)/1000000000. + " s.");

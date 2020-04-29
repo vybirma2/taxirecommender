@@ -32,7 +32,7 @@ public class MapVisualizer extends Application {
     private static SimpleMarkerSymbol environmentNode = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000, 6.0f);
     private static SimpleMarkerSymbol chargingStation = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF00FF00, 6.0f);
     private static SimpleMarkerSymbol currentNode = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF800080, 15.0f);
-    private static SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH_DOT_DOT, 0xFFFF0000, 3);
+    private static SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF00FF00, 3);
 
 
     private static SimpleMarkerSymbol pickUpPointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF00FF00, 2.0f);
@@ -147,6 +147,7 @@ public class MapVisualizer extends Application {
 
 
     public static void addBetweenStatesLine(RoadNode fromNode, RoadNode toNode){
+
         PointCollection points = new PointCollection(SpatialReferences.getWgs84());
         points.add(fromNode.getLongitude(), fromNode.getLatitude());
         points.add(toNode.getLongitude(), toNode.getLatitude());

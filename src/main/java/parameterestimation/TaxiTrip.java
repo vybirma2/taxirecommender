@@ -13,21 +13,25 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
 
     private final double pickUpLongitude;
     private final double pickUpLatitude;
+    private final double destinationLongitude;
+    private final double destinationLatitude;
     private double distance;
     private final long tripLength;
     private final int tripEnergyConsumption;
 
-    private final int fromEnvironmentNode;
-    private final int toEnvironmentNode;
+    private Integer fromEnvironmentNode;
+    private Integer toEnvironmentNode;
 
 
     private final Date startDate;
     private final Date finishDate;
 
 
-    public TaxiTrip(double pickUpLongitude, double pickUpLatitude, double distance, long tripLength, Date startDate, Date finishDate, int fromNode, int toNode) {
+    public TaxiTrip(double pickUpLongitude, double pickUpLatitude, double destinationLongitude, double destinationLatitude, double distance, long tripLength, Date startDate, Date finishDate, Integer fromNode, Integer toNode) {
         this.pickUpLongitude = pickUpLongitude;
         this.pickUpLatitude = pickUpLatitude;
+        this.destinationLongitude = destinationLongitude;
+        this.destinationLatitude = destinationLatitude;
         this.distance = distance;
         this.tripLength = tripLength;
         this.startDate = startDate;
@@ -82,6 +86,21 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
         return EnergyConsumptionEstimator.getEnergyConsumption(this.distance);
     }
 
+    public void setFromEnvironmentNode(Integer fromEnvironmentNode) {
+        this.fromEnvironmentNode = fromEnvironmentNode;
+    }
+
+    public double getDestinationLongitude() {
+        return destinationLongitude;
+    }
+
+    public double getDestinationLatitude() {
+        return destinationLatitude;
+    }
+
+    public void setToEnvironmentNode(Integer toEnvironmentNode) {
+        this.toEnvironmentNode = toEnvironmentNode;
+    }
 
     @Override
     public String toString() {

@@ -27,7 +27,7 @@ public class PragueDataSetReader implements DataSetReader {
     @Override
     public ArrayList<TaxiTrip> readDataSet() throws IOException, ClassNotFoundException {
         File file = new File("data/programdata/liftago_prague.fst");
-        ArrayList<TaxiTrip> taxiTrips = null;
+        ArrayList<TaxiTrip> taxiTrips;
 
         if(!file.exists()) {
             taxiTrips = parseTaxiTripsFromOriginalDataFileAndSerialize(file);
@@ -51,7 +51,6 @@ public class PragueDataSetReader implements DataSetReader {
 
             while ((row = csvReader.readLine()) != null) {
                 if (numOfRows > 0){
-                    System.out.println(numOfRows);
                     TaxiTrip taxiTrip = parseTaxiTrip(row.split(","));
                     if (taxiTrip != null && taxiTrip.getTripLength() != 0){
                         taxiTrips.add(taxiTrip);
@@ -99,16 +98,16 @@ public class PragueDataSetReader implements DataSetReader {
             return null;
         }
 
-        EnvironmentNode fromNode = DistanceGraphUtils.chooseEnvironmentNode(pickUpLongitude, pickUpLatitude);
+        /*EnvironmentNode fromNode = DistanceGraphUtils.chooseEnvironmentNode(pickUpLongitude, pickUpLatitude);
         EnvironmentNode toNode = DistanceGraphUtils.chooseEnvironmentNode(destinationLongitude, destinationLatitude);
-
+*/
         Date startDate = dateFormat.parse(trip[6]);
         Date finishDate = dateFormat.parse(trip[7]);
 
         long tripLengthMilliseconds = Math.abs(finishDate.getTime() - startDate.getTime());
         long tripLengthMinutes = TimeUnit.MINUTES.convert(tripLengthMilliseconds, TimeUnit.MILLISECONDS);
 
-        return new TaxiTrip(pickUpLongitude, pickUpLatitude, distance,tripLengthMinutes, startDate, finishDate,
-                fromNode.getNodeId(), toNode.getNodeId());
+        return new TaxiTrip(pickUpLongitude, pickUpLatitude, destinationLongitude, destinationLatitude, distance,tripLengthMinutes, startDate, finishDate,
+                null, null);
     }
 }
