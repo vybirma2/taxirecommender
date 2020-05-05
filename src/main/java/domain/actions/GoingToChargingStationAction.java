@@ -1,10 +1,10 @@
 package domain.actions;
 
-import parameterestimation.EnergyConsumptionEstimator;
-import static utils.DistanceGraphUtils.getTripTime;
+import domain.parameterestimation.EnergyConsumptionEstimator;
+import static domain.utils.DistanceGraphUtils.getTripTime;
 
 /**
- * Action of going to charging station from some node in the Environment
+ * Action of going to domain.charging station from some node in the Environment
  */
 public class GoingToChargingStationAction extends MeasurableAction  {
 

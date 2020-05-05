@@ -1,10 +1,10 @@
 package domain.actions;
 
-import charging.ChargingConnection;
-import charging.ChargingStation;
-import charging.ChargingStationReader;
+import domain.charging.ChargingConnection;
+import domain.charging.ChargingStation;
+import domain.charging.ChargingStationReader;
 import domain.states.TaxiState;
-import utils.Utils;
+import domain.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,10 +12,10 @@ import java.util.List;
 
 
 import static domain.actions.ActionUtils.*;
-import static utils.Utils.NUM_OF_CHARGING_LENGTH_POSSIBILITIES;
+import static domain.utils.Utils.NUM_OF_CHARGING_LENGTH_POSSIBILITIES;
 
 /**
- * Class with the main purpose of returning the best available charging actions in given state.
+ * Class with the main purpose of returning the best available domain.charging actions in given state.
  */
 public class ChargingActionType extends TaxiActionType {
 
@@ -26,9 +26,9 @@ public class ChargingActionType extends TaxiActionType {
 
 
     /**
-     * Choosing the best available connection and producing charging actions of different length.
-     * @param state current previousState to be charging done in
-     * @return charging actions available in current previousState - equally divided into NUM_OF_CHARGING_LENGTH_POSSIBILITIES
+     * Choosing the best available connection and producing domain.charging actions of different length.
+     * @param state current previousState to be domain.charging done in
+     * @return domain.charging actions available in current previousState - equally divided into NUM_OF_CHARGING_LENGTH_POSSIBILITIES
      * intervals.
      */
     @Override

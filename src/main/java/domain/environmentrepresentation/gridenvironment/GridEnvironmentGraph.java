@@ -5,15 +5,15 @@ import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.environmentrepresentation.EnvironmentGraph;
-import utils.DistanceGraphUtils;
-import utils.DistanceSpeedPairTime;
-import utils.Utils;
+import domain.utils.DistanceGraphUtils;
+import domain.utils.DistanceSpeedPairTime;
+import domain.utils.Utils;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
-import static utils.DistanceGraphUtils.*;
+import static domain.utils.DistanceGraphUtils.*;
 
 /**
  * Grid world environment consisting of grid which cell consists of grid node to which original road nodes are fitted

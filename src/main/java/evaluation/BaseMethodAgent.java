@@ -1,14 +1,12 @@
 package evaluation;
 
-import domain.TaxiModel;
 import domain.TaxiRecommenderDomain;
 import domain.actions.ActionTypes;
 import domain.actions.MeasurableAction;
-import domain.environmentrepresentation.EnvironmentNode;
 import domain.states.TaxiState;
-import parameterestimation.ParameterEstimator;
-import parameterestimation.TaxiTrip;
-import utils.DistanceGraphUtils;
+import domain.parameterestimation.ParameterEstimator;
+import domain.parameterestimation.TaxiTrip;
+import domain.utils.DistanceGraphUtils;
 
 import java.util.HashMap;
 import java.util.LinkedList;

@@ -1,12 +1,12 @@
 package domain.actions;
 
 import domain.states.TaxiState;
-import parameterestimation.EnergyConsumptionEstimator;
+import domain.parameterestimation.EnergyConsumptionEstimator;
 
 import java.util.*;
 
 import static domain.actions.ActionUtils.*;
-import static utils.DistanceGraphUtils.getTripTime;
+import static domain.utils.DistanceGraphUtils.getTripTime;
 
 /**
  * Class with the main purpose of returning all available actions of moving to the neighbouring node in the environment.

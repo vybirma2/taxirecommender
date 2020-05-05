@@ -1,29 +1,9 @@
-import charging.ChargingStationReader;
-import cz.agents.multimodalstructures.edges.RoadEdge;
-import cz.agents.multimodalstructures.nodes.RoadNode;
-import de.alsclo.voronoi.Voronoi;
-import de.alsclo.voronoi.graph.Edge;
-import de.alsclo.voronoi.graph.Graph;
-import de.alsclo.voronoi.graph.Point;
 import domain.TaxiRecommenderDomain;
 import domain.environmentrepresentation.EnvironmentEdge;
 import domain.environmentrepresentation.EnvironmentNode;
-import domain.environmentrepresentation.gridenvironment.GridEnvironment;
-import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
-import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPointCentroid;
-import domain.environmentrepresentation.kmeansenvironment.kmeans.TaxiTripPickupPlace;
-import domain.environmentrepresentation.kmeansenvironment.kmeansenvironmentutils.ConvexHullFinder;
-import evaluation.Simulation;
-import parameterestimation.NewYorkLongitudeLatitudeReader;
-import utils.DistanceGraphUtils;
-import utils.GraphLoader;
 import visualization.MapVisualizer;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static utils.Utils.SHIFT_LENGTH;
 
 public class Main {
 

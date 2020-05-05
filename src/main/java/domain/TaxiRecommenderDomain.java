@@ -1,8 +1,8 @@
 package domain;
 
-import charging.ChargingStation;
-import charging.ChargingStationReader;
-import charging.DistanceChargingStationStateOrder;
+import domain.charging.ChargingStation;
+import domain.charging.ChargingStationReader;
+import domain.charging.DistanceChargingStationStateOrder;
 import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
@@ -15,19 +15,17 @@ import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
 import org.json.simple.parser.ParseException;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
-import parameterestimation.ParameterEstimator;
-import parameterestimation.TaxiTrip;
-import utils.*;
+import domain.parameterestimation.ParameterEstimator;
+import domain.parameterestimation.TaxiTrip;
+import domain.utils.*;
 import visualization.MapVisualizer;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static domain.actions.ActionTypes.*;
-import static utils.Utils.ENVIRONMENT;
-import static utils.Utils.INPUT_STATION_FILE_NAME;
+import static domain.utils.Utils.ENVIRONMENT;
+import static domain.utils.Utils.INPUT_STATION_FILE_NAME;
 
 /**
  * Class responsible for loading all needed data, creating all objects needed for planning and generating domain
@@ -50,7 +48,6 @@ public class TaxiRecommenderDomain implements Serializable {
     private final String chargingStationsInputFile;
 
     private ParameterEstimator parameterEstimator;
-    private TaxiModel taxiModel;
 
     private final ArrayList<HashMap<Integer, ArrayList<Integer>>> transitions = new ArrayList<>(Utils.NUM_OF_ACTION_TYPES);
 
@@ -73,7 +70,6 @@ public class TaxiRecommenderDomain implements Serializable {
     public void generateDomain() {
         try {
             loadData();
-            this.taxiModel =  new TaxiModel(actionTypes);
             addAllActionTypes();
         } catch (Exception e) {
             e.printStackTrace();
@@ -209,12 +205,12 @@ public class TaxiRecommenderDomain implements Serializable {
         long startTime;
         long stopTime;
 
-        System.out.println("Loading charging stations...");
+        System.out.println("Loading domain.charging stations...");
         startTime = System.nanoTime();
         chargingStations = new ArrayList<>(ChargingStationReader.readChargingStations(chargingStationsInputFileFullPath, chargingStationsInputFile));
         DistanceGraphUtils.setChargingStations(chargingStations);
         stopTime  = System.nanoTime();
-        System.out.println("Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + chargingStations.size() + " charging stations.");
+        System.out.println("Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + chargingStations.size() + " domain.charging stations.");
     }
 
 
@@ -222,7 +218,7 @@ public class TaxiRecommenderDomain implements Serializable {
         long startTime;
         long stopTime;
 
-        System.out.println( "Computing shortest paths to charging stations...");
+        System.out.println( "Computing shortest paths to domain.charging stations...");
         startTime = System.nanoTime();
         AllDistancesSpeedsPair allDistancesSpeedsPair = getChargingStationDistanceSpeedTime("distance_speed_" + Utils.DATA_SET_NAME);
         DistanceGraphUtils.setChargingStationDistancesSpeedTime(allDistancesSpeedsPair.getDistanceSpeedTime());
@@ -261,7 +257,7 @@ public class TaxiRecommenderDomain implements Serializable {
             // setting transitions between neighbouring nodes - action of going to next location, i.e. prob 1
             setToNextLocationTransitions(node);
 
-            // setting transitions between current node and all available charging stations
+            // setting transitions between current node and all available domain.charging stations
             trans = new ArrayList<>();
             this.transitions.get(GOING_TO_CHARGING_STATION.getValue()).put(node.getNodeId(), trans);
             for (ChargingStation station : chargingStations) {
@@ -316,11 +312,6 @@ public class TaxiRecommenderDomain implements Serializable {
         AllDistancesSpeedsPair result = (AllDistancesSpeedsPair) in.readObject();
         in.close();
         return result;
-    }
-
-
-    public TaxiModel getTaxiModel() {
-        return taxiModel;
     }
 
 

@@ -1,11 +1,9 @@
 package evaluation;
 
 
-import domain.TaxiModel;
 import domain.TaxiRecommenderDomain;
 import domain.actions.MeasurableAction;
 import domain.states.TaxiState;
-import parameterestimation.TaxiTrip;
 
 import java.util.List;
 

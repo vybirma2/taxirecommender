@@ -1,12 +1,12 @@
 package domain.actions;
 
 import domain.states.TaxiState;
-import parameterestimation.ParameterEstimator;
+import domain.parameterestimation.ParameterEstimator;
 
 import java.util.*;
 
 import static domain.actions.ActionUtils.*;
-import static utils.DistanceGraphUtils.getIntervalStart;
+import static domain.utils.DistanceGraphUtils.getIntervalStart;
 
 /**
  * Class with the main purpose of returning all available actions of picking up passenger in some node in the environment.

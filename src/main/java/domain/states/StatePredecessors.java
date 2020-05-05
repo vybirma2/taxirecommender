@@ -1,6 +1,6 @@
 package domain.states;
 
-import utils.Utils;
+import domain.utils.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;

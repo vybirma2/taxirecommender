@@ -1,19 +1,19 @@
 package domain.actions;
 
-import charging.ChargingStationReader;
-import charging.TripToChargingStation;
+import domain.charging.ChargingStationReader;
+import domain.charging.TripToChargingStation;
 import domain.states.TaxiState;
-import parameterestimation.EnergyConsumptionEstimator;
-import utils.Utils;
+import domain.parameterestimation.EnergyConsumptionEstimator;
+import domain.utils.Utils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static domain.actions.ActionUtils.*;
-import static utils.DistanceGraphUtils.getTripTime;
+import static domain.utils.DistanceGraphUtils.getTripTime;
 
 /**
- * Class with the main purpose of returning the best available actions of going to charging in given state.
+ * Class with the main purpose of returning the best available actions of going to domain.charging in given state.
  */
 public class GoingToChargingStationActionType extends TaxiActionType {
 
@@ -24,9 +24,9 @@ public class GoingToChargingStationActionType extends TaxiActionType {
 
 
     /**
-     * @param state Current state to go to charging station from
-     * @return NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO actions of going to charging stations chosen by defined
-     * charging station order - distance/prize...
+     * @param state Current state to go to domain.charging station from
+     * @return NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO actions of going to domain.charging stations chosen by defined
+     * domain.charging station order - distance/prize...
      */
     @Override
     public void addAsPredecessorToAllReachableStates(TaxiState state) {

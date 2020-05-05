@@ -1,9 +1,9 @@
 package domain.actions;
 
-import parameterestimation.EnergyConsumptionEstimator;
+import domain.parameterestimation.EnergyConsumptionEstimator;
 
 
-import static utils.DistanceGraphUtils.getTripTime;
+import static domain.utils.DistanceGraphUtils.getTripTime;
 
 /**
  * Action of going to nex location

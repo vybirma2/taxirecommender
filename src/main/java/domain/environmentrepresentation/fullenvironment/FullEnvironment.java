@@ -1,11 +1,8 @@
 package domain.environmentrepresentation.fullenvironment;
 
 import domain.environmentrepresentation.Environment;
-import parameterestimation.TaxiTrip;
-import utils.DistanceGraphUtils;
 
 import java.io.IOException;
-import java.util.List;
 
 
 public class FullEnvironment extends Environment<FullEnvironmentNode, FullEnvironmentEdge> {

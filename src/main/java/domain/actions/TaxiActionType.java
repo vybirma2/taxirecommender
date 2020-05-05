@@ -1,7 +1,7 @@
 package domain.actions;
 
 import domain.states.TaxiState;
-import evaluation.chargingrecommenderagent.ReachableStatesGenerator;
+import problemsolving.ChragingRecommender;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public abstract  class TaxiActionType implements Serializable {
 
-    private static ReachableStatesGenerator reachableStatesGenerator;
+    private static ChragingRecommender chragingRecommender;
     protected HashMap<Integer, ArrayList<Integer>> transitions;
     protected int actionId;
 
@@ -28,10 +28,10 @@ public abstract  class TaxiActionType implements Serializable {
         int resultNodeId = toNodeId;
 
         TaxiState newState = new TaxiState(resultNodeId, resultStateOfCharge, resultTimeStamp);
-        if (reachableStatesGenerator.getState(newState) == null){
+        if (chragingRecommender.getState(newState) == null){
             System.out.println("shgvf");
         }
-        reachableStatesGenerator.addPreviousStateConnection(reachableStatesGenerator.getState(newState).getId(), predecessor.getId(), actionId);
+        chragingRecommender.addPreviousStateConnection(chragingRecommender.getState(newState).getId(), predecessor.getId(), actionId);
     }
 
 
@@ -40,8 +40,8 @@ public abstract  class TaxiActionType implements Serializable {
         return actionId;
     }
 
-    public static void setReachableStatesGenerator(ReachableStatesGenerator statesGenerator){
-        reachableStatesGenerator = statesGenerator;
+    public static void setChragingRecommender(ChragingRecommender statesGenerator){
+        chragingRecommender = statesGenerator;
     }
 
 

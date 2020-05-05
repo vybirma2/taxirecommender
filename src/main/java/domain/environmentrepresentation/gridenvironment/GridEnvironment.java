@@ -3,12 +3,9 @@ package domain.environmentrepresentation.gridenvironment;
 import domain.environmentrepresentation.Environment;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
-import parameterestimation.TaxiTrip;
-import utils.DistanceGraphUtils;
-import utils.Utils;
+import domain.utils.Utils;
 
 import java.io.*;
-import java.util.List;
 
 
 /**

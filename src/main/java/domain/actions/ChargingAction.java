@@ -1,7 +1,7 @@
 package domain.actions;
 
-import charging.ChargingStationReader;
-import utils.Utils;
+import domain.charging.ChargingStationReader;
+import domain.utils.Utils;
 
 import java.util.Objects;
 

@@ -8,23 +8,18 @@ import de.alsclo.voronoi.graph.Edge;
 import de.alsclo.voronoi.graph.Point;
 import domain.environmentrepresentation.EnvironmentGraph;
 import domain.environmentrepresentation.EnvironmentNode;
-import domain.environmentrepresentation.gridenvironment.GridEnvironment;
-import domain.environmentrepresentation.gridenvironment.GridEnvironmentGraph;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPointCentroid;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.TaxiTripPickupPlace;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.TripToNode;
-import domain.environmentrepresentation.kmeansenvironment.kmeansenvironmentutils.ClusterGridCell;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
-import utils.DistanceGraphUtils;
-import utils.DistanceSpeedPairTime;
-import utils.Utils;
+import domain.utils.DistanceGraphUtils;
+import domain.utils.DistanceSpeedPairTime;
+import domain.utils.Utils;
 
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static utils.DistanceGraphUtils.getEuclideanDistance;
 
 
 public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNode, KMeansEnvironmentEdge> {

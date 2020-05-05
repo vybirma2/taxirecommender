@@ -1,24 +1,25 @@
 package evaluation;
 
 
-import charging.ChargingStationReader;
+import domain.actions.ActionTypes;
+import domain.actions.TaxiActionType;
+import domain.charging.ChargingStationReader;
 import domain.TaxiRecommenderDomain;
-import domain.TaxiRewardFunction;
+import problemsolving.TaxiRewardFunction;
 import domain.actions.MeasurableAction;
 import domain.states.TaxiState;
-import evaluation.chargingrecommenderagent.ChargingRecommenderAgent;
-import parameterestimation.EnergyConsumptionEstimator;
-import parameterestimation.ParameterEstimationUtils;
-import parameterestimation.TaxiTrip;
-import utils.DistanceGraphUtils;
-import utils.DistanceSpeedPairTime;
-import utils.Utils;
+import domain.parameterestimation.EnergyConsumptionEstimator;
+import domain.parameterestimation.ParameterEstimationUtils;
+import domain.parameterestimation.TaxiTrip;
+import domain.utils.DistanceGraphUtils;
+import domain.utils.DistanceSpeedPairTime;
+import domain.utils.Utils;
 import visualization.MapVisualizer;
 
 import java.io.IOException;
 import java.util.*;
 
-import static utils.Utils.*;
+import static domain.utils.Utils.*;
 
 
 public class Simulation {
@@ -32,7 +33,6 @@ public class Simulation {
     private List<Integer> tripDestinations = new ArrayList<>();
     private List<Integer> tripPickups = new ArrayList<>();
     private HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTrips;
-
 
     private double resultReward = 0;
 
@@ -80,7 +80,7 @@ public class Simulation {
                 continue;
             }
 
-            List<MeasurableAction> applicableActions = domainGenerator.getTaxiModel().allApplicableActionsFromState(currentState);
+            List<MeasurableAction> applicableActions = allApplicableActionsFromState(currentState);
 
             /*TaxiState state = new TaxiState(102701, 14, 712);
             domainGenerator.getTaxiModel().allApplicableActionsFromState(state);
@@ -157,6 +157,17 @@ public class Simulation {
         return false;
     }
 
+
+    public List<MeasurableAction> allApplicableActionsFromState(TaxiState state) {
+        List<MeasurableAction> result = new ArrayList<>();
+
+        for (TaxiActionType a : domainGenerator.getActionTypes()) {
+            if (a.getActionId() != ActionTypes.PICK_UP_PASSENGER.getValue()){
+                result.addAll(a.allApplicableActions(state));
+            }
+        }
+        return result;
+    }
 
     private SimulationTaxiTrip tripToDestination(){
         double randomNumber = Math.random();

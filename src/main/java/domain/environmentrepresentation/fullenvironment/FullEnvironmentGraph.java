@@ -1,15 +1,13 @@
 package domain.environmentrepresentation.fullenvironment;
 
-import cz.agents.basestructures.GPSLocation;
 import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.environmentrepresentation.EnvironmentGraph;
-import utils.DistanceGraphUtils;
+import domain.utils.DistanceGraphUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * Graph for FullEnvironment which copies the structure of the original graph parsed from OSM data

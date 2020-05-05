@@ -1,10 +1,10 @@
 package domain.actions;
 
-import utils.Utils;
+import domain.utils.Utils;
 import domain.states.TaxiState;
 
-import static parameterestimation.EnergyConsumptionEstimator.getActionEnergyConsumption;
-import static utils.Utils.*;
+import static domain.parameterestimation.EnergyConsumptionEstimator.getActionEnergyConsumption;
+import static domain.utils.Utils.*;
 
 /**
  * Class containing functions controlling whether concrete action is possible to do in given state

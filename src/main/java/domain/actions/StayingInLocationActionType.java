@@ -4,7 +4,7 @@ import domain.states.TaxiState;
 
 import java.util.*;
 
-import static utils.Utils.STAYING_INTERVAL;
+import static domain.utils.Utils.STAYING_INTERVAL;
 import static domain.actions.ActionUtils.shiftNotOver;
 
 /**

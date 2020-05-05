@@ -1,6 +1,6 @@
 package visualization;
 
-import charging.ChargingStation;
+import domain.charging.ChargingStation;
 import com.esri.arcgisruntime.geometry.*;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -10,7 +10,6 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import cz.agents.multimodalstructures.nodes.RoadNode;
-import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.EnvironmentNode;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPoint;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPointCentroid;

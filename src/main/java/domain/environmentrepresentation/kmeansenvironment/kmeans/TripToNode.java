@@ -1,9 +1,8 @@
 package domain.environmentrepresentation.kmeansenvironment.kmeans;
 
-import utils.DistanceSpeedPairTime;
+import domain.utils.DistanceSpeedPairTime;
 
 import java.io.Serializable;
-import java.util.Comparator;
 
 public class TripToNode implements Serializable, Comparable<TripToNode> {
     private DistanceSpeedPairTime distanceSpeedPairTime;

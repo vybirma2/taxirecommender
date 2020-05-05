@@ -1,6 +1,6 @@
 package domain.environmentrepresentation.kmeansenvironment.kmeans;
 
-import utils.DistanceGraphUtils;
+import domain.utils.DistanceGraphUtils;
 
 public class PickUpPlacesDistance {
     double getDistance(PickUpPoint place1, PickUpPoint place2){
