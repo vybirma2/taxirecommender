@@ -17,23 +17,33 @@ public class SimulationState {
         return nodeId;
     }
 
-    public void setNodeId(int nodeId) {
-        this.nodeId = nodeId;
-    }
-
     public int getTimeStamp() {
         return timeStamp;
-    }
-
-    public void increaseTimeStamp(int timeStamp) {
-        this.timeStamp = timeStamp;
     }
 
     public int getStateOfCharge() {
         return stateOfCharge;
     }
 
-    public void increaseStateOfCharge(int stateOfCharge) {
+
+    public void setNodeId(int nodeId) {
+        this.nodeId = nodeId;
+    }
+
+    public void setTimeStamp(int timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public void setStateOfCharge(int stateOfCharge) {
         this.stateOfCharge = stateOfCharge;
+    }
+
+    @Override
+    public String toString() {
+        return "SimulationState{" +
+                "nodeId=" + nodeId +
+                ", timeStamp=" + timeStamp +
+                ", stateOfCharge=" + stateOfCharge +
+                '}';
     }
 }

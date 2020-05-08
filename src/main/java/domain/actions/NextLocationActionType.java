@@ -25,14 +25,14 @@ public class NextLocationActionType extends TaxiActionType {
      * in TaxiRecommenderDomainGenerator - check on applicability - not running out of time/battery...
      */
     @Override
-    public void addAsPredecessorToAllReachableStates(TaxiState state) {
+    public void createConnections(TaxiState state) {
         ArrayList<Integer> trans = transitions.get(state.getNodeId());
 
         if (trans != null){
             for (int neighbour : trans){
                 int time = getTripTime(state.getNodeId(), neighbour);
                 if (this.applicableInState(state, neighbour, time)){
-                    addStateStateAsPreviousToState(state,neighbour, time,
+                    createConnectionBetweenStates(state,neighbour, time,
                             getConsumption(state.getNodeId(), neighbour), actionId);
                 }
             }

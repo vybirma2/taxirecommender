@@ -18,7 +18,7 @@ public class ActionUtils {
 
 
     public static boolean shiftNotOver(TaxiState state, int actionTime){
-        return state.getTimeStamp() + actionTime < Utils.SHIFT_LENGTH + SHIFT_START_TIME;
+        return state.getTimeStamp() + actionTime <= Utils.SHIFT_LENGTH + SHIFT_START_TIME;
     }
 
 

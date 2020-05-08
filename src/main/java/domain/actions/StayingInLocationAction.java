@@ -12,7 +12,7 @@ public class StayingInLocationAction extends MeasurableAction {
 
 
     @Override
-    public int getConsumption() {
+    public int getRestConsumption() {
         return 0;
     }
 
@@ -21,11 +21,16 @@ public class StayingInLocationAction extends MeasurableAction {
         return 0;
     }
 
+    @Override
+    public void setRestConsumption(int restConsumption) {
+
+    }
+
 
     @Override
     public MeasurableAction copy() {
         return new StayingInLocationAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId(),
-                this.getLength());
+                this.getTimeToFinish());
     }
 
 

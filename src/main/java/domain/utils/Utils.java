@@ -1,8 +1,6 @@
 package domain.utils;
 
 import domain.charging.*;
-import domain.environmentrepresentation.Environment;
-import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
 import domain.parameterestimation.DataSetReader;
 import domain.parameterestimation.PragueDataSetReader;
 
@@ -12,7 +10,7 @@ public class Utils {
 
     public static final int NUM_OF_CLUSTERS = 100;
 
-    public static final int SHIFT_LENGTH = 12 * 60;
+    public static final int SHIFT_LENGTH = 4 * 60;
     public static final int STARTING_STATE_OF_CHARGE = 20;
 
 
@@ -26,7 +24,7 @@ public class Utils {
 
     public static final int SIZE_OF_DATASET = 1000000;
 
-    public static final double TRIP_OFFER_PROBABILITY = 0.5;
+    public static final double TRIP_OFFER_PROBABILITY = 0.05;
 
     public static final int NUM_OF_NODES = NUM_OF_CLUSTERS + 123;
 
@@ -55,7 +53,8 @@ public class Utils {
 
     public static final double MAX_NODE_FITTING_DISTANCE = 0.2;
 
-    public static final Environment ENVIRONMENT = new KMeansEnvironment();
+    public static final String ENVIRONMENT = "kmeans";
+
     public static final DataSetReader DATA_SET_READER = new PragueDataSetReader();
     public static final String INPUT_GRAPH_FILE_NAME = "prague.fst";
     public static final String INPUT_STATION_FILE_NAME = "prague_charging_stations_full.json";

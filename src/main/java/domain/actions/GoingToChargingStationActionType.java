@@ -29,7 +29,7 @@ public class GoingToChargingStationActionType extends TaxiActionType {
      * domain.charging station order - distance/prize...
      */
     @Override
-    public void addAsPredecessorToAllReachableStates(TaxiState state) {
+    public void createConnections(TaxiState state) {
 
         List<Integer> trans = this.transitions.get(state.getNodeId());
 
@@ -38,7 +38,7 @@ public class GoingToChargingStationActionType extends TaxiActionType {
             for (Integer chargingStation : stations){
                 int time = getTripTime(state.getNodeId(), chargingStation);
                 if (this.applicableInState(state, chargingStation, time)){
-                    addStateStateAsPreviousToState(state,chargingStation, time,
+                    createConnectionBetweenStates(state,chargingStation, time,
                             getConsumption(state.getNodeId(), chargingStation), actionId);
                 }
             }

@@ -5,8 +5,8 @@ import domain.utils.DistanceSpeedPairTime;
 import java.io.Serializable;
 
 public class TripToNode implements Serializable, Comparable<TripToNode> {
-    private DistanceSpeedPairTime distanceSpeedPairTime;
-    private int toNodeId;
+    private final DistanceSpeedPairTime distanceSpeedPairTime;
+    private final int toNodeId;
 
     public TripToNode(int toNodeId, DistanceSpeedPairTime distanceSpeedPairTime) {
         this.distanceSpeedPairTime = distanceSpeedPairTime;

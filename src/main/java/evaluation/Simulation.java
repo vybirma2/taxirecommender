@@ -1,20 +1,18 @@
 package evaluation;
 
 
+import cz.agents.basestructures.Graph;
+import cz.agents.multimodalstructures.edges.RoadEdge;
+import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.actions.ActionTypes;
-import domain.actions.TaxiActionType;
-import domain.charging.ChargingStationReader;
-import domain.TaxiRecommenderDomain;
-import problemsolving.TaxiRewardFunction;
 import domain.actions.MeasurableAction;
-import domain.states.TaxiState;
-import domain.parameterestimation.EnergyConsumptionEstimator;
+import domain.actions.PickUpPassengerAction;
+import domain.charging.ChargingStationReader;
 import domain.parameterestimation.ParameterEstimationUtils;
 import domain.parameterestimation.TaxiTrip;
 import domain.utils.DistanceGraphUtils;
-import domain.utils.DistanceSpeedPairTime;
+import domain.utils.GraphLoader;
 import domain.utils.Utils;
-import visualization.MapVisualizer;
 
 import java.io.IOException;
 import java.util.*;
@@ -26,153 +24,164 @@ public class Simulation {
 
     private Agent agent;
 
-    TaxiRecommenderDomain domainGenerator;
-
-
-    private TaxiState currentState;
-    private List<Integer> tripDestinations = new ArrayList<>();
-    private List<Integer> tripPickups = new ArrayList<>();
-    private HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTrips;
+    private SimulationState currentState;
+    private HashMap<Integer, ArrayList<TaxiTrip>>taxiTrips;
+    private Graph<RoadNode, RoadEdge> osmGraph;
+    private List<RoadNode> nodes;
 
     private double resultReward = 0;
 
+    private MeasurableAction actionInProgress = null;
+    private List<Integer> nodesOnPath = null;
 
-    public Simulation() throws IOException, ClassNotFoundException {
+
+    public Simulation() {
         initSimulation();
     }
 
 
-    private void initSimulation() throws IOException, ClassNotFoundException {
-        domainGenerator = new TaxiRecommenderDomain();
-        currentState = new TaxiState(domainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getNodeId(),
-                STARTING_STATE_OF_CHARGE, SHIFT_START_TIME);
+    private void initSimulation() {
+        try {
+            osmGraph = GraphLoader.loadGraph("data/graphs/" + INPUT_GRAPH_FILE_NAME);
+            DistanceGraphUtils.setOsmGraph(osmGraph);
+            nodes = new ArrayList<>(osmGraph.getAllNodes());
+            currentState = new SimulationState(getRandomNode().getId(), SHIFT_START_TIME, STARTING_STATE_OF_CHARGE);
+            initTripChoosing();
+            String chargingStationsInputFileFullPath = "data/chargingstations/" + INPUT_STATION_FILE_NAME;
+            ChargingStationReader.readChargingStations(chargingStationsInputFileFullPath, INPUT_STATION_FILE_NAME);
 
-        initTripChoosing();
-
-        this.agent = new BaseMethodAgent(domainGenerator.getParameterEstimator(), currentState);
+            this.agent = new ChargingRecommenderAgent(osmGraph);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initTripChoosing(){
-        timeSortedTrips = ParameterEstimationUtils.getTimeSortedTrips(TaxiRecommenderDomain.getTaxiTrips());
+        try {
+            taxiTrips = ParameterEstimationUtils.getTimeSortedTrips(DATA_SET_READER.readDataSet());
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
+
+
+    private RoadNode getRandomNode(){
+        Collections.shuffle(nodes);
+        return nodes.get(0);
+    }
+
 
     public void clearSimulationResults(){
         resultReward = 0;
-        currentState = new TaxiState(domainGenerator.getEnvironment().getEnvironmentNodes().iterator().next().getNodeId(),
-                STARTING_STATE_OF_CHARGE, SHIFT_START_TIME);
-        this.agent.setCurrentState(currentState);
+        currentState = new SimulationState(getRandomNode().getId(), 60 * SHIFT_START_TIME, STARTING_STATE_OF_CHARGE);
+        actionInProgress = null;
+        nodesOnPath = null;
+       // ((BaseMethodAgent)this.agent).setInChargingStation(false);
+       // ((BaseMethodAgent)this.agent).setNotChargingPreviously(false);
+
+        //this.agent = new ChargingRecommenderAgent(osmGraph);
     }
+
 
     public void startSimulation() {
-       // visualizeEnvironment();
+
+        for (int timeStamp = SHIFT_START_TIME; timeStamp < SHIFT_START_TIME + SHIFT_LENGTH; timeStamp++){
+            currentState.setTimeStamp(timeStamp);
+
+            if (isActionInProgress()){
+                doStepInActionInProgress();
+            }
+
+            if (!isActionInProgress()){
+                if (actionInProgress != null){
+                    finishActionInProgress();
+                }
+                startInProgressAction(agent.getAction(currentState));
+            }
+
+            if (tripOfferPossibleProgress()){
+                tryToOfferTripIfAvailable();
+            }
+
+        }
+
+    }
+
+
+    private boolean tripOfferPossibleProgress(){
+        return actionInProgress != null && actionInProgress.getActionId() != ActionTypes.PICK_UP_PASSENGER.getValue()
+                && actionInProgress.getActionId() != ActionTypes.GOING_TO_CHARGING_STATION.getValue()
+                && actionInProgress.getActionId() != ActionTypes.CHARGING_IN_CHARGING_STATION.getValue();
+    }
+
+
+    private void startInProgressAction(MeasurableAction action){
+        System.out.println("starting action: " + ActionTypes.getNameOfAction(action.getActionId()));
+        printSimulationStep();
+        actionInProgress = action;
+        if (action.getActionId() == ActionTypes.PICK_UP_PASSENGER.getValue()){
+            if (currentState.getNodeId() != action.getFromNodeId()){
+                nodesOnPath = DistanceGraphUtils.aStar(currentState.getNodeId(), action.getFromNodeId());
+                nodesOnPath.addAll(DistanceGraphUtils.aStar(action.getFromNodeId(), action.getToNodeId()));
+            } else {
+                nodesOnPath = DistanceGraphUtils.aStar(action.getFromNodeId(), action.getToNodeId());
+            }
+        }else {
+            nodesOnPath = DistanceGraphUtils.aStar(currentState.getNodeId(), action.getToNodeId());
+        }
+    }
+
+
+    private void finishActionInProgress(){
+        System.out.println("finishing action: " + ActionTypes.getNameOfAction(actionInProgress.getActionId()));
         printSimulationStep();
 
-        while (currentState.getTimeStamp() <= SHIFT_START_TIME + SHIFT_LENGTH){
-           // MapVisualizer.setCurrentStateNode(domainGenerator.getEnvironment().getOsmGraph().getNode(currentState.getNodeId()));
-
-            /*try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
-
-            if (tripDone()){
-                continue;
-            }
-
-            List<MeasurableAction> applicableActions = allApplicableActionsFromState(currentState);
-
-            /*TaxiState state = new TaxiState(102701, 14, 712);
-            domainGenerator.getTaxiModel().allApplicableActionsFromState(state);
-*/
-
-            if (applicableActions.isEmpty()){
-                return;
-            }
-            MeasurableAction actionDone = agent.chooseAction(currentState, applicableActions);
-            applyAction(actionDone);
-
-            printSimulationStep(actionDone);
-        }
+        currentState.setNodeId(actionInProgress.getToNodeId());
+        currentState.setStateOfCharge(currentState.getStateOfCharge() + actionInProgress.getRestConsumption());
+        this.resultReward += actionInProgress.getReward();
     }
 
-    private void visualizeEnvironment(){
+    private boolean isActionInProgress(){
+        return actionInProgress != null && actionInProgress.getTimeToFinish() > 0;
+    }
 
-        new Thread() {
-            @Override
-            public void run() {
-                MapVisualizer.main(null);
-            }
-        }.start();
 
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    private void doStepInActionInProgress(){
+        actionInProgress.setTimeToFinish(actionInProgress.getTimeToFinish() - 1);
+        double timeRatio = (actionInProgress.getActionTime() - actionInProgress.getTimeToFinish())/(double)actionInProgress.getActionTime();
+
+        if (nodesOnPath != null && !nodesOnPath.isEmpty()){
+            currentState.setNodeId(nodesOnPath.get((int) Math.round(timeRatio*(nodesOnPath.size() - 1))));
         }
+        int consumption = (int)Math.round(timeRatio * actionInProgress.getRestConsumption());
+        currentState.setStateOfCharge(currentState.getStateOfCharge() + consumption);
+        actionInProgress.setRestConsumption(actionInProgress.getRestConsumption() - consumption);
+    }
 
-        MapVisualizer.initSimulation(domainGenerator.getEnvironment().getEnvironmentNodes(), ChargingStationReader.getChargingStations());
 
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+    private void doStepIn(){
 
     }
 
 
-    private void applyAction(MeasurableAction action){
-        currentState.setNodeId(action.getToNodeId());
-        currentState.setStateOfCharge(currentState.getStateOfCharge() + action.getConsumption());
-        currentState.setTimeStamp(currentState.getTimeStamp() + action.getLength());
-        this.resultReward += action.getReward();
-    }
-
-
-    private boolean tripDone(){
-        SimulationTaxiTrip trip = tripToDestination();
+    private void tryToOfferTripIfAvailable() {
+        SimulationTaxiTrip trip = availableTrip();
 
         if (trip != null) {
             if (agent.tripOffer(currentState, trip)) {
-                int tripDistance = new Double(trip.getDistance()).intValue();
-                int tripConsumption = trip.getTripEnergyConsumption();
-                int tripTime = new Double(trip.getTripLength()).intValue();
-                double tripReward = TaxiRewardFunction.getTripReward(tripDistance);
-                DistanceSpeedPairTime toPickUpPath = DistanceGraphUtils.getDistanceSpeedPairOfPath(DistanceGraphUtils.aStar(currentState.getNodeId(), trip.getFromEnvironmentNode()));
-
-                this.resultReward += tripReward;
-
-                currentState.setNodeId(trip.getToEnvironmentNode());
-
-                currentState.setTimeStamp(currentState.getTimeStamp() + tripTime + toPickUpPath.getTime());
-
-                currentState.setStateOfCharge(currentState.getStateOfCharge() + tripConsumption + EnergyConsumptionEstimator.getEnergyConsumption(toPickUpPath.getDistance()));
-
-                printSimulationStep(trip.getToEnvironmentNode(), tripDistance, tripTime, tripConsumption, tripReward);
-                return true;
+                startInProgressAction(new PickUpPassengerAction(currentState.getNodeId(),
+                        new Double(trip.getDistance()).intValue(), ActionTypes.PICK_UP_PASSENGER.getValue(),
+                        trip.getFromNode(), trip.getToNode(), (int) trip.getTripLength()));
             }
         }
-        return false;
     }
 
 
-    public List<MeasurableAction> allApplicableActionsFromState(TaxiState state) {
-        List<MeasurableAction> result = new ArrayList<>();
 
-        for (TaxiActionType a : domainGenerator.getActionTypes()) {
-            if (a.getActionId() != ActionTypes.PICK_UP_PASSENGER.getValue()){
-                result.addAll(a.allApplicableActions(state));
-            }
-        }
-        return result;
-    }
-
-    private SimulationTaxiTrip tripToDestination(){
+    private SimulationTaxiTrip availableTrip(){
         double randomNumber = Math.random();
 
-        if (randomNumber > Utils.TRIP_OFFER_PROBABILITY){
+        if (randomNumber < Utils.TRIP_OFFER_PROBABILITY){
             return chooseTrip();
         } else {
             return null;
@@ -182,12 +191,16 @@ public class Simulation {
 
     private SimulationTaxiTrip chooseTrip(){
         int intervalStart = DistanceGraphUtils.getIntervalStart(currentState.getTimeStamp());
-        List<TaxiTrip> trips = timeSortedTrips.get(intervalStart);
+        ArrayList<TaxiTrip> trips = taxiTrips.get(intervalStart);
         Collections.shuffle(trips);
         TaxiTrip result = trips.get(0);
 
-        return new SimulationTaxiTrip(result.getDistance(), result.getTripLength(),result.getTripEnergyConsumption(),
-                result.getFromEnvironmentNode(), result.getToEnvironmentNode());
+        if (result.getFromOSMNode() == result.getToOSMNode()){
+            return null;
+        }
+
+        return new SimulationTaxiTrip(result.getDistance(), result.getTripLength(), result.getTripEnergyConsumption(),
+                result.getFromOSMNode(), result.getToOSMNode());
     }
 
     private void printSimulationStep(MeasurableAction action){

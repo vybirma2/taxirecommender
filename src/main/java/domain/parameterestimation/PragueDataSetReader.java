@@ -106,6 +106,6 @@ public class PragueDataSetReader implements DataSetReader {
         long tripLengthMinutes = TimeUnit.MINUTES.convert(tripLengthMilliseconds, TimeUnit.MILLISECONDS);
 
         return new TaxiTrip(pickUpLongitude, pickUpLatitude, destinationLongitude, destinationLatitude, distance,tripLengthMinutes, startDate, finishDate,
-                null, null);
+                null, null, pickUpNode.getId(), destinationNode.getId());
     }
 }

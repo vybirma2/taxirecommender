@@ -3,9 +3,11 @@ package domain.environmentrepresentation;
 import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
+import domain.parameterestimation.TaxiTrip;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,12 +18,14 @@ import java.util.Set;
  */
 public abstract class Environment<TNode extends EnvironmentNode, TEdge extends EnvironmentEdge> {
 
-    private static Graph<RoadNode, RoadEdge> osmGraph;
+    private final Graph<RoadNode, RoadEdge> osmGraph;
     protected EnvironmentGraph<TNode, TEdge> environmentGraph;
+    protected List<TaxiTrip> trainingDataSet;
 
 
-    public void setOsmGraph(Graph<RoadNode, RoadEdge> osmGraph) throws IOException, ClassNotFoundException {
-        Environment.osmGraph = osmGraph;
+    public Environment(Graph<RoadNode, RoadEdge> osmGraph, List<TaxiTrip> trainingDataSet) {
+        this.osmGraph = osmGraph;
+        this.trainingDataSet = trainingDataSet;
         setEnvironmentGraph();
     }
 
@@ -30,31 +34,27 @@ public abstract class Environment<TNode extends EnvironmentNode, TEdge extends E
         return osmGraph;
     }
 
-
     public EnvironmentGraph<TNode, TEdge> getEnvironmentGraph() {
         return environmentGraph;
     }
-
 
     public Collection<TNode> getEnvironmentNodes() {
         return this.environmentGraph.getNodes();
     }
 
-
     public Set<Integer> getNodes() {
         return this.environmentGraph.getNodeIds();
     }
 
+    public double getNodeLongitude(int nodeId){
+        return osmGraph.getNode(nodeId).getLongitude();
+    }
 
-    protected abstract void setEnvironmentGraph() throws IOException, ClassNotFoundException;
-
-
-    public static double getNodeLongitude(int nodeId){
-        return Environment.osmGraph.getNode(nodeId).getLongitude();
+    public double getNodeLatitude(int nodeId){
+        return osmGraph.getNode(nodeId).getLatitude();
     }
 
 
-    public static double getNodeLatitude(int nodeId){
-        return Environment.osmGraph.getNode(nodeId).getLatitude();
-    }
+    protected abstract void setEnvironmentGraph();
 }
+

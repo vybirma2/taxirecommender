@@ -3,6 +3,10 @@ package domain.environmentrepresentation.kmeansenvironment.kmeans;
 
 import java.util.*;
 
+/**
+ * K-means algorithm modification of implementation on https://www.baeldung.com/java-k-means-clustering-algorithm
+ * K-means++ initialization modification of implementation on https://www.geeksforgeeks.org/ml-k-means-algorithm/
+ * */
 public class KMeansAlgorithm {
     private static final Random random = new Random();
 
@@ -78,8 +82,6 @@ public class KMeansAlgorithm {
     }
 
 
-
-
     private static PickUpPointCentroid findTheNearestCentroid(TaxiTripPickupPlace pickupPlace,
                                                               List<PickUpPointCentroid> centroids,
                                                               PickUpPlacesDistance distance){
@@ -99,13 +101,11 @@ public class KMeansAlgorithm {
         return nearest;
     }
 
-
     private static List<PickUpPointCentroid> kMeansPPInit(List<TaxiTripPickupPlace> pickupPlaces, int numOfCentroids, PickUpPlacesDistance distance) {
         List<PickUpPointCentroid> centroids = new ArrayList<>();
         int placeIndex = random.nextInt(pickupPlaces.size());
 
         centroids.add(createCentroid(pickupPlaces.get(placeIndex).getLongitude(), pickupPlaces.get(placeIndex).getLatitude()));
-
 
         for (int i = 0; i < numOfCentroids - 1; i++){
 

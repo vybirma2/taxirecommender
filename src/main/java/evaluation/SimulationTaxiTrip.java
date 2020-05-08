@@ -5,15 +5,15 @@ public class SimulationTaxiTrip {
     private final long tripLength;
     private final int tripEnergyConsumption;
 
-    private final int fromEnvironmentNode;
-    private final int toEnvironmentNode;
+    private final int fromNode;
+    private final int toNode;
 
-    public SimulationTaxiTrip(double distance, long tripLength, int tripEnergyConsumption, int fromEnvironmentNode, int toEnvironmentNode) {
+    public SimulationTaxiTrip(double distance, long tripLength, int tripEnergyConsumption, int fromNode, int toNode) {
         this.distance = distance;
         this.tripLength = tripLength;
         this.tripEnergyConsumption = tripEnergyConsumption;
-        this.fromEnvironmentNode = fromEnvironmentNode;
-        this.toEnvironmentNode = toEnvironmentNode;
+        this.fromNode = fromNode;
+        this.toNode = toNode;
     }
 
 
@@ -29,11 +29,11 @@ public class SimulationTaxiTrip {
         return tripEnergyConsumption;
     }
 
-    public int getFromEnvironmentNode() {
-        return fromEnvironmentNode;
+    public int getFromNode() {
+        return fromNode;
     }
 
-    public int getToEnvironmentNode() {
-        return toEnvironmentNode;
+    public int getToNode() {
+        return toNode;
     }
 }

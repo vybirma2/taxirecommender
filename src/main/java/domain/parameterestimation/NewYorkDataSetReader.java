@@ -114,6 +114,6 @@ public class NewYorkDataSetReader implements DataSetReader {
 */
         return new TaxiTrip(pickUpNode.getLongitude(), destinationNode.getLatitude(), destinationNode.getLongitude(),
                 destinationNode.getLatitude(), distance, tripLengthMinutes, startDate, finishDate,
-                null, null);
+                null, null, pickUpNode.getId(), destinationNode.getId());
     }
 }

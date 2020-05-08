@@ -1,17 +1,19 @@
 package domain.environmentrepresentation;
 
+import cz.agents.multimodalstructures.nodes.RoadNode;
+
 import java.io.Serializable;
 import java.util.Set;
 
 public abstract class EnvironmentNode implements Serializable {
 
     protected Set<Integer> neighbours;
-    private final int nodeId;
+    private final RoadNode node;
 
 
-    public EnvironmentNode(int nodeId, Set<Integer> neighbours) {
+    public EnvironmentNode(RoadNode node, Set<Integer> neighbours) {
         this.neighbours = neighbours;
-        this.nodeId = nodeId;
+        this.node = node;
     }
 
 
@@ -20,26 +22,23 @@ public abstract class EnvironmentNode implements Serializable {
     }
 
     public int getNodeId() {
-        return nodeId;
+        return node.getId();
     }
 
     public void addNeighbour(int neighbour){
         neighbours.add(neighbour);
     }
 
-
     public void addNeighbours(Set<Integer> neighbours){
         this.neighbours.addAll(neighbours);
     }
 
-
     public double getLatitude() {
-        return Environment.getNodeLatitude(nodeId);
+        return node.getLatitude();
     }
 
-
     public double getLongitude() {
-        return Environment.getNodeLongitude(nodeId);
+        return node.getLongitude();
     }
 
     public void setNeighbours(Set<Integer> neighbours) {

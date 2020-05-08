@@ -129,7 +129,7 @@ public class ParameterEstimationUtils {
      * @param taxiTrips
      * @return taxi trips sorted into estimation intervals according to the estimation_interval_length
      */
-    public static HashMap<Integer, ArrayList<TaxiTrip>> getTimeSortedTrips(ArrayList<TaxiTrip> taxiTrips){
+    public static HashMap<Integer, ArrayList<TaxiTrip>> getTimeSortedTrips(List<TaxiTrip> taxiTrips){
         int estimationTime = Utils.SHIFT_START_TIME;
         HashMap<Integer, ArrayList<TaxiTrip>> timeSortedTaxiTrips = new HashMap<>();
         ArrayList<TaxiTrip> trips = new ArrayList<>();

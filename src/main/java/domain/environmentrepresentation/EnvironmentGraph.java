@@ -20,7 +20,7 @@ public abstract class EnvironmentGraph<TNode extends EnvironmentNode, TEdge exte
     protected HashMap<Integer, HashMap<Integer, TEdge>> edges;
 
 
-    public EnvironmentGraph(Graph<RoadNode, RoadEdge> osmGraph) throws IOException, ClassNotFoundException {
+    public EnvironmentGraph(Graph<RoadNode, RoadEdge> osmGraph) {
         this.osmGraph = osmGraph;
         System.out.println("Setting environment nodes...");
         setNodes();
@@ -30,23 +30,14 @@ public abstract class EnvironmentGraph<TNode extends EnvironmentNode, TEdge exte
         System.out.println("Setting finished.");
     }
 
-
-    protected abstract void setNodes() throws IOException, ClassNotFoundException;
-
-
-    protected abstract void setEdges();
-
-
     public TNode getNode(int nodeId){
         return nodes.get(nodeId);
     }
-
 
     public EnvironmentEdge getEdge(int fromNode, int toNode){
         HashMap<Integer, TEdge> fromNodeEdges = edges.get(fromNode);
         return fromNodeEdges != null ? edges.get(fromNode).get(toNode) : null;
     }
-
 
     public Collection<TNode> getNodes() {
         return nodes.values();
@@ -63,10 +54,14 @@ public abstract class EnvironmentGraph<TNode extends EnvironmentNode, TEdge exte
         return ed;
     }
 
-
     public Set<Integer> getNodeIds(){
         return nodes.keySet();
     }
+
+
+    protected abstract void setNodes();
+
+    protected abstract void setEdges();
 }
 
 

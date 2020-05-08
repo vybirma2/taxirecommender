@@ -1,6 +1,7 @@
 import domain.TaxiRecommenderDomain;
 import domain.environmentrepresentation.EnvironmentEdge;
 import domain.environmentrepresentation.EnvironmentNode;
+import evaluation.Simulation;
 import visualization.MapVisualizer;
 
 import java.io.IOException;
@@ -8,10 +9,25 @@ import java.io.IOException;
 public class Main {
 
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) {
+
+        Simulation simulation = new Simulation();
+        double reward = 0;
+        for (int i = 0; i < 100; i++){
+            System.out.println(i);
+            simulation.startSimulation();
+            reward += simulation.getResultReward();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            simulation.clearSimulationResults();
+        }
+
+        System.out.println(reward/100);
 
 
-        try {
+        /*try {
             TaxiRecommenderDomain domain = new TaxiRecommenderDomain();
 
             //Graph<RoadNode, RoadEdge> graph = new Graph<>();
@@ -42,7 +58,7 @@ public class Main {
             }
 
 
-           /*for (Map.Entry<PickUpPointCentroid, List<TaxiTripPickupPlace>>  entry: KMeansEnvironment.clusters.entrySet()){
+           for (Map.Entry<PickUpPointCentroid, List<TaxiTripPickupPlace>>  entry: KMeansEnvironment.clusters.entrySet()){
                 List<TaxiTripPickupPlace> hull =
                         ConvexHullFinder.getConvexHull(KMeansEnvironment.clusters.get(entry.getKey()));
                 MapVisualizer.addHullPointsToMap(hull, entry.getKey());
@@ -54,7 +70,7 @@ public class Main {
                     .map(t -> new TaxiTripPickupPlace(t.getPickUpLongitude(), t.getPickUpLatitude()))
                     .collect(Collectors.toList());
 
-            MapVisualizer.addPickUpPointsToMap(pickupPlaces);*/
+            MapVisualizer.addPickUpPointsToMap(pickupPlaces);
 
             try {
                 Thread.sleep(20000);
@@ -65,21 +81,15 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
+*/
 
-         /*Simulation simulation = new Simulation();
 
-         double reward = 0;
-         for (int i = 0; i < 1000; i++){
-             simulation.startSimulation();
-             reward += simulation.getResultReward();
-             System.out.println();
-             System.out.println();
-             System.out.println();
-             System.out.println();
-             simulation.clearSimulationResults();
-         }
+         /*double reward = 0;
+         */
 
-        System.out.println(reward/1000);*/
+/*
+        System.out.println(reward/1000);
+*/
         /*TaxiRecommenderDomain taxiRecommenderDomainGenerator = new TaxiRecommenderDomain(
                 "prague_full.fst","prague_charging_stations_full.json",
                 new KMeansEnvironment());

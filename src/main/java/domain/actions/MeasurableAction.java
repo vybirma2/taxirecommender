@@ -1,5 +1,7 @@
 package domain.actions;
 
+import domain.parameterestimation.EnergyConsumptionEstimator;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -11,15 +13,17 @@ public abstract class MeasurableAction implements Serializable {
     private int actionId;
     private int fromNodeId;
     private int toNodeId;
-    private int length;
+    private int actionTime;
+    private int timeToFinish;
 
 
-    public MeasurableAction(int actionId, int fromNodeId, int toNodeId, int length) {
+    public MeasurableAction(int actionId, int fromNodeId, int toNodeId, int actionTime) {
         this.id = ids++;
         this.actionId = actionId;
         this.fromNodeId = fromNodeId;
         this.toNodeId = toNodeId;
-        this.length = length;
+        this.actionTime = actionTime;
+        this.timeToFinish = actionTime;
     }
 
 
@@ -37,19 +41,25 @@ public abstract class MeasurableAction implements Serializable {
         return toNodeId;
     }
 
-
-    public int getLength() {
-        return length;
+    public int getActionTime() {
+        return actionTime;
     }
 
+    public int getTimeToFinish() {
+        return timeToFinish;
+    }
+
+    public void setTimeToFinish(int timeToFinish){this.timeToFinish = timeToFinish;}
 
     public int getId(){
         return id;
     }
 
 
-    public abstract int getConsumption();
+
+    public abstract int getRestConsumption();
     public abstract double getReward();
+    public abstract void setRestConsumption(int restConsumption);
 
 
 
@@ -80,6 +90,6 @@ public abstract class MeasurableAction implements Serializable {
     public String toString() {
         return "fromNodeId: " + fromNodeId +
                 ", toNodeId: " + toNodeId +
-                ", length: " + length;
+                ", length: " + timeToFinish;
     }
 }

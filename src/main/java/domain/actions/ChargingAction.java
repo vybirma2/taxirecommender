@@ -11,11 +11,14 @@ import java.util.Objects;
 public class ChargingAction extends MeasurableAction {
 
     private final int connectionId;
-
+    private int restConsumption;
+    private int consumption;
 
     public ChargingAction(int actionId, int fromNodeId, int toNodeId, int length, int connectionId) {
         super(actionId, fromNodeId, toNodeId, length);
         this.connectionId = connectionId;
+        restConsumption = (int)(((ChargingStationReader.getChargingConnection(connectionId).getPowerKW()*(getTimeToFinish()/60.))/Utils.BATTERY_CAPACITY)*100.);
+        consumption= restConsumption;
     }
 
 
@@ -25,29 +28,29 @@ public class ChargingAction extends MeasurableAction {
 
 
     private double getChargingCost(){
-        return -Utils.COST_FOR_KW * (Utils.BATTERY_CAPACITY*(this.getConsumption()/100.));
+        return -Utils.COST_FOR_KW * (Utils.BATTERY_CAPACITY*(consumption/100.));
     }
 
 
     @Override
     public MeasurableAction copy() {
         return new ChargingAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId(),
-                this.getLength(), connectionId);
+                this.getTimeToFinish(), connectionId);
     }
 
 
     @Override
     public boolean equals(Object o) {
         ChargingAction that = (ChargingAction) o;
-        return this.getLength() == that.getLength() &&
+        return this.getTimeToFinish() == that.getTimeToFinish() &&
                 this.getFromNodeId() == that.getFromNodeId() &&
                 connectionId == that.connectionId;
     }
 
 
     @Override
-    public int getConsumption() {
-        return (int)(((ChargingStationReader.getChargingConnection(connectionId).getPowerKW()*(getLength()/60.))/Utils.BATTERY_CAPACITY)*100.);
+    public int getRestConsumption() {
+        return restConsumption;
     }
 
     @Override
@@ -56,8 +59,13 @@ public class ChargingAction extends MeasurableAction {
     }
 
     @Override
+    public void setRestConsumption(int restConsumption) {
+        this.restConsumption = restConsumption;
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(this.getActionId(), this.getFromNodeId(), this.getToNodeId(), this.getLength(), connectionId);
+        return Objects.hash(this.getActionId(), this.getFromNodeId(), this.getToNodeId(), this.getTimeToFinish(), connectionId);
     }
 
     @Override

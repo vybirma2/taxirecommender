@@ -1,9 +1,13 @@
 package domain.charging;
 
+import domain.parameterestimation.ParameterEstimator;
 import domain.states.TaxiState;
 import domain.utils.DistanceSpeedPairTime;
 import domain.utils.Utils;
+import org.nustaq.serialization.FSTObjectInput;
+import org.nustaq.serialization.FSTObjectOutput;
 
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,18 +40,41 @@ public class DistanceChargingStationStateOrder implements ChargingStationStateOr
 
     private void computeOrders(){
         Set<Integer> chargingStations = chargingStationDistanceSpeedTime.keySet();
-        this.orders = new HashMap<>();
+        File file = new File("data/programdata/chargingOrders" + Utils.ENVIRONMENT +
+                "" + Utils.NUM_OF_CLUSTERS + ".fst");
+        if (!file.exists()) {
+            this.orders = new HashMap<>();
 
-        for (Integer node : nodes){
-            List<Integer> list = chargingStations
-                                        .stream()
-                                        .map(station -> new TripToChargingStation(node, station))
-                                        .sorted(Utils.tripToChargingStationComparator)
-                                        .limit(Utils.NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO)
-                                        .map(TripToChargingStation::getChargingStation)
-                                        .collect(Collectors.toList());
+            for (Integer node : nodes){
+                List<Integer> list = chargingStations
+                        .stream()
+                        .map(station -> new TripToChargingStation(node, station))
+                        .sorted(Utils.tripToChargingStationComparator)
+                        .limit(Utils.NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO)
+                        .map(TripToChargingStation::getChargingStation)
+                        .collect(Collectors.toList());
 
-            orders.put(node, list);
+                orders.put(node, list);
+
+                FSTObjectOutput out;
+                try {
+                    out = new FSTObjectOutput(new FileOutputStream(file));
+                    out.writeObject(orders);
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } else {
+            FSTObjectInput in;
+            try {
+                in = new FSTObjectInput(new FileInputStream(file));
+                orders = (HashMap<Integer, List<Integer>>) in.readObject();
+                in.close();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

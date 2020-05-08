@@ -1,4 +1,4 @@
-package domain.environmentrepresentation.fullenvironment;
+package domain.environmentrepresentation.osmenvironment;
 
 import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
@@ -12,10 +12,10 @@ import java.util.HashMap;
 /**
  * Graph for FullEnvironment which copies the structure of the original graph parsed from OSM data
  */
-public class FullEnvironmentGraph extends EnvironmentGraph<FullEnvironmentNode, FullEnvironmentEdge> {
+public class OSMEnvironmentGraph extends EnvironmentGraph<OSMEnvironmentNode, OSMEnvironmentEdge> {
 
 
-    public FullEnvironmentGraph(Graph<RoadNode, RoadEdge> osmGraph) throws IOException, ClassNotFoundException {
+    public OSMEnvironmentGraph(Graph<RoadNode, RoadEdge> osmGraph) {
         super(osmGraph);
     }
 
@@ -28,7 +28,7 @@ public class FullEnvironmentGraph extends EnvironmentGraph<FullEnvironmentNode, 
         nodes = new HashMap<>();
 
         for (RoadNode node : osmGraph.getAllNodes()){
-            nodes.put(node.getId(), new FullEnvironmentNode(node.id, DistanceGraphUtils.getOsmNeighbours(node.getId())));
+            nodes.put(node.getId(), new OSMEnvironmentNode(node, DistanceGraphUtils.getOsmNeighbours(node.getId())));
         }
     }
 
@@ -42,11 +42,11 @@ public class FullEnvironmentGraph extends EnvironmentGraph<FullEnvironmentNode, 
 
         for (RoadEdge edge : osmGraph.getAllEdges()){
             if (edges.containsKey(edge.fromId)){
-                edges.get(edge.fromId).put(edge.toId, new FullEnvironmentEdge(edge.getFromId(), edge.getToId(), edge.allowedMaxSpeedInMpS, edge.length,
+                edges.get(edge.fromId).put(edge.toId, new OSMEnvironmentEdge(edge.getFromId(), edge.getToId(), edge.allowedMaxSpeedInMpS, edge.length,
                         DistanceGraphUtils.getTripTime(edge.length, edge.allowedMaxSpeedInMpS)));
             } else {
-                HashMap<Integer, FullEnvironmentEdge> nodeEdges = new HashMap<>();
-                nodeEdges.put(edge.toId, new FullEnvironmentEdge(edge.getFromId(), edge.getToId(), edge.allowedMaxSpeedInMpS, edge.length,
+                HashMap<Integer, OSMEnvironmentEdge> nodeEdges = new HashMap<>();
+                nodeEdges.put(edge.toId, new OSMEnvironmentEdge(edge.getFromId(), edge.getToId(), edge.allowedMaxSpeedInMpS, edge.length,
                         DistanceGraphUtils.getTripTime(edge.length, edge.allowedMaxSpeedInMpS)));
                 edges.put(edge.fromId, nodeEdges);
             }

@@ -22,15 +22,12 @@ public abstract  class TaxiActionType implements Serializable {
     }
 
 
-    protected void addStateStateAsPreviousToState(TaxiState predecessor, int toNodeId, int length, int energyConsumption, int actionId){
+    protected void createConnectionBetweenStates(TaxiState predecessor, int toNodeId, int length, int energyConsumption, int actionId){
         int resultTimeStamp = length + predecessor.getTimeStamp();
         int resultStateOfCharge = energyConsumption + predecessor.getStateOfCharge();
         int resultNodeId = toNodeId;
 
         TaxiState newState = new TaxiState(resultNodeId, resultStateOfCharge, resultTimeStamp);
-        if (chragingRecommender.getState(newState) == null){
-            System.out.println("shgvf");
-        }
         chragingRecommender.addPreviousStateConnection(chragingRecommender.getState(newState).getId(), predecessor.getId(), actionId);
     }
 
@@ -45,7 +42,7 @@ public abstract  class TaxiActionType implements Serializable {
     }
 
 
-    public abstract void addAsPredecessorToAllReachableStates(TaxiState state);
+    public abstract void createConnections(TaxiState state);
 
     public abstract List<MeasurableAction> allApplicableActions(TaxiState state);
 

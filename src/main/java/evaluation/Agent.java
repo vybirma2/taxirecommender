@@ -1,6 +1,9 @@
 package evaluation;
 
 
+import cz.agents.basestructures.Graph;
+import cz.agents.multimodalstructures.edges.RoadEdge;
+import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.TaxiRecommenderDomain;
 import domain.actions.MeasurableAction;
 import domain.states.TaxiState;
@@ -9,19 +12,15 @@ import java.util.List;
 
 public abstract class Agent {
 
-    protected TaxiRecommenderDomain domain;
-    protected TaxiState currentState;
+    protected Graph<RoadNode, RoadEdge> osmGraph;
 
-    public Agent(TaxiRecommenderDomain domain, TaxiState simulationState) {
-        this.domain = domain;
-        this.currentState = simulationState;
+
+    public Agent(Graph<RoadNode, RoadEdge> osmGraph) {
+        this.osmGraph = osmGraph;
     }
 
-    public void setCurrentState(TaxiState currentState) {
-        this.currentState = currentState;
-    }
 
-    public abstract MeasurableAction chooseAction(TaxiState currentState, List<MeasurableAction> actions);
+    public abstract MeasurableAction getAction(SimulationState currentState);
 
-    public abstract boolean tripOffer(TaxiState currentState, SimulationTaxiTrip trip);
+    public abstract boolean tripOffer(SimulationState currentState, SimulationTaxiTrip trip);
 }

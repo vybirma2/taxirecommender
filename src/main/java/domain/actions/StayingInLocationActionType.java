@@ -19,9 +19,9 @@ public class StayingInLocationActionType extends TaxiActionType {
 
 
     @Override
-    public void addAsPredecessorToAllReachableStates(TaxiState state) {
+    public void createConnections(TaxiState state) {
         if (this.applicableInState(state)) {
-            addStateStateAsPreviousToState(state, state.getNodeId(), STAYING_INTERVAL, 0, actionId);
+            createConnectionBetweenStates(state, state.getNodeId(), STAYING_INTERVAL, 0, actionId);
         }
     }
 

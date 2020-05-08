@@ -1,5 +1,6 @@
 package domain.environmentrepresentation.kmeansenvironment;
 
+import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.environmentrepresentation.EnvironmentNode;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPointCentroid;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.TaxiTripPickupPlace;
@@ -9,13 +10,14 @@ import java.util.Set;
 
 public class KMeansEnvironmentNode extends EnvironmentNode {
 
-    private PickUpPointCentroid centroid;
-    private List<TaxiTripPickupPlace> pickupPlaceList;
+    private final PickUpPointCentroid centroid;
+    private final List<TaxiTripPickupPlace> pickupPlaceList;
 
-    public KMeansEnvironmentNode(int nodeId, Set<Integer> neighbours, PickUpPointCentroid centroid,
+
+    public KMeansEnvironmentNode(RoadNode node, Set<Integer> neighbours, PickUpPointCentroid centroid,
                                  List<TaxiTripPickupPlace> pickupPlaces) {
 
-        super(nodeId, neighbours);
+        super(node, neighbours);
         this.centroid = centroid;
         this.pickupPlaceList = pickupPlaces;
     }
@@ -24,7 +26,6 @@ public class KMeansEnvironmentNode extends EnvironmentNode {
     public PickUpPointCentroid getCentroid() {
         return centroid;
     }
-
 
     public List<TaxiTripPickupPlace> getPickupPlaceList() {
         return pickupPlaceList;

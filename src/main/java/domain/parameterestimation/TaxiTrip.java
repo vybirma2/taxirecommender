@@ -16,15 +16,18 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
     private final long tripLength;
     private final int tripEnergyConsumption;
 
-    private Integer fromEnvironmentNode;
-    private Integer toEnvironmentNode;
-
-
     private final Date startDate;
     private final Date finishDate;
 
+    private Integer fromEnvironmentNode;
+    private Integer toEnvironmentNode;
+    private int fromOSMNode;
+    private int toOSMNode;
 
-    public TaxiTrip(double pickUpLongitude, double pickUpLatitude, double destinationLongitude, double destinationLatitude, double distance, long tripLength, Date startDate, Date finishDate, Integer fromNode, Integer toNode) {
+    public TaxiTrip(double pickUpLongitude, double pickUpLatitude, double destinationLongitude,
+                    double destinationLatitude, double distance, long tripLength, Date startDate,
+                    Date finishDate, Integer fromEnvironmentNode, Integer toEnvironmentNode,
+                    int fromOsmNode, int toOSMNode) {
         this.pickUpLongitude = pickUpLongitude;
         this.pickUpLatitude = pickUpLatitude;
         this.destinationLongitude = destinationLongitude;
@@ -34,8 +37,10 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.tripEnergyConsumption = computeEnergyConsumption();
-        fromEnvironmentNode = fromNode;
-        toEnvironmentNode = toNode;
+        this.fromEnvironmentNode = fromEnvironmentNode;
+        this.toEnvironmentNode = toEnvironmentNode;
+        this.fromOSMNode = fromOsmNode;
+        this.toOSMNode = toOSMNode;
     }
 
 
@@ -97,6 +102,22 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
 
     public void setToEnvironmentNode(Integer toEnvironmentNode) {
         this.toEnvironmentNode = toEnvironmentNode;
+    }
+
+    public int getFromOSMNode() {
+        return fromOSMNode;
+    }
+
+    public void setFromOSMNode(int fromOSMNode) {
+        this.fromOSMNode = fromOSMNode;
+    }
+
+    public int getToOSMNode() {
+        return toOSMNode;
+    }
+
+    public void setToOSMNode(int toOSMNode) {
+        this.toOSMNode = toOSMNode;
     }
 
     @Override

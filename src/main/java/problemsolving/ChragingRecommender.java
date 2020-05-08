@@ -1,5 +1,6 @@
 package problemsolving;
 
+import domain.TaxiRewardFunction;
 import domain.charging.ChargingStation;
 import domain.charging.ChargingStationReader;
 import domain.actions.TaxiActionType;
@@ -51,8 +52,12 @@ public class ChragingRecommender implements Serializable {
             for (int time = Utils.SHIFT_START_TIME; time <= Utils.SHIFT_START_TIME + Utils.SHIFT_LENGTH; time++){
                 for (int charge = 0; charge <= 100; charge++){
                     TaxiState state = new TaxiState(station.getRoadNode().getId(), charge, time);
-                    reachableStates.add(state);
-                    visitedStates.put(state, state.getId());
+                    if (!visitedStates.containsKey(state)){
+                        reachableStates.add(state);
+                        visitedStates.put(state, state.getId());
+                    } else {
+                        TaxiState.stateId--;
+                    }
                 }
             }
         }
@@ -75,7 +80,7 @@ public class ChragingRecommender implements Serializable {
 
     private void createStateConnections(){
         for (TaxiState state : reachableStates) {
-            addAsPredecessorToSuccessors(state);
+            createConnections(state);
         }
     }
 
@@ -85,9 +90,9 @@ public class ChragingRecommender implements Serializable {
      * @return all possible transitions - future states - i.e. generator of new states, if generated state already
      * exist only updates its previous actions and previous states
      */
-    public void addAsPredecessorToSuccessors(TaxiState state) {
+    public void createConnections(TaxiState state) {
         for (TaxiActionType a : actionTypes) {
-            a.addAsPredecessorToAllReachableStates(state);
+            a.createConnections(state);
         }
     }
 

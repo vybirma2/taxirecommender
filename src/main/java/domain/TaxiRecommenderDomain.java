@@ -10,8 +10,10 @@ import domain.actions.*;
 import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.EnvironmentEdge;
 import domain.environmentrepresentation.EnvironmentNode;
-import domain.environmentrepresentation.gridenvironment.GridEnvironment;
+import domain.environmentrepresentation.gridworldenvironment.GridWorldEnvironment;
 import domain.environmentrepresentation.kmeansenvironment.KMeansEnvironment;
+import domain.environmentrepresentation.osmenvironment.OSMEnvironment;
+import jdk.jshell.execution.Util;
 import org.json.simple.parser.ParseException;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
@@ -33,31 +35,28 @@ import static domain.utils.Utils.INPUT_STATION_FILE_NAME;
  */
 public class TaxiRecommenderDomain implements Serializable {
 
-
-    private final Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> environment;
-    private Graph<RoadNode, RoadEdge> osmGraph;
-    private Collection<RoadNode> osmNodes;
+    private final ArrayList<HashMap<Integer, ArrayList<Integer>>> transitions = new ArrayList<>(Utils.NUM_OF_ACTION_TYPES);
+    private Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> environment;
     private List<ChargingStation> chargingStations;
-    private static ArrayList<TaxiTrip>  taxiTrips;
+    private ArrayList<TaxiTrip>  taxiTrips;
+    private Graph<RoadNode, RoadEdge> osmGraph;
 
     private final List<TaxiActionType> actionTypes = new ArrayList<>();
 
     private final String roadGraphInputFileFullPath;
-    private final String roadGraphInputFile;
     private final String chargingStationsInputFileFullPath;
     private final String chargingStationsInputFile;
+    private final String environmentType;
 
     private ParameterEstimator parameterEstimator;
 
-    private final ArrayList<HashMap<Integer, ArrayList<Integer>>> transitions = new ArrayList<>(Utils.NUM_OF_ACTION_TYPES);
 
 
-    public TaxiRecommenderDomain(){
+    public TaxiRecommenderDomain(String environmentType){
         this.roadGraphInputFileFullPath = "data/graphs/" + Utils.INPUT_GRAPH_FILE_NAME;
-        this.roadGraphInputFile = INPUT_STATION_FILE_NAME;
         this.chargingStationsInputFileFullPath = "data/chargingstations/" + INPUT_STATION_FILE_NAME;
         this.chargingStationsInputFile = INPUT_STATION_FILE_NAME;
-        this.environment = ENVIRONMENT;
+        this.environmentType = environmentType;
         generateDomain();
     }
 
@@ -70,45 +69,9 @@ public class TaxiRecommenderDomain implements Serializable {
     public void generateDomain() {
         try {
             loadData();
-            addAllActionTypes();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-
-    private void addAllActionTypes(){
-        actionTypes.add(new StayingInLocationActionType(STAYING_IN_LOCATION.getValue(), transitions.get(STAYING_IN_LOCATION.getValue())));
-        actionTypes.add(new NextLocationActionType(TO_NEXT_LOCATION.getValue(), transitions.get(TO_NEXT_LOCATION.getValue())));
-        actionTypes.add(new GoingToChargingStationActionType(GOING_TO_CHARGING_STATION.getValue(), transitions.get(GOING_TO_CHARGING_STATION.getValue())));
-        actionTypes.add(new ChargingActionType(CHARGING_IN_CHARGING_STATION.getValue(), transitions.get(CHARGING_IN_CHARGING_STATION.getValue())));
-        actionTypes.add(new PickUpPassengerActionType(PICK_UP_PASSENGER.getValue(), transitions.get(PICK_UP_PASSENGER.getValue()), parameterEstimator));
-    }
-
-    private void visualizeEnvironment(){
-
-        new Thread() {
-            @Override
-            public void run() {
-                MapVisualizer.main(null);
-            }
-        }.start();
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        MapVisualizer.addRoadNodesToMap(this.osmNodes);
-
-        try {
-            Thread.sleep(20000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
     }
 
     private void loadData() throws Exception {
@@ -125,9 +88,19 @@ public class TaxiRecommenderDomain implements Serializable {
         computeShortestPathsToChargingStations();
 
         setTransitions();
+
+        addAllActionTypes();
     }
 
-    private void estimateParameters(File file) throws IOException, ClassNotFoundException {
+    private void addAllActionTypes(){
+        actionTypes.add(new StayingInLocationActionType(STAYING_IN_LOCATION.getValue(), transitions.get(STAYING_IN_LOCATION.getValue())));
+        actionTypes.add(new NextLocationActionType(TO_NEXT_LOCATION.getValue(), transitions.get(TO_NEXT_LOCATION.getValue())));
+        actionTypes.add(new GoingToChargingStationActionType(GOING_TO_CHARGING_STATION.getValue(), transitions.get(GOING_TO_CHARGING_STATION.getValue())));
+        actionTypes.add(new ChargingActionType(CHARGING_IN_CHARGING_STATION.getValue(), transitions.get(CHARGING_IN_CHARGING_STATION.getValue())));
+        actionTypes.add(new PickUpPassengerActionType(PICK_UP_PASSENGER.getValue(), transitions.get(PICK_UP_PASSENGER.getValue()), parameterEstimator));
+    }
+
+    private void estimateParameters(File file) throws IOException {
         long startTime;
         long stopTime;
 
@@ -163,14 +136,14 @@ public class TaxiRecommenderDomain implements Serializable {
         }
     }
 
-    private void setEnvironment() throws IOException, ClassNotFoundException {
+    private void setEnvironment() {
         long startTime;
         long stopTime;
 
         System.out.println("Setting environment..");
         startTime = System.nanoTime();
 
-        this.environment.setOsmGraph(osmGraph);
+        createEnvironment();
 
         for (TaxiTrip trip : taxiTrips){
             trip.setFromEnvironmentNode(DistanceGraphUtils.chooseEnvironmentNode(trip.getPickUpLongitude(), trip.getPickUpLatitude()).getNodeId());
@@ -192,7 +165,7 @@ public class TaxiRecommenderDomain implements Serializable {
         osmGraph = GraphLoader.loadGraph(roadGraphInputFileFullPath);
 
         DistanceGraphUtils.setOsmGraph(osmGraph);
-        osmNodes = osmGraph.getAllNodes();
+        Collection<RoadNode> osmNodes = osmGraph.getAllNodes();
         DistanceGraphUtils.setOsmNodes(osmNodes);
 
         stopTime  = System.nanoTime();
@@ -298,7 +271,7 @@ public class TaxiRecommenderDomain implements Serializable {
         File file;
         if (this.environment instanceof KMeansEnvironment) {
             file = new File("data/programdata/" + Utils.NUM_OF_CLUSTERS + "_" + inputFile);
-        } else if (this.environment instanceof GridEnvironment) {
+        } else if (this.environment instanceof GridWorldEnvironment) {
             file = new File("data/programdata/" + Utils.ONE_GRID_CELL_HEIGHT + "x" + Utils.ONE_GRID_CELL_WIDTH + "_" + inputFile);
         } else {
             file = new File("data/programdata/fullenvironment_" + inputFile);
@@ -314,6 +287,21 @@ public class TaxiRecommenderDomain implements Serializable {
         return result;
     }
 
+    private void createEnvironment(){
+        switch (environmentType){
+            case "kmeans":
+                this.environment = new KMeansEnvironment(osmGraph, taxiTrips);
+                break;
+            case "gridworld":
+                this.environment = new GridWorldEnvironment(osmGraph, taxiTrips);
+                break;
+            case "osm":
+                this.environment = new OSMEnvironment(osmGraph, taxiTrips);
+                break;
+            default:
+                throw new IllegalArgumentException("Not known environment");
+        }
+    }
 
     public Environment<? extends EnvironmentNode, ? extends EnvironmentEdge> getEnvironment() {
         return environment;
@@ -324,7 +312,7 @@ public class TaxiRecommenderDomain implements Serializable {
     }
 
 
-    public static  ArrayList<TaxiTrip> getTaxiTrips(){
+    public  ArrayList<TaxiTrip> getTaxiTrips(){
         return taxiTrips;
     }
 

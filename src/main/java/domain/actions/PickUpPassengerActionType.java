@@ -34,14 +34,14 @@ public class PickUpPassengerActionType  extends TaxiActionType {
      * in TaxiRecommenderDomainGenerator - check on applicability - not running out of time/battery...
      */
     @Override
-    public void addAsPredecessorToAllReachableStates(TaxiState state) {
+    public void createConnections(TaxiState state) {
         ArrayList<Integer> trans = transitions.get(state.getNodeId());
 
         if (trans != null) {
             for (Integer neighbour : trans) {
                 if (this.applicableInState(state, neighbour)) {
                     int startInterval = getIntervalStart(state.getTimeStamp());
-                    addStateStateAsPreviousToState(state, neighbour,
+                    createConnectionBetweenStates(state, neighbour,
                             taxiTripLengths.get(startInterval).get(state.getNodeId()).get(neighbour).intValue(),
                             taxiTripConsumptions.get(startInterval).get(state.getNodeId()).get(neighbour).intValue(), actionId);
                 }

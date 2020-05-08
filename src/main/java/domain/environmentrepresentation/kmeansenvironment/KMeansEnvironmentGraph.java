@@ -6,6 +6,7 @@ import cz.agents.multimodalstructures.nodes.RoadNode;
 import de.alsclo.voronoi.Voronoi;
 import de.alsclo.voronoi.graph.Edge;
 import de.alsclo.voronoi.graph.Point;
+import domain.charging.ChargingStationReader;
 import domain.environmentrepresentation.EnvironmentGraph;
 import domain.environmentrepresentation.EnvironmentNode;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPointCentroid;
@@ -27,12 +28,13 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
     private Map<PickUpPointCentroid, List<TaxiTripPickupPlace>> clusters;
     private Map<Integer, List<TripToNode>> distanceSpeedTime;
 
+
     public KMeansEnvironmentGraph(Graph<RoadNode, RoadEdge> osmGraph) throws IOException, ClassNotFoundException {
         super(osmGraph);
     }
 
     @Override
-    protected void setNodes() throws IOException, ClassNotFoundException {
+    protected void setNodes() {
         this.clusters = KMeansEnvironment.getClusters();
         createNodes();
         DistanceGraphUtils.setNodes(getNodes());
@@ -40,7 +42,6 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
         setDistances();
         setNodeNeighbours();
     }
-
 
     @Override
     protected void setEdges() {
@@ -64,17 +65,24 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
         }
     }
 
-
     private void createNodes() {
         this.nodes = new HashMap<>();
+        ArrayList<RoadNode> deletedNodes = new ArrayList<>();
+        HashSet<RoadNode> remainingNodes = new HashSet<>(osmGraph.getAllNodes());
         for (PickUpPointCentroid centroid : clusters.keySet()) {
-            RoadNode centroidNode = DistanceGraphUtils.chooseRoadNode(centroid.getLongitude(), centroid.getLatitude());
-            this.nodes.put(centroidNode.getId(), new KMeansEnvironmentNode(centroidNode.getId(), new HashSet<>(), centroid, clusters.get(centroid)));
+            RoadNode centroidNode = DistanceGraphUtils.chooseClosestRoadNode(remainingNodes, centroid.getLongitude(), centroid.getLatitude());
+            while (nodes.containsKey(centroidNode.getId()) || ChargingStationReader.getChargingStation(centroidNode.getId()) != null){
+                deletedNodes.add(centroidNode);
+                remainingNodes.remove(centroidNode);
+                centroidNode = DistanceGraphUtils.chooseRoadNode(remainingNodes, centroid.getLongitude(), centroid.getLatitude());
+            }
+            this.nodes.put(centroidNode.getId(), new KMeansEnvironmentNode(centroidNode, new HashSet<>(), centroid, clusters.get(centroid)));
+            remainingNodes.addAll(deletedNodes);
+            deletedNodes.clear();
         }
     }
 
-
-    private void setDistances() throws IOException, ClassNotFoundException {
+    private void setDistances() {
         String name = "data/programdata/" + Utils.NUM_OF_CLUSTERS +"KMeansCentroidDistances" + Utils.DATA_SET_NAME;
         File file = new File(name);
 
@@ -83,21 +91,17 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
         } else {
             loadDistances(file);
         }
-
     }
-
 
     public double getDistanceBetweenNodes(int fromNodeId, int toNodeId){
         return distanceSpeedTime.get(fromNodeId).stream().filter(t-> t.getToNodeId() == toNodeId).findFirst().get().getDistanceSpeedPairTime().getDistance();
     }
 
-
     public DistanceSpeedPairTime getDistanceSpeedTimeBetweenNodes(int fromNodeId, int toNodeId){
         return distanceSpeedTime.get(fromNodeId).stream().filter(t-> t.getToNodeId() == toNodeId).findFirst().get().getDistanceSpeedPairTime();
     }
 
-
-    private void computeAndSerializeDistances(File file) throws IOException {
+    private void computeAndSerializeDistances(File file) {
         distanceSpeedTime = new HashMap<>();
 
         for (KMeansEnvironmentNode fromNode : this.nodes.values()){
@@ -113,18 +117,29 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
                 }
             }
         }
-        FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));
-        out.writeObject(distanceSpeedTime);
-        out.close();
+
+        FSTObjectOutput out;
+        try {
+            out = new FSTObjectOutput(new FileOutputStream(file));
+            out.writeObject(distanceSpeedTime);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
+    private void loadDistances(File file) {
+        FSTObjectInput in;
+        try {
+            in = new FSTObjectInput(new FileInputStream(file));
+            distanceSpeedTime = (Map<Integer, List<TripToNode>>)in.readObject();
+            in.close();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
-    private void loadDistances(File file) throws IOException, ClassNotFoundException {
-        FSTObjectInput in = new FSTObjectInput(new FileInputStream(file));
-        distanceSpeedTime = (Map<Integer, List<TripToNode>>)in.readObject();
-        in.close();
     }
-
 
     private void setNodeNeighbours() {
         Collection<Point> points = new ArrayList<>();

@@ -1,4 +1,4 @@
-package problemsolving;
+package domain;
 
 import domain.utils.SuccessfulPickUpParameters;
 import domain.actions.ActionTypes;
@@ -62,7 +62,6 @@ public class TaxiRewardFunction {
      * @return set of visited states to add to openSet
      */
     private void setPreviousStateReward(TaxiState state){
-
 
         for (int actionId = 0; actionId < Utils.NUM_OF_ACTION_TYPES; actionId++){
             List<Integer> previousStateNodesOfAction = predecessors.getPreviousStateNodesOfActionInState(actionId, state.getId());

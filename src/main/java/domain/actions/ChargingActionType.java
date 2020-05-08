@@ -32,7 +32,7 @@ public class ChargingActionType extends TaxiActionType {
      * intervals.
      */
     @Override
-    public void addAsPredecessorToAllReachableStates(TaxiState state) {
+    public void createConnections(TaxiState state) {
 
         if (this.applicableInState(state)) {
             ChargingStation station = ChargingStationReader.getChargingStation(state.getNodeId());
@@ -46,7 +46,7 @@ public class ChargingActionType extends TaxiActionType {
                 for(int i = 1; i <= NUM_OF_CHARGING_LENGTH_POSSIBILITIES; i++){
                     int energyCharged = getEnergyCharged(connection, i * chargingTimeUnit);
                     if (applicableInState(state, i * chargingTimeUnit, energyCharged)){
-                        addStateStateAsPreviousToState(state, state.getNodeId(), i * chargingTimeUnit, energyCharged, actionId);
+                        createConnectionBetweenStates(state, state.getNodeId(), i * chargingTimeUnit, energyCharged, actionId);
                     }
                 }
             }

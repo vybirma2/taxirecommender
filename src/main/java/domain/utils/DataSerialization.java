@@ -48,14 +48,14 @@ public class DataSerialization {
             if (path != null){
                 DistanceSpeedPairTime distanceSpeedPairTime = getDistanceSpeedPairOfPath(path);
 
-                double distance = distanceSpeedPairTime.getDistance();
-                double speed = distanceSpeedPairTime.getSpeed();
-                int time = distanceSpeedPairTime.getTime();
-
-                stationDistanceSpeedTime.put(path.getFirst(), new DistanceSpeedPairTime(distance, speed, time));
+                if (!path.isEmpty()) {
+                    stationDistanceSpeedTime.put(path.getFirst(), distanceSpeedPairTime);
+                } else {
+                    stationDistanceSpeedTime.put(chargingStation.getRoadNode().getId(), distanceSpeedPairTime);
+                }
 
             } else {
-                throw new IllegalArgumentException("No connection between node: " + path.getFirst() + " and node: " + chargingStation.getRoadNode().getId());
+                throw new IllegalArgumentException("No connection between nodes");
             }
         }
 

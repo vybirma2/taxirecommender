@@ -3,11 +3,11 @@ package domain.environmentrepresentation;
 
 public abstract class EnvironmentEdge {
 
-    private int time;
-    private int fromId;
-    private int toId;
-    private int length;
-    private float speed;
+    private final int time;
+    private final int fromId;
+    private final int toId;
+    private final int length;
+    private final float speed;
 
 
     public EnvironmentEdge(int fromId, int toId, float speed, int length, int time) {

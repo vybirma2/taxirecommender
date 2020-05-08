@@ -15,7 +15,11 @@ public class TripToChargingStation {
     public TripToChargingStation(Integer state, Integer chargingStation) {
         this.fromNode = state;
         this.chargingStation = chargingStation;
-        this.distance = DistanceGraphUtils.getDistanceBetweenNodes(fromNode, chargingStation);
+        if (!state.equals(chargingStation)){
+            this.distance = DistanceGraphUtils.getDistanceSpeedPairOfPath(DistanceGraphUtils.aStar(fromNode, chargingStation)).getDistance();
+        }else {
+            distance = 0;
+        }
     }
 
 
