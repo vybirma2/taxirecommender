@@ -90,7 +90,7 @@ public class GoingToChargingStationActionType extends TaxiActionType {
 
     @Override
     protected boolean applicableInState(TaxiState state) {
-        return notChargedALot(state.getStateOfCharge());
+        return true;
     }
 
 

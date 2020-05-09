@@ -1,5 +1,6 @@
 package domain;
 
+import domain.charging.ChargingRateType;
 import domain.utils.SuccessfulPickUpParameters;
 import domain.actions.ActionTypes;
 import domain.states.StatePredecessors;
@@ -137,7 +138,22 @@ public class TaxiRewardFunction {
 
 
     private double getChargingReward(TaxiState previousState, TaxiState currentState) {
-        return currentState.getReward() - (currentState.getStateOfCharge() - previousState.getStateOfCharge()) * Utils.COST_FOR_KW;
+        return currentState.getReward() - getCostForCharging(currentState.getTimeStamp() - previousState.getTimeStamp(),
+                currentState.getStateOfCharge() - previousState.getStateOfCharge());
+    }
+
+
+    private double getCostForCharging(int timeOfCharging, int energyCharged){
+        int powerKWCharged = (int)((energyCharged/100)*Utils.BATTERY_CAPACITY);
+        double timeHours = timeOfCharging/60.;
+
+        if (powerKWCharged/timeHours < ChargingRateType.SLOW_CHARGING.getKWMax()){
+            return -timeOfCharging * ChargingRateType.SLOW_CHARGING.getRate();
+        } else if (powerKWCharged/timeHours < ChargingRateType.STANDARD_CHARGING.getKWMax()){
+            return -timeOfCharging * ChargingRateType.STANDARD_CHARGING.getRate();
+        } else {
+            return -timeOfCharging * ChargingRateType.SPEED_CHARGING.getRate();
+        }
     }
 
 

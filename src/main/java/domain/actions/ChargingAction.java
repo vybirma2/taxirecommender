@@ -1,5 +1,7 @@
 package domain.actions;
 
+import domain.charging.ChargingConnection;
+import domain.charging.ChargingRateType;
 import domain.charging.ChargingStationReader;
 import domain.utils.Utils;
 
@@ -28,7 +30,14 @@ public class ChargingAction extends MeasurableAction {
 
 
     private double getChargingCost(){
-        return -Utils.COST_FOR_KW * (Utils.BATTERY_CAPACITY*(consumption/100.));
+        ChargingConnection connection = ChargingStationReader.getChargingConnection(connectionId);
+        if (connection.getPowerKW() < ChargingRateType.SLOW_CHARGING.getKWMax()){
+            return -this.getActionTime() * ChargingRateType.SLOW_CHARGING.getRate();
+        } else if (connection.getPowerKW() < ChargingRateType.STANDARD_CHARGING.getKWMax()){
+            return -this.getActionTime()  * ChargingRateType.STANDARD_CHARGING.getRate();
+        } else {
+            return -this.getActionTime()  * ChargingRateType.SPEED_CHARGING.getRate();
+        }
     }
 
 

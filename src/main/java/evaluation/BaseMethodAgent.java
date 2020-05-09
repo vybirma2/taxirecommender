@@ -161,6 +161,12 @@ public class BaseMethodAgent extends Agent {
         return actionApplicable(currentState, action);
     }
 
+    @Override
+    public void resetAgent() {
+        this.inChargingStation = false;
+        this.notChargingPreviously = false;
+    }
+
 
     private boolean actionApplicable(SimulationState currentState, MeasurableAction action){
         return currentState.getStateOfCharge() + action.getRestConsumption() > this.BATTERY_LOW_LEVEL_VALUE

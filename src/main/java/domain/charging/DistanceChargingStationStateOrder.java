@@ -4,6 +4,7 @@ import domain.parameterestimation.ParameterEstimator;
 import domain.states.TaxiState;
 import domain.utils.DistanceSpeedPairTime;
 import domain.utils.Utils;
+import jdk.jshell.execution.Util;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
 
@@ -40,8 +41,8 @@ public class DistanceChargingStationStateOrder implements ChargingStationStateOr
 
     private void computeOrders(){
         Set<Integer> chargingStations = chargingStationDistanceSpeedTime.keySet();
-        File file = new File("data/programdata/chargingOrders" + Utils.ENVIRONMENT +
-                "" + Utils.NUM_OF_CLUSTERS + ".fst");
+        File file = new File("data/programdata/chargingOrders" + Utils.DATA_SET_NAME + Utils.ENVIRONMENT +
+                "" + Utils.NUM_OF_CLUSTERS + Utils.ONE_GRID_CELL_WIDTH + Utils.ONE_GRID_CELL_HEIGHT + ".fst");
         if (!file.exists()) {
             this.orders = new HashMap<>();
 

@@ -1,17 +1,68 @@
-import domain.TaxiRecommenderDomain;
-import domain.environmentrepresentation.EnvironmentEdge;
-import domain.environmentrepresentation.EnvironmentNode;
+
+import domain.parameterestimation.NewYorkDataSetReader;
+import domain.parameterestimation.PragueDataSetReader;
+import domain.utils.Utils;
+import evaluation.Experiment;
 import evaluation.Simulation;
-import visualization.MapVisualizer;
 
 import java.io.IOException;
+
 
 public class Main {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         Simulation simulation = new Simulation();
+
+        /*Utils.setUtilsParameters(8*60, 12*60, 20, new PragueDataSetReader(),
+                "prague.fst", "prague_charging_stations_full.json",
+                "prague", "gridworld", 2000, 2000);
+        simulation.initSimulation();
+
+
+        for (int startingStateOfCharge = 10; startingStateOfCharge <= 100; startingStateOfCharge+=10){
+            Experiment experiment = new Experiment(simulation, 8*60, 12*60, startingStateOfCharge, new PragueDataSetReader(),
+                    "prague.fst", "prague_charging_stations_full.json",
+                    "prague", "gridworld", 2000, 2000);
+            experiment.doExperiment();
+            experiment = null;
+        }
+
+
+        Utils.setUtilsParameters(8*60, 12*60, 20, new PragueDataSetReader(),
+                "prague.fst", "prague_charging_stations_full.json",
+                "prague", "kmeans", 100);
+        simulation.initSimulation();
+        for (int startingStateOfCharge = 10; startingStateOfCharge <= 100; startingStateOfCharge+=10){
+            Experiment experiment = new Experiment(simulation, 8*60, 12*60, startingStateOfCharge, new PragueDataSetReader(),
+                    "prague.fst", "prague_charging_stations_full.json",
+                    "prague", "kmeans", 100);
+            experiment.doExperiment();
+            experiment = null;
+        }*/
+
+        Utils.setUtilsParameters(8*60, 2*60, 20, new NewYorkDataSetReader(),
+                "new_york_full.fst", "new_york_chargingstations.json",
+                "new_york", "gridworld", 2000, 2000);
+        simulation.initSimulation();
+
+
+        for (int startingStateOfCharge = 10; startingStateOfCharge <= 20; startingStateOfCharge+=10){
+            Experiment experiment = new Experiment(simulation, 8*60, 2*60, startingStateOfCharge, new NewYorkDataSetReader(),
+                    "new_york_full.fst", "new_york_chargingstations.json",
+                    "new_york", "gridworld", 2000, 2000);
+            experiment.doExperiment();
+            experiment = null;
+        }
+
+
+
+
+
+
+
+        /*Simulation simulation = new Simulation();
         double reward = 0;
         for (int i = 0; i < 100; i++){
             System.out.println(i);
@@ -24,7 +75,7 @@ public class Main {
             simulation.clearSimulationResults();
         }
 
-        System.out.println(reward/100);
+        System.out.println(reward/100);*/
 
 
         /*try {

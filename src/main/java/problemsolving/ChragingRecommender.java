@@ -28,6 +28,7 @@ public class ChragingRecommender implements Serializable {
         this.actionTypes = actionTypes;
         this.nodes = nodes;
         this.parameterEstimator = parameterEstimator;
+        TaxiState.stateId = 0;
     }
 
     public void performStateSpaceAnalysis() {

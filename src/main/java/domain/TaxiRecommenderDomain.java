@@ -127,7 +127,7 @@ public class TaxiRecommenderDomain implements Serializable {
 
     private void setParameterEstimator() throws IOException, ClassNotFoundException {
         File file = new File("data/programdata/estimated_parameters_tS" + Utils.SHIFT_START_TIME +
-                "sL" + Utils.SHIFT_LENGTH + ".fst");
+                "sL" + Utils.SHIFT_LENGTH + ENVIRONMENT + Utils.NUM_OF_CLUSTERS + Utils.ONE_GRID_CELL_HEIGHT + Utils.ONE_GRID_CELL_WIDTH + Utils.DATA_SET_NAME+ ".fst");
 
         if (!file.exists()){
             estimateParameters(file);
@@ -144,6 +144,8 @@ public class TaxiRecommenderDomain implements Serializable {
         startTime = System.nanoTime();
 
         createEnvironment();
+        DistanceGraphUtils.setGraph(environment.getEnvironmentGraph());
+        DistanceGraphUtils.setNodes(environment.getEnvironmentNodes());
 
         for (TaxiTrip trip : taxiTrips){
             trip.setFromEnvironmentNode(DistanceGraphUtils.chooseEnvironmentNode(trip.getPickUpLongitude(), trip.getPickUpLatitude()).getNodeId());

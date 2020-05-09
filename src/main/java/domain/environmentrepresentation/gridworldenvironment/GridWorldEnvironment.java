@@ -26,7 +26,7 @@ public class GridWorldEnvironment extends Environment<GridWorldEnvironmentNode, 
 
     @Override
     protected void setEnvironmentGraph() {
-        File file = new File("data/programdata/" + Utils.ONE_GRID_CELL_WIDTH + "x" + Utils.ONE_GRID_CELL_HEIGHT + "grid_environment.fst");
+        File file = new File("data/programdata/" + Utils.DATA_SET_NAME + Utils.ONE_GRID_CELL_WIDTH + "x" + Utils.ONE_GRID_CELL_HEIGHT + "grid_environment.fst");
 
         if (!file.exists()) {
             createGridEnvironmentAndSerializeIt(file);

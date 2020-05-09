@@ -41,9 +41,6 @@ public class ChargingRecommenderAgent extends Agent {
     public MeasurableAction getAction(SimulationState currentState) {
 
         TaxiState currentTaxiState = getTaxiState(currentState);
-        if (currentTaxiState == null){
-            System.out.println("skjf");
-        }
         int maxRewardActionId = currentTaxiState.getMaxRewardActionId();
         int maxRewardStateId = currentTaxiState.getMaxRewardStateId();
         TaxiState nextState = chargingRecommender.reachableStates.get(maxRewardStateId);
@@ -64,6 +61,11 @@ public class ChargingRecommenderAgent extends Agent {
         }
 
         return false;
+    }
+
+    @Override
+    public void resetAgent() {
+
     }
 
 

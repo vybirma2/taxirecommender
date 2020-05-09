@@ -32,15 +32,18 @@ public class Simulation {
     private double resultReward = 0;
 
     private MeasurableAction actionInProgress = null;
-    private List<Integer> nodesOnPath = null;
+    private LinkedList<Integer> nodesOnPath = null;
+    private SimulationStatistics simulationStatistics;
+
+    private ChargingRecommenderAgent chargingRecommenderAgent;
+    private BaseMethodAgent baseMethodAgent;
 
 
     public Simulation() {
-        initSimulation();
     }
 
 
-    private void initSimulation() {
+    public void initSimulation() {
         try {
             osmGraph = GraphLoader.loadGraph("data/graphs/" + INPUT_GRAPH_FILE_NAME);
             DistanceGraphUtils.setOsmGraph(osmGraph);
@@ -49,8 +52,9 @@ public class Simulation {
             initTripChoosing();
             String chargingStationsInputFileFullPath = "data/chargingstations/" + INPUT_STATION_FILE_NAME;
             ChargingStationReader.readChargingStations(chargingStationsInputFileFullPath, INPUT_STATION_FILE_NAME);
-
-            this.agent = new ChargingRecommenderAgent(osmGraph);
+            simulationStatistics = new SimulationStatistics();
+            baseMethodAgent = new BaseMethodAgent(osmGraph);
+            chargingRecommenderAgent = new ChargingRecommenderAgent(osmGraph);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,21 +69,39 @@ public class Simulation {
     }
 
 
+    public void setAgent(String agentType) {
+        if (agentType.equals("base")){
+            this.agent = baseMethodAgent;
+            this.agent.resetAgent();
+        } else {
+            this.agent = chargingRecommenderAgent;
+            this.agent.resetAgent();
+        }
+    }
+
+
     private RoadNode getRandomNode(){
         Collections.shuffle(nodes);
         return nodes.get(0);
     }
 
 
-    public void clearSimulationResults(){
+    public void clearShiftSimulationResults(){
+        simulationStatistics.addRewardPerShift(resultReward);
         resultReward = 0;
-        currentState = new SimulationState(getRandomNode().getId(), 60 * SHIFT_START_TIME, STARTING_STATE_OF_CHARGE);
+        currentState = new SimulationState(getRandomNode().getId(), SHIFT_START_TIME, STARTING_STATE_OF_CHARGE);
         actionInProgress = null;
         nodesOnPath = null;
-       // ((BaseMethodAgent)this.agent).setInChargingStation(false);
-       // ((BaseMethodAgent)this.agent).setNotChargingPreviously(false);
+        agent.resetAgent();
+    }
 
-        //this.agent = new ChargingRecommenderAgent(osmGraph);
+    public void clearStatistics(){
+        simulationStatistics = new SimulationStatistics();
+    }
+
+    public void switchAgents(String agentType){
+        setAgent(agentType);
+        simulationStatistics = new SimulationStatistics();
     }
 
 
@@ -99,16 +121,14 @@ public class Simulation {
                 startInProgressAction(agent.getAction(currentState));
             }
 
-            if (tripOfferPossibleProgress()){
+            if (tripOfferPossible()){
                 tryToOfferTripIfAvailable();
             }
-
         }
-
     }
 
 
-    private boolean tripOfferPossibleProgress(){
+    private boolean tripOfferPossible(){
         return actionInProgress != null && actionInProgress.getActionId() != ActionTypes.PICK_UP_PASSENGER.getValue()
                 && actionInProgress.getActionId() != ActionTypes.GOING_TO_CHARGING_STATION.getValue()
                 && actionInProgress.getActionId() != ActionTypes.CHARGING_IN_CHARGING_STATION.getValue();
@@ -120,15 +140,29 @@ public class Simulation {
         printSimulationStep();
         actionInProgress = action;
         if (action.getActionId() == ActionTypes.PICK_UP_PASSENGER.getValue()){
+            simulationStatistics.addTotalEnergyConsumed(action.getRestConsumption());
+            simulationStatistics.addNumOfTripsDone(1);
+            simulationStatistics.addRewardFromTrips(action.getReward());
+
             if (currentState.getNodeId() != action.getFromNodeId()){
                 nodesOnPath = DistanceGraphUtils.aStar(currentState.getNodeId(), action.getFromNodeId());
-                nodesOnPath.addAll(DistanceGraphUtils.aStar(action.getFromNodeId(), action.getToNodeId()));
+                simulationStatistics.addDistanceToReachPassenger(DistanceGraphUtils.getDistanceSpeedPairOfPath(nodesOnPath).getDistance());
+                LinkedList<Integer> tripNodes = DistanceGraphUtils.aStar(action.getFromNodeId(), action.getToNodeId());
+                simulationStatistics.addDistanceWithPassenger(DistanceGraphUtils.getDistanceSpeedPairOfPath(tripNodes).getDistance());
+                nodesOnPath.addAll(tripNodes);
             } else {
                 nodesOnPath = DistanceGraphUtils.aStar(action.getFromNodeId(), action.getToNodeId());
             }
-        }else {
+        } else if (action.getActionId() == ActionTypes.CHARGING_IN_CHARGING_STATION.getValue()){
+            simulationStatistics.addCostOfCharging(action.getReward());
+            simulationStatistics.addTotalEnergyCharged(action.getRestConsumption());
+            simulationStatistics.addTimeSpentCharging(action.getActionTime());
+        } else {
+            simulationStatistics.addTotalEnergyConsumed(action.getRestConsumption());
             nodesOnPath = DistanceGraphUtils.aStar(currentState.getNodeId(), action.getToNodeId());
         }
+
+        simulationStatistics.addDistanceTransferred(DistanceGraphUtils.getDistanceSpeedPairOfPath(nodesOnPath).getDistance());
     }
 
 
@@ -140,6 +174,7 @@ public class Simulation {
         currentState.setStateOfCharge(currentState.getStateOfCharge() + actionInProgress.getRestConsumption());
         this.resultReward += actionInProgress.getReward();
     }
+
 
     private boolean isActionInProgress(){
         return actionInProgress != null && actionInProgress.getTimeToFinish() > 0;
@@ -156,11 +191,6 @@ public class Simulation {
         int consumption = (int)Math.round(timeRatio * actionInProgress.getRestConsumption());
         currentState.setStateOfCharge(currentState.getStateOfCharge() + consumption);
         actionInProgress.setRestConsumption(actionInProgress.getRestConsumption() - consumption);
-    }
-
-
-    private void doStepIn(){
-
     }
 
 
@@ -226,5 +256,9 @@ public class Simulation {
 
     public double getResultReward() {
         return resultReward;
+    }
+
+    public SimulationStatistics getSimulationStatistics() {
+        return simulationStatistics;
     }
 }

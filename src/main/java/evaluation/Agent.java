@@ -23,4 +23,6 @@ public abstract class Agent {
     public abstract MeasurableAction getAction(SimulationState currentState);
 
     public abstract boolean tripOffer(SimulationState currentState, SimulationTaxiTrip trip);
+
+    public abstract void resetAgent();
 }

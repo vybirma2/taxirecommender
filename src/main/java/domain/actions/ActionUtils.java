@@ -27,10 +27,6 @@ public class ActionUtils {
     }
 
 
-    public static boolean notChargedALot(int stateOfCharge){
-        return stateOfCharge < MINIMAL_CHARGING_STATE_OF_CHARGE;
-    }
-
 
     public static boolean notRunOutOfBattery(TaxiState state, int toNodeId){
         return state.getStateOfCharge() + getActionEnergyConsumption(state.getNodeId(), toNodeId) > MINIMAL_STATE_OF_CHARGE;
