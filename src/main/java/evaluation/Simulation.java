@@ -110,6 +110,11 @@ public class Simulation {
         for (int timeStamp = SHIFT_START_TIME; timeStamp < SHIFT_START_TIME + SHIFT_LENGTH; timeStamp++){
             currentState.setTimeStamp(timeStamp);
 
+            if (currentState.getStateOfCharge() < 0){
+                return;
+            }
+
+
             if (isActionInProgress()){
                 doStepInActionInProgress();
             }
@@ -136,8 +141,8 @@ public class Simulation {
 
 
     private void startInProgressAction(MeasurableAction action){
-        System.out.println("starting action: " + ActionTypes.getNameOfAction(action.getActionId()));
-        printSimulationStep();
+       // System.out.println("starting action: " + ActionTypes.getNameOfAction(action.getActionId()));
+       // printSimulationStep();
         actionInProgress = action;
         if (action.getActionId() == ActionTypes.PICK_UP_PASSENGER.getValue()){
             simulationStatistics.addTotalEnergyConsumed(action.getRestConsumption());
@@ -167,8 +172,8 @@ public class Simulation {
 
 
     private void finishActionInProgress(){
-        System.out.println("finishing action: " + ActionTypes.getNameOfAction(actionInProgress.getActionId()));
-        printSimulationStep();
+       // System.out.println("finishing action: " + ActionTypes.getNameOfAction(actionInProgress.getActionId()));
+       // printSimulationStep();
 
         currentState.setNodeId(actionInProgress.getToNodeId());
         currentState.setStateOfCharge(currentState.getStateOfCharge() + actionInProgress.getRestConsumption());

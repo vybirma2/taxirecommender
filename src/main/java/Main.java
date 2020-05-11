@@ -15,48 +15,81 @@ public class Main {
 
         Simulation simulation = new Simulation();
 
+
+
         /*Utils.setUtilsParameters(8*60, 12*60, 20, new PragueDataSetReader(),
                 "prague.fst", "prague_charging_stations_full.json",
-                "prague", "gridworld", 2000, 2000);
+                "prague", "gridworld", 2500, 2500);
         simulation.initSimulation();
 
 
-        for (int startingStateOfCharge = 10; startingStateOfCharge <= 100; startingStateOfCharge+=10){
+        for (int startingStateOfCharge = 30; startingStateOfCharge <= 100; startingStateOfCharge+=10){
             Experiment experiment = new Experiment(simulation, 8*60, 12*60, startingStateOfCharge, new PragueDataSetReader(),
                     "prague.fst", "prague_charging_stations_full.json",
-                    "prague", "gridworld", 2000, 2000);
-            experiment.doExperiment();
-            experiment = null;
-        }
+                    "prague", "gridworld", 2500, 2500);
+            System.out.println("Starting: " + experiment);
 
-
-        Utils.setUtilsParameters(8*60, 12*60, 20, new PragueDataSetReader(),
-                "prague.fst", "prague_charging_stations_full.json",
-                "prague", "kmeans", 100);
-        simulation.initSimulation();
-        for (int startingStateOfCharge = 10; startingStateOfCharge <= 100; startingStateOfCharge+=10){
-            Experiment experiment = new Experiment(simulation, 8*60, 12*60, startingStateOfCharge, new PragueDataSetReader(),
-                    "prague.fst", "prague_charging_stations_full.json",
-                    "prague", "kmeans", 100);
             experiment.doExperiment();
             experiment = null;
         }*/
 
-        Utils.setUtilsParameters(8*60, 2*60, 20, new NewYorkDataSetReader(),
-                "new_york_full.fst", "new_york_chargingstations.json",
-                "new_york", "gridworld", 2000, 2000);
+
+
+
+
+        Utils.setUtilsParameters(8*60, 12*60, 20, new PragueDataSetReader(),
+                "prague.fst", "prague_charging_stations_full.json",
+                "prague", "kmeans", 125);
         simulation.initSimulation();
+        for (int startingStateOfCharge = 20; startingStateOfCharge <= 100; startingStateOfCharge+=10){
+            Experiment experiment = new Experiment(simulation, 8*60, 12*60, startingStateOfCharge, new PragueDataSetReader(),
+                    "prague.fst", "prague_charging_stations_full.json",
+                    "prague", "kmeans", 125);
+            System.out.println("Starting: " + experiment);
 
-
-        for (int startingStateOfCharge = 10; startingStateOfCharge <= 20; startingStateOfCharge+=10){
-            Experiment experiment = new Experiment(simulation, 8*60, 2*60, startingStateOfCharge, new NewYorkDataSetReader(),
-                    "new_york_full.fst", "new_york_chargingstations.json",
-                    "new_york", "gridworld", 2000, 2000);
             experiment.doExperiment();
             experiment = null;
         }
 
 
+
+
+
+
+        Utils.setUtilsParameters(8*60, 12*60, 20, new NewYorkDataSetReader(),
+                "new_york_full.fst", "new_york_chargingstations.json",
+                "new_york", "gridworld", 4000, 4000);
+        simulation.initSimulation();
+
+
+        for (int startingStateOfCharge = 10; startingStateOfCharge <= 100; startingStateOfCharge+=10){
+            Experiment experiment = new Experiment(simulation, 8*60, 12*60, startingStateOfCharge, new NewYorkDataSetReader(),
+                    "new_york_full.fst", "new_york_chargingstations.json",
+                    "new_york", "gridworld", 4000, 4000);
+            System.out.println("Starting: " + experiment);
+
+            experiment.doExperiment();
+            experiment = null;
+        }
+
+
+
+
+        Utils.setUtilsParameters(8*60, 12*60, 20, new NewYorkDataSetReader(),
+                "new_york_full.fst", "new_york_chargingstations.json",
+                "new_york", "kmeans", 100);
+        simulation.initSimulation();
+
+
+        for (int startingStateOfCharge = 10; startingStateOfCharge <= 100; startingStateOfCharge+=10) {
+            Experiment experiment = new Experiment(simulation, 8*60, 12*60, startingStateOfCharge, new NewYorkDataSetReader(),
+                    "new_york_full.fst", "new_york_chargingstations.json",
+                    "new_york", "kmeans", 100);
+            System.out.println("Starting: " + experiment);
+
+            experiment.doExperiment();
+            experiment = null;
+        }
 
 
 

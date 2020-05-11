@@ -241,7 +241,7 @@ public class TaxiRewardFunction {
 
 
     public static double getTripReward(double distance){
-        return distance * Utils.TAXI_COST_FOR_KM + Utils.TAXI_START_JOURNEY_FEE;
+        return distance * Utils.TAXI_FARE_FOR_KM + Utils.TAXI_START_JOURNEY_FEE;
     }
 
 

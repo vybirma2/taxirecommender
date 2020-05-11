@@ -67,15 +67,13 @@ public class ChragingRecommender implements Serializable {
     }
 
     private void computePolicies(){
-        System.out.println("Connection creation..." + reachableStates.size());
+        System.out.println("Connection creation...");
         statePredecessors = new StatePredecessors(reachableStates.size());
         createStateConnections();
         TaxiRewardFunction rewardFunction = new TaxiRewardFunction(reachableStates, statePredecessors, parameterEstimator);
         System.out.println("Computing reward...");
         rewardFunction.computeReward();
-        System.out.println("Reward computed.");
-
-        System.out.println("Finished reachability analysis; # states: " + reachableStates.size());
+        System.out.println("Finished reachability analysis.");
     }
 
 

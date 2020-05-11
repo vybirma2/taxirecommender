@@ -65,16 +65,16 @@ public class Experiment {
         Utils.setUtilsParameters(SHIFT_START_TIME, SHIFT_LENGTH, STARTING_STATE_OF_CHARGE, DATA_SET_READER,
                 INPUT_GRAPH_FILE_NAME, INPUT_STATION_FILE_NAME, DATA_SET_NAME, ENVIRONMENT, NUM_OF_CLUSTERS);
 
-        simulation.setAgent("base");
+        simulation.setAgent("charging");
 
-        for (int i = 0; i < Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS; i++){
+        /*for (int i = 0; i < Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS; i++){
             simulation.startSimulation();
             simulation.clearShiftSimulationResults();
             saveSimulationStatistics(simulation.getSimulationStatistics(), "base");
             simulation.clearStatistics();
         }
 
-        simulation.switchAgents("charging");
+        simulation.switchAgents("charging");*/
 
         for (int i = 0; i < Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS; i++){
             simulation.startSimulation();
@@ -99,17 +99,16 @@ public class Experiment {
 
     @Override
     public String toString() {
-        return "evaluation.Experiment{" +
-                " SHIFT_START_TIME=" + SHIFT_START_TIME +
-                ", SHIFT_LENGTH=" + SHIFT_LENGTH +
-                ", STARTING_STATE_OF_CHARGE=" + STARTING_STATE_OF_CHARGE +
-                ", ENVIRONMENT='" + ENVIRONMENT + '\'' +
-                ", INPUT_GRAPH_FILE_NAME='" + INPUT_GRAPH_FILE_NAME + '\'' +
-                ", INPUT_STATION_FILE_NAME='" + INPUT_STATION_FILE_NAME + '\'' +
-                ", DATA_SET_NAME='" + DATA_SET_NAME + '\'' +
-                ", ONE_GRID_CELL_WIDTH=" + ONE_GRID_CELL_WIDTH +
-                ", ONE_GRID_CELL_HEIGHT=" + ONE_GRID_CELL_HEIGHT +
-                ", NUM_OF_CLUSTERS=" + NUM_OF_CLUSTERS +
-                '}';
+        return "Experiment: " +
+                " SHIFT_START_TIME = " + SHIFT_START_TIME +
+                ", SHIFT_LENGTH = " + SHIFT_LENGTH +
+                ", STARTING_STATE_OF_CHARGE = " + STARTING_STATE_OF_CHARGE +
+                ", ENVIRONMENT = " + ENVIRONMENT +
+                ", INPUT_GRAPH_FILE_NAME = " + INPUT_GRAPH_FILE_NAME +
+                ", INPUT_STATION_FILE_NAME = " + INPUT_STATION_FILE_NAME +
+                ", DATA_SET_NAME = " + DATA_SET_NAME +
+                ", ONE_GRID_CELL_WIDTH = " + ONE_GRID_CELL_WIDTH +
+                ", ONE_GRID_CELL_HEIGHT = " + ONE_GRID_CELL_HEIGHT +
+                ", NUM_OF_CLUSTERS = " + NUM_OF_CLUSTERS;
     }
 }

@@ -91,9 +91,7 @@ public class BaseMethodAgent extends Agent {
     private MeasurableAction chooseCharging(SimulationState currentState){
         pathToCenterNode = null;
         ChargingStation chargingStation = ChargingStationReader.getChargingStation(currentState.getNodeId());
-        if (chargingStation == null){
-            System.out.println("ksdbf");
-        }
+
         ArrayList<ChargingConnection> availableConnections = chargingStation.getAvailableConnections();
         double maxPowerKW = Integer.MIN_VALUE;
         ChargingConnection maxConnection = null;

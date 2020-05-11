@@ -53,9 +53,9 @@ public class Utils {
     }
 
 
-    public static final double TAXI_COST_FOR_KM = 30;
+    public static final double TAXI_FARE_FOR_KM = 30;
     public static final double TAXI_START_JOURNEY_FEE = 30;
-    public static final int CAR_FULL_BATTERY_DISTANCE = 300;
+    public static final int ELECTRIC_VEHICLE_DRIVING_RANGE = 300;
     public static double BATTERY_CAPACITY = 40;
 
 
@@ -74,7 +74,7 @@ public class Utils {
     public static final Comparator<TripToChargingStation> tripToChargingStationComparator = new ClosestStationComparator();
     public static final Comparator<ChargingConnection> chargingConnectionComparator = new ChargingConnectionComparator();
     public static ChargingStationStateOrder CHARGING_STATION_STATE_ORDER = null;
-    public static final int NUM_OF_SHIFTS_IN_EXPERIMENTS = 10;
+    public static final int NUM_OF_SHIFTS_IN_EXPERIMENTS = 1000;
 
 
 

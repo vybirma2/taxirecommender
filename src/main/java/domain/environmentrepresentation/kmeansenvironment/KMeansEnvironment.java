@@ -51,15 +51,15 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
     }
 
     private void loadKMeansClusters(File file) throws IOException, ClassNotFoundException {
-        System.out.println("Loading KMeans clusters...");
+//        System.out.println("Loading KMeans clusters...");
         FSTObjectInput in = new FSTObjectInput(new FileInputStream(file));
         clusters = (Map<PickUpPointCentroid, List<TaxiTripPickupPlace>>)in.readObject();
         in.close();
-        System.out.println("Loading finished.");
+//        System.out.println("Loading finished.");
     }
 
     private void computeAndSerializeKMeansClusters(File file) throws IOException {
-        System.out.println("Computing KMeans clusters...");
+ //       System.out.println("Computing KMeans clusters...");
         List<TaxiTripPickupPlace> pickupPlaces = trainingDataSet
                 .stream()
                 .map(t -> new TaxiTripPickupPlace(t.getPickUpLongitude(), t.getPickUpLatitude()))
@@ -72,7 +72,7 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
         FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));
         out.writeObject(clusters);
         out.close();
-        System.out.println("Computing finished.");
+ //       System.out.println("Computing finished.");
     }
 
     public static Map<PickUpPointCentroid, List<TaxiTripPickupPlace>> getClusters() {

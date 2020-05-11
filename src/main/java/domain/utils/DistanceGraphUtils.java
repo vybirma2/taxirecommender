@@ -471,7 +471,7 @@ public class DistanceGraphUtils {
 
 
     public static DistanceSpeedPairTime getDistanceSpeedPairOfPath(LinkedList<Integer> nodePath){
-        if (nodePath.isEmpty()){
+        if (nodePath == null || nodePath.isEmpty()){
             return new DistanceSpeedPairTime(0,0,0);
         }
         double distance = 0;

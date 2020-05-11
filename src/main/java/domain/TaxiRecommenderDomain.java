@@ -104,7 +104,7 @@ public class TaxiRecommenderDomain implements Serializable {
         long startTime;
         long stopTime;
 
-        System.out.println("Estimating parameters started...");
+     //   System.out.println("Estimating parameters started...");
         startTime = System.nanoTime();
 
         this.parameterEstimator = new ParameterEstimator(taxiTrips);
@@ -115,7 +115,7 @@ public class TaxiRecommenderDomain implements Serializable {
         out.writeObject(parameterEstimator);
         out.close();
 
-        System.out.println("Estimating finished in " + (stopTime - startTime)/1000000000. + " s.");
+       // System.out.println("Estimating finished in " + (stopTime - startTime)/1000000000. + " s.");
     }
 
     private void readParameterEstimator(File file) throws IOException, ClassNotFoundException {
@@ -140,7 +140,7 @@ public class TaxiRecommenderDomain implements Serializable {
         long startTime;
         long stopTime;
 
-        System.out.println("Setting environment..");
+       // System.out.println("Setting environment..");
         startTime = System.nanoTime();
 
         createEnvironment();
@@ -153,7 +153,7 @@ public class TaxiRecommenderDomain implements Serializable {
         }
 
         stopTime  = System.nanoTime();
-        System.out.println("Setting finished in " + (stopTime - startTime)/1000000000. + " s.");
+     //   System.out.println("Setting finished in " + (stopTime - startTime)/1000000000. + " s.");
 
     }
 
@@ -162,7 +162,7 @@ public class TaxiRecommenderDomain implements Serializable {
         long startTime;
         long stopTime;
 
-        System.out.println("Loading graph...");
+    //    System.out.println("Loading graph...");
         startTime = System.nanoTime();
         osmGraph = GraphLoader.loadGraph(roadGraphInputFileFullPath);
 
@@ -172,7 +172,7 @@ public class TaxiRecommenderDomain implements Serializable {
 
         stopTime  = System.nanoTime();
 
-        System.out.println("Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + osmNodes.size() + " nodes, " + osmGraph.getAllEdges().size() + " edges.");
+     //   System.out.println("Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + osmNodes.size() + " nodes, " + osmGraph.getAllEdges().size() + " edges.");
     }
 
 
@@ -180,12 +180,12 @@ public class TaxiRecommenderDomain implements Serializable {
         long startTime;
         long stopTime;
 
-        System.out.println("Loading domain.charging stations...");
+     //   System.out.println("Loading domain.charging stations...");
         startTime = System.nanoTime();
         chargingStations = new ArrayList<>(ChargingStationReader.readChargingStations(chargingStationsInputFileFullPath, chargingStationsInputFile));
         DistanceGraphUtils.setChargingStations(chargingStations);
         stopTime  = System.nanoTime();
-        System.out.println("Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + chargingStations.size() + " domain.charging stations.");
+     //   System.out.println("Loading finished in " + (stopTime - startTime)/1000000000. + " s, loaded " + chargingStations.size() + " domain.charging stations.");
     }
 
 
@@ -193,14 +193,14 @@ public class TaxiRecommenderDomain implements Serializable {
         long startTime;
         long stopTime;
 
-        System.out.println( "Computing shortest paths to domain.charging stations...");
+     //   System.out.println( "Computing shortest paths to domain.charging stations...");
         startTime = System.nanoTime();
         AllDistancesSpeedsPair allDistancesSpeedsPair = getChargingStationDistanceSpeedTime("distance_speed_" + Utils.DATA_SET_NAME);
         DistanceGraphUtils.setChargingStationDistancesSpeedTime(allDistancesSpeedsPair.getDistanceSpeedTime());
         Utils.setChargingStationStateOrder(new DistanceChargingStationStateOrder(allDistancesSpeedsPair.getDistanceSpeedTime(), this
         .environment.getNodes()));
         stopTime  = System.nanoTime();
-        System.out.println("Computing finished in " + (stopTime - startTime)/1000000000. + "s.");
+     //   System.out.println("Computing finished in " + (stopTime - startTime)/1000000000. + "s.");
     }
 
 
@@ -208,11 +208,11 @@ public class TaxiRecommenderDomain implements Serializable {
         long startTime;
         long stopTime;
 
-        System.out.println("Reading taxi trip dataset...");
+     //   System.out.println("Reading taxi trip dataset...");
         startTime = System.nanoTime();
         taxiTrips = Utils.DATA_SET_READER.readDataSet();
         stopTime  = System.nanoTime();
-        System.out.println("Reading finished in " + (stopTime - startTime)/1000000000. + "s.");
+     //   System.out.println("Reading finished in " + (stopTime - startTime)/1000000000. + "s.");
     }
 
 

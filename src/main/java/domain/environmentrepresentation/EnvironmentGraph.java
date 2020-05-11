@@ -22,12 +22,12 @@ public abstract class EnvironmentGraph<TNode extends EnvironmentNode, TEdge exte
 
     public EnvironmentGraph(Graph<RoadNode, RoadEdge> osmGraph) {
         this.osmGraph = osmGraph;
-        System.out.println("Setting environment nodes...");
+//        System.out.println("Setting environment nodes...");
         setNodes();
-        System.out.println("Setting finished.");
-        System.out.println("Setting environment edges...");
+ //       System.out.println("Setting finished.");
+//        System.out.println("Setting environment edges...");
         setEdges();
-        System.out.println("Setting finished.");
+//        System.out.println("Setting finished.");
     }
 
     public TNode getNode(int nodeId){
