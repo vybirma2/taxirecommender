@@ -158,7 +158,7 @@ public class ChargingRecommenderAgent extends Agent {
         double resultStateReward = resultState.getReward();
         double tripReward = TaxiRewardFunction.getTripReward(distance);
 
-        return resultStateReward + tripReward > 0.5*currentState.getReward();
+        return resultStateReward + tripReward > 0.1*currentState.getReward();
     }
 
 
