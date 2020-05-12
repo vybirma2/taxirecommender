@@ -141,7 +141,7 @@ public class DistanceGraphUtils {
     }
 
 
-    public static Set<Integer> getOsmNeighbours(int node){
+    public static Set<Integer> getOsmNeighbours(int node) {
         List<RoadEdge> edges = osmGraph.getOutEdges(node);
         Set<Integer> neighbours = new HashSet<>();
         for (RoadEdge edge : edges){
@@ -242,6 +242,9 @@ public class DistanceGraphUtils {
     public static double getEuclideanDistanceBetweenOsmNodes(int fromNodeId, int toNodeId){
         RoadNode fromNode = osmGraph.getNode(fromNodeId);
         RoadNode toNode = osmGraph.getNode(toNodeId);
+        if (fromNode == null || toNode == null){
+            return Double.MAX_VALUE;
+        }
         return DistanceGraphUtils.getEuclideanDistance(fromNode.getLongitude(), fromNode.getLatitude(),
                 toNode.getLongitude(), toNode.getLatitude());
     }

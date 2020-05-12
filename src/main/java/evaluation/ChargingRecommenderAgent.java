@@ -9,6 +9,8 @@ import domain.charging.ChargingConnection;
 import domain.charging.ChargingStation;
 import domain.charging.ChargingStationReader;
 import domain.environmentrepresentation.EnvironmentNode;
+import domain.environmentrepresentation.kmeansenvironment.kmeans.TaxiTripPickupPlace;
+import domain.parameterestimation.TaxiTrip;
 import domain.utils.Utils;
 import problemsolving.ChragingRecommender;
 import domain.TaxiRewardFunction;
@@ -17,11 +19,14 @@ import org.nustaq.serialization.FSTObjectInput;
 import domain.parameterestimation.EnergyConsumptionEstimator;
 import domain.utils.DistanceGraphUtils;
 import domain.utils.DistanceSpeedPairTime;
+import visualization.MapVisualizer;
 
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static domain.utils.DistanceGraphUtils.getEuclideanDistanceBetweenOsmNodes;
 
@@ -111,6 +116,54 @@ public class ChargingRecommenderAgent extends Agent {
 
     private void init() {
         domain = new TaxiRecommenderDomain(Utils.ENVIRONMENT);
+
+
+
+
+/*
+
+        try {
+            //Graph<RoadNode, RoadEdge> graph = new Graph<>();
+            new Thread() {
+                @Override
+                public void run() {
+                    MapVisualizer.main(null);
+                }
+            }.start();
+
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+            List<TaxiTripPickupPlace> pickupPlaces = domain.getTaxiTrips()
+                    .stream()
+                    .map(t -> new TaxiTripPickupPlace(t.getPickUpLongitude(), t.getPickUpLatitude()))
+                    .collect(Collectors.toList());
+
+            MapVisualizer.addPickUpPointsToMap(pickupPlaces);
+            MapVisualizer.addEnvironmentNodesToMap(domain.getEnvironment().getEnvironmentNodes());
+
+            try {
+                Thread.sleep(2000000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+*/
+
+
+
+
+
+
         generateReachableStates();
     }
 
