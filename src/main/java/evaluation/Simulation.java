@@ -54,7 +54,7 @@ public class Simulation {
             ChargingStationReader.readChargingStations(chargingStationsInputFileFullPath, INPUT_STATION_FILE_NAME);
             simulationStatistics = new SimulationStatistics();
             baseMethodAgent = new BaseMethodAgent(osmGraph);
-            chargingRecommenderAgent = new ChargingRecommenderAgent(osmGraph);
+          //  chargingRecommenderAgent = new ChargingRecommenderAgent(osmGraph);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -54,7 +54,7 @@ public class Main {
 
 
 
-        Utils.setUtilsParameters(8*60, 12*60, 20, new NewYorkDataSetReader(),
+     /*   Utils.setUtilsParameters(8*60, 12*60, 20, new NewYorkDataSetReader(),
                 "new_york.fst", "new_york_chargingstations.json",
                 "new_york", "kmeans", 100);
         simulation.initSimulation();
@@ -68,24 +68,24 @@ public class Main {
 
             experiment.doExperiment();
             experiment = null;
-        }
+        }*/
 
 
-        /*Utils.setUtilsParameters(8*60, 12*60, 20, new NewYorkDataSetReader(),
-                "new_york_full.fst", "new_york_chargingstations.json",
-                "new_york", "gridworld", 4000, 4000);
+        Utils.setUtilsParameters(8*60, 12*60, 20, new NewYorkDataSetReader(),
+                "new_york.fst", "new_york_chargingstations.json",
+                "new_york", "gridworld", 2500, 2500);
         simulation.initSimulation();
 
 
         for (int startingStateOfCharge = 10; startingStateOfCharge <= 100; startingStateOfCharge+=10){
             Experiment experiment = new Experiment(simulation, 8*60, 12*60, startingStateOfCharge, new NewYorkDataSetReader(),
                     "new_york_full.fst", "new_york_chargingstations.json",
-                    "new_york", "gridworld", 4000, 4000);
+                    "new_york", "gridworld", 2500, 2500);
             System.out.println("Starting: " + experiment);
 
             experiment.doExperiment();
             experiment = null;
-        }*/
+        }
 
 
 

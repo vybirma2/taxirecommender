@@ -65,15 +65,7 @@ public class Experiment {
         Utils.setUtilsParameters(SHIFT_START_TIME, SHIFT_LENGTH, STARTING_STATE_OF_CHARGE, DATA_SET_READER,
                 INPUT_GRAPH_FILE_NAME, INPUT_STATION_FILE_NAME, DATA_SET_NAME, ENVIRONMENT, NUM_OF_CLUSTERS);
 
-        simulation.setAgent("charging");
-
-        for (int i = 0; i < Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS; i++){
-            simulation.startSimulation();
-            simulation.clearShiftSimulationResults();
-            saveSimulationStatistics(simulation.getSimulationStatistics(), "charging");
-            simulation.clearStatistics();
-        }
-        simulation.switchAgents("base");
+        simulation.setAgent("base");
 
         for (int i = 0; i < Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS; i++){
             simulation.startSimulation();
@@ -81,6 +73,14 @@ public class Experiment {
             saveSimulationStatistics(simulation.getSimulationStatistics(), "base");
             simulation.clearStatistics();
         }
+        /*simulation.switchAgents("base");
+
+        for (int i = 0; i < Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS; i++){
+            simulation.startSimulation();
+            simulation.clearShiftSimulationResults();
+            saveSimulationStatistics(simulation.getSimulationStatistics(), "base");
+            simulation.clearStatistics();
+        }*/
     }
 
     private void saveSimulationStatistics(SimulationStatistics simulationStatistics, String agent) throws IOException {

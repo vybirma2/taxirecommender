@@ -20,7 +20,7 @@ public class BaseMethodAgent extends Agent {
 
     private ArrayList<TaxiTrip> taxiTrips;
 
-    private final int BATTERY_LOW_LEVEL_VALUE = 15;
+    private final int BATTERY_LOW_LEVEL_VALUE = 10;
 
     private int centreNode;
     private final HashMap<Integer, Integer> pickupsInNodes = new HashMap<>();
