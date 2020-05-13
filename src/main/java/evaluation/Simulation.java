@@ -48,13 +48,13 @@ public class Simulation {
             osmGraph = GraphLoader.loadGraph("data/graphs/" + INPUT_GRAPH_FILE_NAME);
             DistanceGraphUtils.setOsmGraph(osmGraph);
             nodes = new ArrayList<>(osmGraph.getAllNodes());
-            currentState = new SimulationState(getRandomNode().getId(), SHIFT_START_TIME, STARTING_STATE_OF_CHARGE);
             initTripChoosing();
+            currentState = new SimulationState(getRandomNode().getId(), SHIFT_START_TIME, STARTING_STATE_OF_CHARGE);
             String chargingStationsInputFileFullPath = "data/chargingstations/" + INPUT_STATION_FILE_NAME;
             ChargingStationReader.readChargingStations(chargingStationsInputFileFullPath, INPUT_STATION_FILE_NAME);
             simulationStatistics = new SimulationStatistics();
             baseMethodAgent = new BaseMethodAgent(osmGraph);
-          //  chargingRecommenderAgent = new ChargingRecommenderAgent(osmGraph);
+            chargingRecommenderAgent = new ChargingRecommenderAgent(osmGraph);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,8 +81,8 @@ public class Simulation {
 
 
     private RoadNode getRandomNode(){
-        Collections.shuffle(nodes);
-        return nodes.get(0);
+        Collections.shuffle(taxiTrips.get(690));
+        return osmGraph.getNode(taxiTrips.get(690).get(0).getFromOSMNode());
     }
 
 

@@ -54,7 +54,7 @@ public class Main {
 
 
 
-     /*   Utils.setUtilsParameters(8*60, 12*60, 20, new NewYorkDataSetReader(),
+        Utils.setUtilsParameters(8*60, 12*60, 20, new NewYorkDataSetReader(),
                 "new_york.fst", "new_york_chargingstations.json",
                 "new_york", "kmeans", 100);
         simulation.initSimulation();
@@ -68,10 +68,10 @@ public class Main {
 
             experiment.doExperiment();
             experiment = null;
-        }*/
+        }
 
 
-        Utils.setUtilsParameters(8*60, 12*60, 20, new NewYorkDataSetReader(),
+       /* Utils.setUtilsParameters(8*60, 12*60, 20, new NewYorkDataSetReader(),
                 "new_york.fst", "new_york_chargingstations.json",
                 "new_york", "gridworld", 2500, 2500);
         simulation.initSimulation();
@@ -85,7 +85,7 @@ public class Main {
 
             experiment.doExperiment();
             experiment = null;
-        }
+        }*/
 
 
 
