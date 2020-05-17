@@ -51,7 +51,6 @@ public class ChargingStationReader {
         return ChargingStationReader.chargingStations.values();
     }
 
-
     private static void reduceChargingStations() {
         List<ChargingStation> chargingStations = new ArrayList<>(ChargingStationReader.chargingStations.values());
         Collections.shuffle(chargingStations);
@@ -62,7 +61,6 @@ public class ChargingStationReader {
             ChargingStationReader.chargingStations.put(chargingStations.get(i).getRoadNode().getId(), chargingStations.get(i));
         }
     }
-
 
     private static void readRawDataFromSourceFile(String fullPathToSourceFile) throws IOException, ParseException {
         JSONArray stations = (JSONArray) jsonParser.parse(new FileReader(fullPathToSourceFile));
@@ -75,7 +73,6 @@ public class ChargingStationReader {
         }
     }
 
-
     private static void writeSerializedDataToFile(File file) throws IOException {
         reduceChargingStations();
         FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));
@@ -84,14 +81,12 @@ public class ChargingStationReader {
         out.close();
     }
 
-
     private static void readSerializedDataFromFile(File file) throws IOException, ClassNotFoundException {
         FSTObjectInput in = new FSTObjectInput(new FileInputStream(file));
         ChargingStationReader.chargingStations = (HashMap<Integer, ChargingStation>) in.readObject();
         ChargingStationReader.chargingConnections = (HashMap<Integer, ChargingConnection>) in.readObject();
         in.close();
     }
-
 
     private static ChargingStation parseChargingStation(JSONObject station){
         JSONObject addressInfo = (JSONObject) station.get("AddressInfo");
@@ -126,7 +121,6 @@ public class ChargingStationReader {
         }
     }
 
-
     /**
      * @param nodeId original graph node id
      * @return domain.charging station connected with this node if any
@@ -135,7 +129,6 @@ public class ChargingStationReader {
         return chargingStations.get(nodeId);
     }
 
-
     /**
      * @param connectionId
      * @return domain.charging connection
@@ -143,7 +136,6 @@ public class ChargingStationReader {
     public static ChargingConnection getChargingConnection(int connectionId) {
         return chargingConnections.get(connectionId);
     }
-
 
     public static Collection<ChargingStation> getChargingStations(){
         return chargingStations.values();

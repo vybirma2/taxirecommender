@@ -27,11 +27,8 @@ public class PickUpPassengerActionType  extends TaxiActionType {
     }
 
 
-
     /**
-     * @param state
-     * @return list of all possible actions of picking up passenger in current state defined by transitions set
-     * in TaxiRecommenderDomainGenerator - check on applicability - not running out of time/battery...
+     * Connections states reachable by picking up a passenger
      */
     @Override
     public void createConnections(TaxiState state) {
@@ -49,25 +46,14 @@ public class PickUpPassengerActionType  extends TaxiActionType {
         }
     }
 
-
-    @Override
-    public List<MeasurableAction> allApplicableActions(TaxiState state) {
-        return new ArrayList<>();
-    }
-
-
     @Override
     boolean applicableInState(TaxiState state) {
         return transitions.containsKey(state.getNodeId());
     }
 
-
     private boolean applicableInState(TaxiState state, int toNodeId){
         int startInterval = getIntervalStart(state.getTimeStamp());
 
-        if (taxiTripLengths.get(startInterval) == null){
-            System.out.println("suyc");
-        }
         if (taxiTripLengths.get(startInterval).containsKey(state.getNodeId())){
             if (taxiTripLengths.get(startInterval).get(state.getNodeId()).containsKey(toNodeId)){
                 return applicableInState(state) && shiftNotOver(state, taxiTripLengths.get(startInterval).get(state.getNodeId()).get(toNodeId).intValue()) &&

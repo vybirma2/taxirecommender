@@ -6,7 +6,6 @@ import java.util.*;
 
 public class ParameterEstimationUtils {
 
-
     /**
      * @param timeSortedTaxiTrips taxi trips sorted into defined estimation intervals
      * @return number of trips from to some node sorted in estimation intervals
@@ -22,7 +21,6 @@ public class ParameterEstimationUtils {
 
         return tripsToDestinationNode;
     }
-
 
     /**
      * @param taxiTrips
@@ -50,7 +48,6 @@ public class ParameterEstimationUtils {
         return tripsToDestinationNode;
     }
 
-
     /**
      * @param timeSortedTaxiTrips
      * @return number of pickups in given nodes in estimation time intervals
@@ -66,7 +63,6 @@ public class ParameterEstimationUtils {
 
         return pickupsInOSMNodes;
     }
-
 
     /**
      * @param taxiTrips
@@ -87,7 +83,6 @@ public class ParameterEstimationUtils {
         return pickupsInOSMNodes;
     }
 
-
     /**
      * @param taxiTrips
      * @return number of drop offs in given nodes in one estimation interval
@@ -107,7 +102,6 @@ public class ParameterEstimationUtils {
         return dropOffsInOSMNodes;
     }
 
-
     /**
      * @param timeSortedTaxiTrips
      * @return number of drop offs in given nodes in estimation intervals
@@ -123,7 +117,6 @@ public class ParameterEstimationUtils {
 
         return dropOffsInOSMNodes;
     }
-
 
     /**
      * @param taxiTrips
@@ -167,11 +160,9 @@ public class ParameterEstimationUtils {
         return timeSortedTaxiTrips;
     }
 
-
     public static boolean beforeTripTime(TaxiTrip taxiTrip, int time){
         return taxiTrip.getStartDate().getHours() * 60 + taxiTrip.getStartDate().getMinutes() < time;
     }
-
 
     public static boolean afterTripTime(TaxiTrip taxiTrip, int time){
         return taxiTrip.getStartDate().getHours() * 60 + taxiTrip.getStartDate().getMinutes() >= time;

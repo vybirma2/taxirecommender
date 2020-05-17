@@ -21,7 +21,6 @@ public class GoingToChargingStationAction extends MeasurableAction  {
         }
     }
 
-
     @Override
     public int getRestConsumption() {
         return consumption;
@@ -36,12 +35,6 @@ public class GoingToChargingStationAction extends MeasurableAction  {
     public void setRestConsumption(int restConsumption) {
         this.consumption = restConsumption;
     }
-
-    @Override
-    public MeasurableAction copy() {
-        return new GoingToChargingStationAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId());
-    }
-
 
     @Override
     public String toString() {

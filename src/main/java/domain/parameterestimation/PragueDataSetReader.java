@@ -12,10 +12,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Implementation of Prague data set reader
+ */
 public class PragueDataSetReader implements DataSetReader {
 
     String inputFile = "data\\taxitrips\\prague\\liftago_prague.csv";
-
 
     /**
      * @return Arraylist of all parsed taxi trips with set parameters
@@ -35,7 +37,6 @@ public class PragueDataSetReader implements DataSetReader {
 
         return taxiTrips;
     }
-
 
     private ArrayList<TaxiTrip> parseTaxiTripsFromOriginalDataFileAndSerialize(File file){
         ArrayList<TaxiTrip> taxiTrips = null;
@@ -96,9 +97,6 @@ public class PragueDataSetReader implements DataSetReader {
             return null;
         }
 
-        /*EnvironmentNode fromNode = DistanceGraphUtils.chooseEnvironmentNode(pickUpLongitude, pickUpLatitude);
-        EnvironmentNode toNode = DistanceGraphUtils.chooseEnvironmentNode(destinationLongitude, destinationLatitude);
-*/
         Date startDate = dateFormat.parse(trip[6]);
         Date finishDate = dateFormat.parse(trip[7]);
 

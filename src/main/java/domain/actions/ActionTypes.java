@@ -25,7 +25,6 @@ public enum ActionTypes {
         return value;
     }
 
-
     public String getName() {
         return name;
     }

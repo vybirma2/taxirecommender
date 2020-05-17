@@ -38,7 +38,6 @@ public class DistanceChargingStationStateOrder implements ChargingStationStateOr
                 .collect(Collectors.toList());
     }
 
-
     private void computeOrders(){
         Set<Integer> chargingStations = chargingStationDistanceSpeedTime.keySet();
         File file = new File("data/programdata/chargingOrders" + Utils.DATA_SET_NAME + Utils.ENVIRONMENT +

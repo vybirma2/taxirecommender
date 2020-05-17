@@ -27,11 +27,9 @@ public class TripToChargingStation {
         return fromNode;
     }
 
-
     public Integer getChargingStation() {
         return chargingStation;
     }
-
 
     public double getDistance() {
         return distance;

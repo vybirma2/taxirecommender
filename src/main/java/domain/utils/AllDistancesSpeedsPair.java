@@ -12,7 +12,6 @@ public class AllDistancesSpeedsPair implements Serializable {
 
     private HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> distanceSpeedTime;
 
-
     public AllDistancesSpeedsPair(HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> distanceSpeedTime) {
         this.distanceSpeedTime = distanceSpeedTime;
     }

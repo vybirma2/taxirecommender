@@ -12,7 +12,10 @@ import domain.utils.Utils;
 import java.io.*;
 import java.util.*;
 
-
+/**
+ * Class enabling user to generate state space and compute policies for values set in Utils class and passed to the
+ * constructor.
+ * */
 public class ChragingRecommender implements Serializable {
 
     private final List<TaxiActionType> actionTypes;
@@ -31,9 +34,28 @@ public class ChragingRecommender implements Serializable {
         TaxiState.stateId = 0;
     }
 
+    /**
+     * Function to start performing state space generation and policy finding process
+     * */
     public void performStateSpaceAnalysis() {
         performReachabilitySearch();
         computePolicies();
+    }
+
+    /**
+     * Method called by concrete ActionTypeClass to create connection between two states which are reachable by
+     * an action.
+     * */
+    public void addPreviousStateConnection(int successorStateId, int predecessorStateId, int actionId) {
+        statePredecessors.addPredecessor(successorStateId, predecessorStateId, actionId);
+    }
+
+    public TaxiState getState(TaxiState state) {
+        Integer taxiState = visitedStates.get(state);
+        if (taxiState == null){
+            return null;
+        }
+        return reachableStates.get(taxiState);
     }
 
     private void performReachabilitySearch() {
@@ -76,42 +98,11 @@ public class ChragingRecommender implements Serializable {
         System.out.println("Finished reachability analysis.");
     }
 
-
     private void createStateConnections(){
         for (TaxiState state : reachableStates) {
-            createConnections(state);
+            for (TaxiActionType a : actionTypes) {
+                a.createConnections(state);
+            }
         }
-    }
-
-
-    /**
-     * @param state current state
-     * @return all possible transitions - future states - i.e. generator of new states, if generated state already
-     * exist only updates its previous actions and previous states
-     */
-    public void createConnections(TaxiState state) {
-        for (TaxiActionType a : actionTypes) {
-            a.createConnections(state);
-        }
-    }
-
-
-    public void addPreviousStateConnection(int successorStateId, int predecessorStateId, int actionId) {
-        statePredecessors.addPredecessor(successorStateId, predecessorStateId, actionId);
-    }
-
-
-    public List<TaxiState> getReachableStates() {
-        return reachableStates;
-    }
-
-
-
-    public TaxiState getState(TaxiState state) {
-        Integer taxiState = visitedStates.get(state);
-        if (taxiState == null){
-            return null;
-        }
-        return reachableStates.get(taxiState);
     }
 }

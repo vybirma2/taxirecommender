@@ -462,14 +462,6 @@ public class GridWorldEnvironmentGraph extends EnvironmentGraph<GridWorldEnviron
         }
     }
 
-    public int getNumOfColumns() {
-        return numOfColumns;
-    }
-
-    public int getNumOfRows() {
-        return numOfRows;
-    }
-
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

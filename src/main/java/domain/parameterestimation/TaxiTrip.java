@@ -21,8 +21,8 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
 
     private Integer fromEnvironmentNode;
     private Integer toEnvironmentNode;
-    private int fromOSMNode;
-    private int toOSMNode;
+    private final int fromOSMNode;
+    private final int toOSMNode;
 
     public TaxiTrip(double pickUpLongitude, double pickUpLatitude, double destinationLongitude,
                     double destinationLatitude, double distance, long tripLength, Date startDate,
@@ -43,7 +43,6 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
         this.toOSMNode = toOSMNode;
     }
 
-
     public double getPickUpLongitude() {
         return pickUpLongitude;
     }
@@ -52,11 +51,9 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
         return pickUpLatitude;
     }
 
-
     public double getDistance() {
         return distance;
     }
-
 
     public void setDistance(double distance) {
         this.distance = distance;
@@ -78,11 +75,9 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
         return tripLength;
     }
 
-
     public int getTripEnergyConsumption() {
         return tripEnergyConsumption;
     }
-
 
     private int computeEnergyConsumption(){
         return EnergyConsumptionEstimator.getEnergyConsumption(this.distance);
@@ -108,16 +103,8 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
         return fromOSMNode;
     }
 
-    public void setFromOSMNode(int fromOSMNode) {
-        this.fromOSMNode = fromOSMNode;
-    }
-
     public int getToOSMNode() {
         return toOSMNode;
-    }
-
-    public void setToOSMNode(int toOSMNode) {
-        this.toOSMNode = toOSMNode;
     }
 
     @Override
@@ -130,7 +117,6 @@ public class TaxiTrip implements Comparable<TaxiTrip>, Serializable {
                 ", finishDate=" + finishDate +
                 '}';
     }
-
 
     @Override
     public int compareTo(TaxiTrip o) {

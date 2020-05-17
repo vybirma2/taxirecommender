@@ -16,23 +16,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+
+/**
+ * Base model agent implementation
+ */
 public class BaseMethodAgent extends Agent {
-
     private ArrayList<TaxiTrip> taxiTrips;
-
     private final int BATTERY_LOW_LEVEL_VALUE = 10;
-
     private int centreNode;
     private final HashMap<Integer, Integer> pickupsInNodes = new HashMap<>();
     private boolean inChargingStation = false;
     private boolean notChargingPreviously = false;
 
 
-    private LinkedList<Integer> pathToCenterNode;
-
     public BaseMethodAgent(Graph<RoadNode, RoadEdge> osmGraph) {
         super(osmGraph);
-
         try {
             taxiTrips = Utils.DATA_SET_READER.readDataSet();
         } catch (IOException | ClassNotFoundException e) {
@@ -40,6 +38,44 @@ public class BaseMethodAgent extends Agent {
         }
 
         init();
+    }
+
+    /**
+     * Accepting all trips if enough SOC and time
+     * @param currentState
+     * @param trip
+     * @return
+     */
+    @Override
+    public boolean tripOffer(SimulationState currentState, SimulationTaxiTrip trip) {
+        MeasurableAction action = new PickUpPassengerAction(currentState.getNodeId(), trip.getDistance(),
+                ActionTypes.PICK_UP_PASSENGER.getValue(), trip.getFromNode(), trip.getToNode(), (int) trip.getTripLength());
+        return actionApplicable(currentState, action);
+    }
+
+    /**
+     * @param currentState
+     * @return action according to the behaviour described in the thesis
+     */
+    @Override
+    public MeasurableAction getAction(SimulationState currentState) {
+        if (inChargingStation && notChargingPreviously){
+            return chooseCharging(currentState);
+        } else if (inChargingStation) {
+            return chooseFromChargingStation(currentState);
+        } else if (currentState.getStateOfCharge() <= BATTERY_LOW_LEVEL_VALUE){
+            return chooseGoingToCharging(currentState);
+        } else if (currentState.getNodeId() == centreNode){
+            return chooseStaying(currentState);
+        } else {
+            return chooseGoingToCenter(currentState);
+        }
+    }
+
+    @Override
+    public void resetAgent() {
+        this.inChargingStation = false;
+        this.notChargingPreviously = false;
     }
 
 
@@ -62,25 +98,7 @@ public class BaseMethodAgent extends Agent {
         }
     }
 
-
-    @Override
-    public MeasurableAction getAction(SimulationState currentState) {
-        if (inChargingStation && notChargingPreviously){
-            return chooseCharging(currentState);
-        } else if (inChargingStation) {
-            return chooseFromChargingStation(currentState);
-        } else if (currentState.getStateOfCharge() <= BATTERY_LOW_LEVEL_VALUE){
-            return chooseGoingToCharging(currentState);
-        } else if (currentState.getNodeId() == centreNode){
-            return chooseStaying(currentState);
-        } else {
-            return chooseGoingToCenter(currentState);
-        }
-    }
-
-
     private MeasurableAction chooseGoingToCharging(SimulationState currentState){
-        pathToCenterNode = null;
         TripToChargingStation tripToChargingStation = ChargingStationReader.getChargingStations().stream()
                 .map(station -> new TripToChargingStation(currentState.getNodeId(), station.getRoadNode().getId())).min(Utils.tripToChargingStationComparator).get();
         inChargingStation = true;
@@ -89,7 +107,6 @@ public class BaseMethodAgent extends Agent {
     }
 
     private MeasurableAction chooseCharging(SimulationState currentState){
-        pathToCenterNode = null;
         ChargingStation chargingStation = ChargingStationReader.getChargingStation(currentState.getNodeId());
 
         ArrayList<ChargingConnection> availableConnections = chargingStation.getAvailableConnections();
@@ -106,10 +123,8 @@ public class BaseMethodAgent extends Agent {
                 }
             }
         }
-
         inChargingStation = true;
         notChargingPreviously = false;
-
         int timeToMax = timeToFullStateOfCharge(currentState, maxConnection);
         if (currentState.getTimeStamp() + timeToMax <= Utils.SHIFT_START_TIME + Utils.SHIFT_LENGTH){
             return new ChargingAction(ActionTypes.CHARGING_IN_CHARGING_STATION.getValue(),
@@ -134,7 +149,6 @@ public class BaseMethodAgent extends Agent {
         return new NextLocationAction(ActionTypes.TO_NEXT_LOCATION.getValue(), currentState.getNodeId(), centreNode);
     }
 
-
     private MeasurableAction chooseGoingToCenter(SimulationState currentState){
         inChargingStation = false;
         notChargingPreviously = false;
@@ -145,37 +159,13 @@ public class BaseMethodAgent extends Agent {
         return chooseGoingToCharging(currentState);
     }
 
-
     private int timeToFullStateOfCharge(SimulationState state, ChargingConnection connection){
         double currentStateOfChargeInKW = (state.getStateOfCharge()/100.) * Utils.BATTERY_CAPACITY;
         return (int)((Utils.BATTERY_CAPACITY - currentStateOfChargeInKW)/connection.getPowerKW()*60.);
     }
 
-    @Override
-    public boolean tripOffer(SimulationState currentState, SimulationTaxiTrip trip) {
-        pathToCenterNode = null;
-        MeasurableAction action = new PickUpPassengerAction(currentState.getNodeId(), trip.getDistance(),
-                ActionTypes.PICK_UP_PASSENGER.getValue(), trip.getFromNode(), trip.getToNode(), (int) trip.getTripLength());
-        return actionApplicable(currentState, action);
-    }
-
-    @Override
-    public void resetAgent() {
-        this.inChargingStation = false;
-        this.notChargingPreviously = false;
-    }
-
-
     private boolean actionApplicable(SimulationState currentState, MeasurableAction action){
         return currentState.getStateOfCharge() + action.getRestConsumption() > this.BATTERY_LOW_LEVEL_VALUE
                 && currentState.getTimeStamp() + action.getTimeToFinish() <= Utils.SHIFT_START_TIME + Utils.SHIFT_LENGTH;
-    }
-
-    public void setInChargingStation(boolean inChargingStation) {
-        this.inChargingStation = inChargingStation;
-    }
-
-    public void setNotChargingPreviously(boolean notChargingPreviously) {
-        this.notChargingPreviously = notChargingPreviously;
     }
 }

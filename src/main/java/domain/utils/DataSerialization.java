@@ -13,7 +13,6 @@ import static domain.utils.DistanceGraphUtils.*;
 
 public class DataSerialization {
 
-
     /**
      * Computes and serialized distances and speeds from environment nodes to domain.charging stations
      * @param chargingStations
@@ -34,7 +33,6 @@ public class DataSerialization {
 
         serializeData(fileName, resultDistanceSpeedTime);
     }
-
 
     private static void addDistancesAndSpeedsToChargingStation(ChargingStation chargingStation,
                                                                Collection<? extends EnvironmentNode> nodes,
@@ -61,7 +59,6 @@ public class DataSerialization {
 
         resultDistanceSpeedTime.put(chargingStation.getRoadNode().getId(), stationDistanceSpeedTime);
     }
-
 
     private static void serializeData(String fileName,
                                       HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> resultDistanceSpeedTime) throws IOException {

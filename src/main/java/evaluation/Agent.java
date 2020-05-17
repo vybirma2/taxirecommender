@@ -14,15 +14,11 @@ public abstract class Agent {
 
     protected Graph<RoadNode, RoadEdge> osmGraph;
 
-
     public Agent(Graph<RoadNode, RoadEdge> osmGraph) {
         this.osmGraph = osmGraph;
     }
 
-
     public abstract MeasurableAction getAction(SimulationState currentState);
-
     public abstract boolean tripOffer(SimulationState currentState, SimulationTaxiTrip trip);
-
     public abstract void resetAgent();
 }

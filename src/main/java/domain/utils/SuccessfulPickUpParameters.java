@@ -19,16 +19,13 @@ public class SuccessfulPickUpParameters {
         this.futureStateReward = futureStateReward;
     }
 
-
     public ArrayList<Double> getProbabilities() {
         return probabilities;
     }
 
-
     public ArrayList<Double> getTripReward() {
         return tripReward;
     }
-
 
     public ArrayList<Double> getFutureStateReward() {
         return futureStateReward;

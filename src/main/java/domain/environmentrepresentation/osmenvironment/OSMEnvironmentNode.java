@@ -7,7 +7,6 @@ import java.util.Set;
 
 public class OSMEnvironmentNode extends EnvironmentNode {
 
-
     public OSMEnvironmentNode(RoadNode node, Set<Integer> neighbours) {
         super(node, neighbours);
     }

@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to gather all connections between individual states from a state space reachable by action
+ */
 public class StatePredecessors implements Serializable {
 
     private final List<List<List<Integer>>> predecessors = new ArrayList<>();
@@ -15,7 +18,6 @@ public class StatePredecessors implements Serializable {
         this.numOfStates = numOfStates;
         init();
     }
-
 
     private void init(){
         for (int i = 0; i < Utils.NUM_OF_ACTION_TYPES; i++){
@@ -27,14 +29,11 @@ public class StatePredecessors implements Serializable {
         }
     }
 
-
     public void addPredecessor(int successorStateId, int predecessorStateId, int actionId){
         predecessors.get(actionId).get(successorStateId).add(predecessorStateId);
     }
 
-
     public List<Integer> getPreviousStateNodesOfActionInState(int actionId, int state){
         return predecessors.get(actionId).get(state);
     }
-
 }

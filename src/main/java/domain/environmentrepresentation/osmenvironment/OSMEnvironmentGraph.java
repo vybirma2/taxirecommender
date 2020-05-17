@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * Graph for FullEnvironment which copies the structure of the original graph parsed from OSM data
+ * Graph for OSMEnvironment which copies the structure of the original graph parsed from OSM data
  */
 public class OSMEnvironmentGraph extends EnvironmentGraph<OSMEnvironmentNode, OSMEnvironmentEdge> {
 
@@ -19,9 +19,8 @@ public class OSMEnvironmentGraph extends EnvironmentGraph<OSMEnvironmentNode, OS
         super(osmGraph);
     }
 
-
     /**
-     * Copying all nodes from given osmGraph to FullEnvironmentGraph
+     * Copying all nodes from given osmGraph to OSMEnvironmentGraph
      */
     @Override
     protected void setNodes(){
@@ -32,9 +31,8 @@ public class OSMEnvironmentGraph extends EnvironmentGraph<OSMEnvironmentNode, OS
         }
     }
 
-
     /**
-     * Copying all edges from given osmGraph to FullEnvironmentGraph
+     * Copying all edges from given osmGraph to OSMEnvironmentGraph
      */
     @Override
     protected void setEdges(){

@@ -3,7 +3,6 @@ package domain.environmentrepresentation.kmeansenvironment;
 import cz.agents.basestructures.Graph;
 import cz.agents.multimodalstructures.edges.RoadEdge;
 import cz.agents.multimodalstructures.nodes.RoadNode;
-import domain.TaxiRecommenderDomain;
 import domain.environmentrepresentation.Environment;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.KMeansAlgorithm;
 import domain.environmentrepresentation.kmeansenvironment.kmeans.PickUpPlacesDistance;
@@ -20,10 +19,13 @@ import java.util.stream.Collectors;
 
 import static domain.utils.Utils.*;
 
+
+/**
+ * K-Means environment class responsible for computation of K-Means clusters used to define KMeansEnvironmentGraph
+ */
 public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeansEnvironmentEdge> {
 
     public static Map<PickUpPointCentroid, List<TaxiTripPickupPlace>> clusters;
-
 
     public KMeansEnvironment(Graph<RoadNode, RoadEdge> osmGraph , List<TaxiTrip> trainingDataSet) {
         super(osmGraph, trainingDataSet);
@@ -51,15 +53,12 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
     }
 
     private void loadKMeansClusters(File file) throws IOException, ClassNotFoundException {
-//        System.out.println("Loading KMeans clusters...");
         FSTObjectInput in = new FSTObjectInput(new FileInputStream(file));
         clusters = (Map<PickUpPointCentroid, List<TaxiTripPickupPlace>>)in.readObject();
         in.close();
-//        System.out.println("Loading finished.");
     }
 
     private void computeAndSerializeKMeansClusters(File file) throws IOException {
- //       System.out.println("Computing KMeans clusters...");
         List<TaxiTripPickupPlace> pickupPlaces = trainingDataSet
                 .stream()
                 .map(t -> new TaxiTripPickupPlace(t.getPickUpLongitude(), t.getPickUpLatitude()))
@@ -68,11 +67,9 @@ public class KMeansEnvironment extends Environment<KMeansEnvironmentNode, KMeans
         clusters = KMeansAlgorithm.runKMeans(pickupPlaces,
                 NUM_OF_CLUSTERS, new PickUpPlacesDistance(), MAX_KMEANS_ITERATIONS);
 
-
         FSTObjectOutput out = new FSTObjectOutput(new FileOutputStream(file));
         out.writeObject(clusters);
         out.close();
- //       System.out.println("Computing finished.");
     }
 
     public static Map<PickUpPointCentroid, List<TaxiTripPickupPlace>> getClusters() {

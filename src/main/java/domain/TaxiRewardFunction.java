@@ -26,13 +26,11 @@ public class TaxiRewardFunction {
     private ParameterEstimator parameterEstimator;
     private StatePredecessors predecessors;
 
-
     public TaxiRewardFunction(List<TaxiState> states, StatePredecessors predecessors, ParameterEstimator parameterEstimator) {
         this.states = states;
         this.parameterEstimator = parameterEstimator;
         this.predecessors = predecessors;
     }
-
 
     /**
      * Performs dynamic programing by starting with terminal states added to priority queue where priority is timestamp
@@ -48,22 +46,18 @@ public class TaxiRewardFunction {
         }
     }
 
-
     private PriorityQueue<TaxiState> getSortedStates(List<TaxiState> states){
         PriorityQueue<TaxiState> sortedStates = new PriorityQueue<>(new TaxiGraphStateComparator());
         sortedStates.addAll(states);
         return sortedStates;
     }
 
-
     /**
      * Passes through all actions through which it is possible to reach given state, gets their reward and tries
      * to offer it to the corresponding previous state
      * @param state
-     * @return set of visited states to add to openSet
      */
     private void setPreviousStateReward(TaxiState state){
-
         for (int actionId = 0; actionId < Utils.NUM_OF_ACTION_TYPES; actionId++){
             List<Integer> previousStateNodesOfAction = predecessors.getPreviousStateNodesOfActionInState(actionId, state.getId());
             if (previousStateNodesOfAction != null){
@@ -82,7 +76,6 @@ public class TaxiRewardFunction {
      * to the current one.
      * @param actionId
      * @param previousState
-
      */
     private void setPreviousStateReward(int actionId, TaxiState previousState, TaxiState currentState){
         switch (actionId){
@@ -131,17 +124,14 @@ public class TaxiRewardFunction {
         return notPickingPassengerReward + pickUpPassengerReward;
     }
 
-
     private double getGoingToChargingStationReward(TaxiState state) {
         return state.getReward();
     }
-
 
     private double getChargingReward(TaxiState previousState, TaxiState currentState) {
         return currentState.getReward() - getCostForCharging(currentState.getTimeStamp() - previousState.getTimeStamp(),
                 currentState.getStateOfCharge() - previousState.getStateOfCharge());
     }
-
 
     private double getCostForCharging(int timeOfCharging, int energyCharged){
         int powerKWCharged = (int)((energyCharged/100)*Utils.BATTERY_CAPACITY);
@@ -156,7 +146,6 @@ public class TaxiRewardFunction {
         }
     }
 
-
     /**
      * @param state
      * @param destinationProbabilities probabilities of passenger commuting to some location received from parameterEstimator
@@ -166,11 +155,9 @@ public class TaxiRewardFunction {
     private double getPickupPassengerReward(TaxiState state, HashMap<Integer, Double> destinationProbabilities,
                                             double pickUpProbability){
         SuccessfulPickUpParameters successfulPickUpParameters = getSuccessfulPickUpParameters(state, destinationProbabilities);
-
         ArrayList<Double> probabilities = successfulPickUpParameters.getProbabilities();
         ArrayList<Double> tripReward = successfulPickUpParameters.getTripReward();
         ArrayList<Double> futureStateReward = successfulPickUpParameters.getFutureStateReward();
-
 
         double resultReward = 0;
 

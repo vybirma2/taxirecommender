@@ -18,11 +18,8 @@ public class NextLocationActionType extends TaxiActionType {
         super(actionId, transitions);
     }
 
-
     /**
-     * @param state
-     * @return list of all possible actions of moving to the neighbouring node defined by transitions set
-     * in TaxiRecommenderDomainGenerator - check on applicability - not running out of time/battery...
+     * Connections states reachable by going to next location aciton
      */
     @Override
     public void createConnections(TaxiState state) {
@@ -39,25 +36,6 @@ public class NextLocationActionType extends TaxiActionType {
         }
     }
 
-
-    @Override
-    public List<MeasurableAction> allApplicableActions(TaxiState state) {
-        List<MeasurableAction> actions = new ArrayList<>();
-        ArrayList<Integer> trans = transitions.get(state.getNodeId());
-
-        if (trans != null){
-            for (int neighbour : trans){
-                int time = getTripTime(state.getNodeId(), neighbour);
-                if (this.applicableInState(state, neighbour, time)){
-                    actions.add(new NextLocationAction(actionId, state.getNodeId(), neighbour));
-                }
-            }
-        }
-
-        return actions;
-    }
-
-
     private int getConsumption(int fromNodeId, int toNodeId) {
         return EnergyConsumptionEstimator.getActionEnergyConsumption(fromNodeId, toNodeId);
     }
@@ -66,12 +44,6 @@ public class NextLocationActionType extends TaxiActionType {
     protected boolean applicableInState(TaxiState state) {
         return transitions.containsKey(state.getNodeId());
     }
-
-
-    public int getActionTime(TaxiState state, int toNodeId) {
-        return getTripTime(state.getNodeId(), toNodeId);
-    }
-
 
     private boolean applicableInState(TaxiState state, int toNodeId, int time){
         return shiftNotOver(state, time) &&

@@ -46,15 +46,6 @@ public abstract class Environment<TNode extends EnvironmentNode, TEdge extends E
         return this.environmentGraph.getNodeIds();
     }
 
-    public double getNodeLongitude(int nodeId){
-        return osmGraph.getNode(nodeId).getLongitude();
-    }
-
-    public double getNodeLatitude(int nodeId){
-        return osmGraph.getNode(nodeId).getLatitude();
-    }
-
-
     protected abstract void setEnvironmentGraph();
 }
 

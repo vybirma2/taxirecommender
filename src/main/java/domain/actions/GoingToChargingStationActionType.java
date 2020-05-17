@@ -22,11 +22,8 @@ public class GoingToChargingStationActionType extends TaxiActionType {
         super(actionId, transitions);
     }
 
-
     /**
-     * @param state Current state to go to domain.charging station from
-     * @return NUM_OF_BEST_CHARGING_STATIONS_TO_GO_TO actions of going to domain.charging stations chosen by defined
-     * domain.charging station order - distance/prize...
+     * Connections states reachable by going to charging aciton
      */
     @Override
     public void createConnections(TaxiState state) {
@@ -45,31 +42,9 @@ public class GoingToChargingStationActionType extends TaxiActionType {
         }
     }
 
-    @Override
-    public List<MeasurableAction> allApplicableActions(TaxiState state) {
-        List<MeasurableAction> actions = new ArrayList<>();
-
-        List<Integer> trans = this.transitions.get(state.getNodeId());
-
-        if (trans != null){
-            List<Integer> stations = chooseBestChargingStation(state, trans);
-            for (Integer chargingStation : stations){
-                int time = getTripTime(state.getNodeId(), chargingStation);
-                if (this.applicableInState(state, chargingStation, time)){
-                    actions.add(new GoingToChargingStationAction(actionId, state.getNodeId(), chargingStation));
-                }
-            }
-        }
-
-        return actions;
-    }
-
-
     private int getConsumption(int fromNodeId, int toNodeId) {
         return EnergyConsumptionEstimator.getActionEnergyConsumption(fromNodeId, toNodeId);
     }
-
-
 
     private List<Integer> chooseBestChargingStation(TaxiState state, List<Integer> transitions){
 
@@ -87,16 +62,13 @@ public class GoingToChargingStationActionType extends TaxiActionType {
         }
     }
 
-
     @Override
     protected boolean applicableInState(TaxiState state) {
         return true;
     }
 
-
     private boolean applicableInState(TaxiState state, int toNodeId, int time){
         return applicableInState(state) &&  notRunOutOfBattery(state, toNodeId)
                 && shiftNotOver(state, time);
     }
-
 }

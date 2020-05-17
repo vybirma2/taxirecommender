@@ -24,11 +24,6 @@ public class ChargingAction extends MeasurableAction {
     }
 
 
-    public int getConnectionId() {
-        return connectionId;
-    }
-
-
     private double getChargingCost(){
         ChargingConnection connection = ChargingStationReader.getChargingConnection(connectionId);
         if (connection.getPowerKW() < ChargingRateType.SLOW_CHARGING.getKWMax()){
@@ -40,14 +35,6 @@ public class ChargingAction extends MeasurableAction {
         }
     }
 
-
-    @Override
-    public MeasurableAction copy() {
-        return new ChargingAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId(),
-                this.getTimeToFinish(), connectionId);
-    }
-
-
     @Override
     public boolean equals(Object o) {
         ChargingAction that = (ChargingAction) o;
@@ -55,7 +42,6 @@ public class ChargingAction extends MeasurableAction {
                 this.getFromNodeId() == that.getFromNodeId() &&
                 connectionId == that.connectionId;
     }
-
 
     @Override
     public int getRestConsumption() {

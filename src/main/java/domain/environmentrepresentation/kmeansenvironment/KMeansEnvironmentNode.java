@@ -13,21 +13,11 @@ public class KMeansEnvironmentNode extends EnvironmentNode {
     private final PickUpPointCentroid centroid;
     private final List<TaxiTripPickupPlace> pickupPlaceList;
 
-
     public KMeansEnvironmentNode(RoadNode node, Set<Integer> neighbours, PickUpPointCentroid centroid,
                                  List<TaxiTripPickupPlace> pickupPlaces) {
 
         super(node, neighbours);
         this.centroid = centroid;
         this.pickupPlaceList = pickupPlaces;
-    }
-
-
-    public PickUpPointCentroid getCentroid() {
-        return centroid;
-    }
-
-    public List<TaxiTripPickupPlace> getPickupPlaceList() {
-        return pickupPlaceList;
     }
 }

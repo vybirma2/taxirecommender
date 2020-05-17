@@ -6,24 +6,19 @@ import java.util.*;
 
 /**
  * Class representing state for planning containing information of current node, state of charge, timestamp but also
- * previous actions and states or maximal possible reward achieved by maxReward action which is computed after generating
- * all possible states
+ * maximal possible reward achieved by maxReward action which is computed after generating all possible states
  */
 public class TaxiState implements Comparable<TaxiState>, Serializable {
 
     public static int stateId = 0;
-
     private final int id;
     private int nodeId;
     private int stateOfCharge;
     private int timeStamp;
-
     private int maxRewardStateId = -1;
     private int maxRewardActionId = -1;
     private double maxReward = 0;
-
     private final HashMap<Integer, Double> afterTaxiTripStateRewards = new HashMap<>();
-
 
     public TaxiState(int nodeId, int stateOfCharge, int timeStamp) {
         this.id = stateId++;
@@ -32,41 +27,21 @@ public class TaxiState implements Comparable<TaxiState>, Serializable {
         this.timeStamp = timeStamp;
     }
 
-
     public TaxiState copy() {
         return new TaxiState(this.nodeId, this.stateOfCharge, this.timeStamp);
     }
-
 
     public int getStateOfCharge() {
         return stateOfCharge;
     }
 
-
     public int getTimeStamp() {
         return timeStamp;
     }
 
-
     public int getNodeId() {
         return nodeId;
     }
-
-
-    public void setNodeId(int nodeId) {
-        this.nodeId = nodeId;
-    }
-
-
-    public void setStateOfCharge(int stateOfCharge) {
-        this.stateOfCharge = stateOfCharge;
-    }
-
-
-    public void setTimeStamp(int timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
 
     public int getId() {
         return id;
@@ -83,7 +58,6 @@ public class TaxiState implements Comparable<TaxiState>, Serializable {
         }
     }
 
-
     /**
      * If better than before set value, setting new maximum
      * @param reward potentially received reward
@@ -96,16 +70,13 @@ public class TaxiState implements Comparable<TaxiState>, Serializable {
         }
     }
 
-
     public void addAfterTaxiTripStateReward(int toNodeId, double reward){
         this.afterTaxiTripStateRewards.put(toNodeId, reward);
     }
 
-
     public Double getAfterTaxiTripStateReward(int toNodeId){
         return this.afterTaxiTripStateRewards.get(toNodeId);
     }
-
 
     public int getMaxRewardStateId() {
         return maxRewardStateId;
@@ -122,7 +93,6 @@ public class TaxiState implements Comparable<TaxiState>, Serializable {
                 ", nodeId: " + nodeId;
     }
 
-
     @Override
     public boolean equals(Object o) {
         TaxiState that = (TaxiState) o;
@@ -131,12 +101,10 @@ public class TaxiState implements Comparable<TaxiState>, Serializable {
                 timeStamp == that.timeStamp;
     }
 
-
     @Override
     public int hashCode() {
         return Objects.hash(nodeId, stateOfCharge, timeStamp);
     }
-
 
     @Override
     public int compareTo(TaxiState o) {

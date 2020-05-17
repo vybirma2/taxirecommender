@@ -19,15 +19,10 @@ public abstract class EnvironmentGraph<TNode extends EnvironmentNode, TEdge exte
     protected HashMap<Integer, TNode> nodes;
     protected HashMap<Integer, HashMap<Integer, TEdge>> edges;
 
-
     public EnvironmentGraph(Graph<RoadNode, RoadEdge> osmGraph) {
         this.osmGraph = osmGraph;
-//        System.out.println("Setting environment nodes...");
         setNodes();
- //       System.out.println("Setting finished.");
-//        System.out.println("Setting environment edges...");
         setEdges();
-//        System.out.println("Setting finished.");
     }
 
     public TNode getNode(int nodeId){
@@ -57,7 +52,6 @@ public abstract class EnvironmentGraph<TNode extends EnvironmentNode, TEdge exte
     public Set<Integer> getNodeIds(){
         return nodes.keySet();
     }
-
 
     protected abstract void setNodes();
 

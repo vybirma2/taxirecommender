@@ -22,6 +22,14 @@ public abstract  class TaxiActionType implements Serializable {
     }
 
 
+    /**
+     * Creating connections between states reachable by an aciton - called from TaxiActionType implementations
+     * @param predecessor
+     * @param toNodeId
+     * @param length
+     * @param energyConsumption
+     * @param actionId
+     */
     protected void createConnectionBetweenStates(TaxiState predecessor, int toNodeId, int length, int energyConsumption, int actionId){
         int resultTimeStamp = length + predecessor.getTimeStamp();
         int resultStateOfCharge = energyConsumption + predecessor.getStateOfCharge();
@@ -31,8 +39,6 @@ public abstract  class TaxiActionType implements Serializable {
         chragingRecommender.addPreviousStateConnection(chragingRecommender.getState(newState).getId(), predecessor.getId(), actionId);
     }
 
-
-
     public int getActionId() {
         return actionId;
     }
@@ -41,10 +47,7 @@ public abstract  class TaxiActionType implements Serializable {
         chragingRecommender = statesGenerator;
     }
 
-
     public abstract void createConnections(TaxiState state);
-
-    public abstract List<MeasurableAction> allApplicableActions(TaxiState state);
 
     abstract boolean applicableInState(TaxiState state);
 }

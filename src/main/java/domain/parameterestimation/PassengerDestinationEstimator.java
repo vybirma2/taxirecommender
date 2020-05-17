@@ -12,11 +12,9 @@ public class PassengerDestinationEstimator  implements Serializable {
 
     private ArrayList<TaxiTrip> taxiTrips;
 
-
     public PassengerDestinationEstimator(ArrayList<TaxiTrip> taxiTrips) {
         this.taxiTrips = taxiTrips;
     }
-
 
     /**
      * @return probabilities of passenger commuting from some pickup node to some destination node in defined estimation
@@ -31,7 +29,6 @@ public class PassengerDestinationEstimator  implements Serializable {
         return getPassengerDestinationProbability(pickupsInNodes, numberOfTripsToDestinationNodes);
     }
 
-
     /**
      * @return probabilities of passenger commuting from some pickup node to some destination node during whole shift
      */
@@ -41,7 +38,6 @@ public class PassengerDestinationEstimator  implements Serializable {
 
         return getPassengerDestinationProbabilityComplete(pickupsInNodes, numberOfTripsToDestinationNodes);
     }
-
 
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> getPassengerDestinationProbability(
             HashMap<Integer, HashMap<Integer, Integer>> pickupsInOSMNodes,
@@ -57,7 +53,6 @@ public class PassengerDestinationEstimator  implements Serializable {
         }
         return result;
     }
-
 
     private HashMap<Integer, HashMap<Integer, Double>> getPassengerDestinationProbabilityComplete(
             HashMap<Integer, Integer> pickupsInOSMNodes, HashMap<Integer, HashMap<Integer, Integer>> numberOfTripsToDestinationNodes
@@ -77,7 +72,6 @@ public class PassengerDestinationEstimator  implements Serializable {
 
         return result;
     }
-
 
     private Double getProbability(double numOfTripsToDestination, double numOfAllTripsFromNode){
         return numOfTripsToDestination/numOfAllTripsFromNode;

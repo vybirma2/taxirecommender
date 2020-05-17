@@ -1,7 +1,5 @@
 package evaluation;
 
-import domain.utils.Utils;
-
 public class SimulationStatistics {
 
     private double rewardPerShift = 0;
@@ -54,20 +52,6 @@ public class SimulationStatistics {
 
     public void addTimeSpentCharging(int timeSpentCharging) {
         this.timeSpentCharging += timeSpentCharging;
-    }
-
-
-    public void computeMean(){
-        rewardPerShift /= Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS;
-        distanceTransferred /= Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS;
-        numOfTripsDone /= Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS;
-        rewardFromTrips /= Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS;
-        costOfCharging /= Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS;
-        totalEnergyCharged /= Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS;
-        totalEnergyConsumed /= Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS;
-        distanceToReachPassenger /= Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS;
-        distanceWithPassenger /= Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS;
-        timeSpentCharging /= Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS;
     }
 
     @Override

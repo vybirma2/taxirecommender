@@ -6,12 +6,10 @@ import cz.agents.multimodalstructures.nodes.RoadNode;
 import domain.environmentrepresentation.Environment;
 import domain.parameterestimation.TaxiTrip;
 
-import java.io.IOException;
 import java.util.List;
 
 
 public class OSMEnvironment extends Environment<OSMEnvironmentNode, OSMEnvironmentEdge> {
-
 
     public OSMEnvironment(Graph<RoadNode, RoadEdge> osmGraph, List<TaxiTrip> trainingDataSet) {
         super(osmGraph, trainingDataSet);
@@ -21,5 +19,4 @@ public class OSMEnvironment extends Environment<OSMEnvironmentNode, OSMEnvironme
     protected void setEnvironmentGraph() {
         this.environmentGraph = new OSMEnvironmentGraph(this.getOsmGraph());
     }
-
 }

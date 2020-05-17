@@ -13,7 +13,7 @@ import domain.environmentrepresentation.EnvironmentNode;
 import java.util.*;
 
 /**
- * Util functions computing time, distance...
+ * Util functions computing time, distance, speed...for osm Graph, EnvironmentGraph
  */
 public class DistanceGraphUtils {
 
@@ -29,32 +29,26 @@ public class DistanceGraphUtils {
         DistanceGraphUtils.osmNodes = osmNodes;
     }
 
-
     public static void setOsmGraph(Graph<RoadNode, RoadEdge> osmGraph) {
         DistanceGraphUtils.osmGraph = osmGraph;
         setOsmNodes(osmGraph.getAllNodes());
     }
 
-
     public static void setNodes(Collection<? extends EnvironmentNode> nodes) {
         DistanceGraphUtils.nodes = nodes;
     }
-
 
     public static void setGraph(EnvironmentGraph<? extends EnvironmentNode, ? extends EnvironmentEdge> graph) {
         DistanceGraphUtils.graph = graph;
     }
 
-
     public static void setChargingStationDistancesSpeedTime(HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> chargingStationDistancesSpeedTime) {
         DistanceGraphUtils.chargingStationDistancesSpeedTime = chargingStationDistancesSpeedTime;
     }
 
-
     public static void setChargingStations(List<ChargingStation> chargingStations) {
         DistanceGraphUtils.chargingStations = chargingStations;
     }
-
 
     /**
      * @param nodes
@@ -68,38 +62,17 @@ public class DistanceGraphUtils {
 
         for (RoadNode node : nodes){
             double distance = getEuclideanDistance(longitude, latitude, node.getLongitude(), node.getLatitude());
-
             if (distance < min){
                 min = distance;
                 roadNode = node;
             }
         }
-
         return roadNode;
     }
-
 
     public static RoadNode chooseRoadNode(double longitude, double latitude){
         return chooseRoadNode(osmNodes, longitude, latitude);
     }
-
-
-    public static RoadNode chooseClosestRoadNode(Collection<? extends  RoadNode> nodes, double longitude, double latitude){
-        double min = Double.MAX_VALUE;
-        RoadNode roadNode = null;
-
-        for (RoadNode node : nodes){
-            double distance = getEuclideanDistance(longitude, latitude, node.getLongitude(), node.getLatitude());
-
-            if (distance < min){
-                min = distance;
-                roadNode = node;
-            }
-        }
-
-        return roadNode;
-    }
-
 
     public static EnvironmentNode chooseEnvironmentNode(double longitude, double latitude){
         double min = Double.MAX_VALUE;
@@ -116,7 +89,6 @@ public class DistanceGraphUtils {
 
         return environmentNode;
     }
-
 
     /**
      * @param longitude1
@@ -140,27 +112,18 @@ public class DistanceGraphUtils {
         return (c * radius);
     }
 
-
     public static Set<Integer> getOsmNeighbours(int node) {
         List<RoadEdge> edges = osmGraph.getOutEdges(node);
         Set<Integer> neighbours = new HashSet<>();
         for (RoadEdge edge : edges){
             neighbours.add(edge.getToId());
         }
-
         return neighbours;
     }
-
 
     public static Set<Integer> getEnvironmentNeighbours(int node){
         return graph.getNode(node).getNeighbours();
     }
-
-
-    public static List<ChargingStation> getChargingStations(){
-        return chargingStations;
-    }
-
 
     public static int getTripTime(int fromNodeId, int toNodeId){
         if (fromNodeId == toNodeId){
@@ -176,7 +139,6 @@ public class DistanceGraphUtils {
         }
     }
 
-
     public static int getPathTime(int fromNodeId, int toNodeId){
         if (fromNodeId == toNodeId){
             return 0;
@@ -191,18 +153,16 @@ public class DistanceGraphUtils {
         }
     }
 
-
     public static int getTripTime(double distance, double speed){
         return (int)Math.ceil((distance/(speed*0.8))*60);
     }
-
 
     /**
      * @param fromNodeId
      * @param toNodeId
      * @return distance between two points in environment graph or environment node and domain.charging station
      */
-    public static double getDistanceBetweenNodes(int fromNodeId, int toNodeId){
+    public static double getDistanceBetweenEnvironmentNodes(int fromNodeId, int toNodeId){
         if (fromNodeId == toNodeId){
             return 0;
         }
@@ -216,7 +176,6 @@ public class DistanceGraphUtils {
         }
     }
 
-
     private static DistanceSpeedPairTime getChargingStationParameters(int fromNodeId, int toNodeId, HashMap<Integer, HashMap<Integer, DistanceSpeedPairTime>> parameters){
         if (parameters.containsKey(toNodeId) && parameters.get(toNodeId).containsKey(fromNodeId)){
             return parameters.get(toNodeId).get(fromNodeId);
@@ -226,7 +185,6 @@ public class DistanceGraphUtils {
             throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
         }
     }
-
 
     public static double getDistanceBetweenOsmNodes(int fromNodeId, int toNodeId){
         if (fromNodeId == toNodeId){
@@ -238,7 +196,6 @@ public class DistanceGraphUtils {
         return edge.getLength()/1000.;
     }
 
-
     public static double getEuclideanDistanceBetweenOsmNodes(int fromNodeId, int toNodeId){
         RoadNode fromNode = osmGraph.getNode(fromNodeId);
         RoadNode toNode = osmGraph.getNode(toNodeId);
@@ -249,22 +206,13 @@ public class DistanceGraphUtils {
                 toNode.getLongitude(), toNode.getLatitude());
     }
 
-
-    // TODO - further development - delay function
-    public static int getDelay(int fromNodeId, int toNodeId){
-        return 0;
-    }
-
-
     public static double getSpeedBetweenOsmNodes(int fromNodeId, int toNodeId){
         if (fromNodeId == toNodeId){
             return 0;
         }
-
         RoadEdge edge = osmGraph.getEdge(fromNodeId, toNodeId);
         return edge.getAllowedMaxSpeedInMpS() * 3.6;
     }
-
 
     public static DistanceSpeedPairTime getDistancesAndSpeedBetweenNodes(int fromNodeId, int toNodeId){
         if (fromNodeId == toNodeId){
@@ -279,18 +227,6 @@ public class DistanceGraphUtils {
         }
     }
 
-
-    public static DistanceSpeedPairTime getDistancesAndSpeedBetweenEnvironmentNodes(int fromNodeId, int toNodeId){
-        LinkedList<Integer> nodePath = aStarEnvironment(fromNodeId, toNodeId);
-
-        if (nodePath != null){
-            return getDistanceSpeedPairOfPathEnvironment(nodePath);
-        } else {
-            throw new IllegalArgumentException("No connection between node: " + fromNodeId + " and node: " + toNodeId);
-        }
-    }
-
-
     public static double getTimeBetweenOsmNodes(int fromNodeId, int toNodeId){
         if (fromNodeId == toNodeId){
             return 0;
@@ -299,7 +235,6 @@ public class DistanceGraphUtils {
         RoadEdge edge = osmGraph.getEdge(fromNodeId, toNodeId);
         return (edge.getLength()/edge.getAllowedMaxSpeedInMpS()) / 60.;
     }
-
 
     /**
      * @param fromNodeId
@@ -319,7 +254,6 @@ public class DistanceGraphUtils {
             return distanceSpeedPairTime.getSpeed();
         }
     }
-
 
     /**
      * @param start start node id
@@ -378,8 +312,6 @@ public class DistanceGraphUtils {
         return null;
     }
 
-
-
     public static LinkedList<Integer> aStarEnvironment(int start, int goal){
         AStarNode fromNode = new AStarNode(start, 0., getEuclideanDistanceBetweenOsmNodes(start, goal));
         AStarNode toNode = new AStarNode(goal, Double.MAX_VALUE, 0.);
@@ -412,7 +344,7 @@ public class DistanceGraphUtils {
 
                         double predictedDistance = getEuclideanDistanceBetweenOsmNodes(neighbor, toNode.getNodeId());
 
-                        double neighborDistance = getDistanceBetweenNodes(current.getNodeId(), neighbor);
+                        double neighborDistance = getDistanceBetweenEnvironmentNodes(current.getNodeId(), neighbor);
                         double totalDistance = current.getDistanceToStart() + neighborDistance;
 
 
@@ -430,7 +362,6 @@ public class DistanceGraphUtils {
         return null;
     }
 
-
     private static LinkedList<Integer> reconstructPath(HashMap<Integer, Integer> parentMap, Integer fromNodeId, Integer toNodeId){
         LinkedList<Integer> path = new LinkedList<>();
         Integer current = toNodeId;
@@ -445,7 +376,6 @@ public class DistanceGraphUtils {
         return path;
     }
 
-
     public static int getIntervalStart(double timeStamp){
         int intTime = (int)timeStamp;
         int rest = intTime % Utils.ESTIMATION_EPISODE_LENGTH;
@@ -454,24 +384,6 @@ public class DistanceGraphUtils {
         }
         return intTime - rest;
     }
-
-
-    public static DistanceSpeedPairTime getDistanceSpeedPairOfPathEnvironment(LinkedList<Integer> nodePath){
-        double distance = 0;
-        double speed = 0;
-        double time = 0;
-        Integer current = nodePath.getFirst();
-
-        for (Integer node : nodePath){
-            distance += getDistanceBetweenNodes(current, node);
-            speed += getSpeedBetweenNodes(current, node)/3.6;
-            time += getTripTime(current, node);
-            current = node;
-        }
-
-        return new DistanceSpeedPairTime(distance, speed/(nodePath.size() - 1), (int) Math.ceil(time));
-    }
-
 
     public static DistanceSpeedPairTime getDistanceSpeedPairOfPath(LinkedList<Integer> nodePath){
         if (nodePath == null || nodePath.isEmpty()){
@@ -491,8 +403,6 @@ public class DistanceGraphUtils {
 
         return new DistanceSpeedPairTime(distance, speed/(nodePath.size() - 1), (int) Math.ceil(time));
     }
-
-
 
     private static EnvironmentNode getEnvironmentNode(int nodeId){
         for (EnvironmentNode node : nodes){

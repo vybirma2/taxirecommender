@@ -25,21 +25,17 @@ public class ChargingStation implements Serializable {
         return roadNode.getLongitude();
     }
 
-
     public double getLatitude() {
         return roadNode.getLatitude();
     }
-
 
     public RoadNode getRoadNode() {
         return roadNode;
     }
 
-
     public ArrayList<ChargingConnection> getAvailableConnections() {
         return connections;
     }
-
 
     @Override
     public String toString() {

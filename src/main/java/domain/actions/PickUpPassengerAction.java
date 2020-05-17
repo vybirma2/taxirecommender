@@ -20,6 +20,7 @@ public class PickUpPassengerAction extends MeasurableAction  {
         this.consumption = EnergyConsumptionEstimator.getEnergyConsumption(distance);
     }
 
+
     @Override
     public int getRestConsumption() {
         return consumption;
@@ -41,11 +42,5 @@ public class PickUpPassengerAction extends MeasurableAction  {
 
     public double getDistance() {
         return distance;
-    }
-
-    @Override
-    public MeasurableAction copy() {
-        return new PickUpPassengerAction(getCurrentNodeId(), getDistance(), this.getActionId(), this.getFromNodeId(), this.getToNodeId(),
-                this.getActionTime());
     }
 }

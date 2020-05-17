@@ -5,17 +5,18 @@ import cz.agents.multimodalstructures.nodes.RoadNode;
 import java.io.Serializable;
 import java.util.Set;
 
+/**
+ * Abstract class of an environment node representation as a wrapper for concrete environment node implementations.
+ */
 public abstract class EnvironmentNode implements Serializable {
 
     protected Set<Integer> neighbours;
     private final RoadNode node;
 
-
     public EnvironmentNode(RoadNode node, Set<Integer> neighbours) {
         this.neighbours = neighbours;
         this.node = node;
     }
-
 
     public Set<Integer> getNeighbours(){
         return neighbours;
@@ -29,19 +30,11 @@ public abstract class EnvironmentNode implements Serializable {
         neighbours.add(neighbour);
     }
 
-    public void addNeighbours(Set<Integer> neighbours){
-        this.neighbours.addAll(neighbours);
-    }
-
     public double getLatitude() {
         return node.getLatitude();
     }
 
     public double getLongitude() {
         return node.getLongitude();
-    }
-
-    public void setNeighbours(Set<Integer> neighbours) {
-        this.neighbours = neighbours;
     }
 }

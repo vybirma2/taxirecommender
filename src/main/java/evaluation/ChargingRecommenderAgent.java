@@ -30,6 +30,9 @@ import java.util.stream.Collectors;
 
 import static domain.utils.DistanceGraphUtils.getEuclideanDistanceBetweenOsmNodes;
 
+/**
+ * Agent based on charging recommender system proposed in the thesis
+ */
 public class ChargingRecommenderAgent extends Agent {
 
     private TaxiRecommenderDomain domain;
@@ -41,7 +44,10 @@ public class ChargingRecommenderAgent extends Agent {
         init();
     }
 
-
+    /**
+     * @param currentState
+     * @return action to do according to the policy received from ChragingRecommender
+     */
     @Override
     public MeasurableAction getAction(SimulationState currentState) {
 
@@ -53,7 +59,12 @@ public class ChargingRecommenderAgent extends Agent {
         return getActionDone(currentState, nextState, maxRewardActionId);
     }
 
-
+    /**
+     * Decides whether to accept or do not accept trip according to the potential reward from the policy
+     * @param currentState
+     * @param trip
+     * @return
+     */
     @Override
     public boolean tripOffer(SimulationState currentState, SimulationTaxiTrip trip) {
 
@@ -70,9 +81,7 @@ public class ChargingRecommenderAgent extends Agent {
 
     @Override
     public void resetAgent() {
-
     }
-
 
     private TaxiState getTaxiState(SimulationState currentState){
         if (ChargingStationReader.getChargingStation(currentState.getNodeId()) == null){
@@ -84,15 +93,12 @@ public class ChargingRecommenderAgent extends Agent {
     }
 
     private EnvironmentNode getEnvironmentNode(int nodeId){
-
         return domain.getEnvironment()
                 .getEnvironmentNodes()
                 .stream()
                 .min(Comparator.comparingDouble(node -> getEuclideanDistanceBetweenOsmNodes(nodeId, node.getNodeId())))
                 .get();
     }
-
-
 
     private MeasurableAction getActionDone(SimulationState currentState, TaxiState nextState, int actionId){
         switch (actionId){
@@ -113,72 +119,10 @@ public class ChargingRecommenderAgent extends Agent {
         }
     }
 
-
     private void init() {
         domain = new TaxiRecommenderDomain(Utils.ENVIRONMENT);
-
-
-
-
-/*
-
-        try {
-            //Graph<RoadNode, RoadEdge> graph = new Graph<>();
-            new Thread() {
-                @Override
-                public void run() {
-                    MapVisualizer.main(null);
-                }
-            }.start();
-
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-
-            List<TaxiTripPickupPlace> pickupPlaces = domain.getTaxiTrips()
-                    .stream()
-                    .map(t -> new TaxiTripPickupPlace(t.getPickUpLongitude(), t.getPickUpLatitude()))
-                    .collect(Collectors.toList());
-
-            MapVisualizer.addPickUpPointsToMap(pickupPlaces);
-            MapVisualizer.addEnvironmentNodesToMap(domain.getEnvironment().getEnvironmentNodes());
-
-            try {
-                Thread.sleep(2000000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-*/
-
-
-
-
-
-
         generateReachableStates();
     }
-
-
-   /* private void printCurrentPolicy(){
-        TaxiState state = currentState;
-        while (state.getMaxRewardStateId() != -1){
-            System.out.println("FROM: " + state);
-            System.out.println("TO: " + chargingRecommender.getReachableStates().get(state.getMaxRewardStateId()));
-            System.out.println("ACTION: " + ActionTypes.getNameOfAction(state.getMaxRewardActionId()));
-            System.out.println();
-            state = chargingRecommender.getReachableStates().get(state.getMaxRewardStateId());
-        }
-    }*/
-
 
     private void generateReachableStates() {
         chargingRecommender = new ChragingRecommender(domain.getActionTypes(),
@@ -186,7 +130,6 @@ public class ChargingRecommenderAgent extends Agent {
         TaxiActionType.setChragingRecommender(chargingRecommender);
         chargingRecommender.performStateSpaceAnalysis();
     }
-
 
     private int chooseConnection(ChargingStation station, int timeOfCharging, int energyCharged){
         if (station.getAvailableConnections().size() == 1){
@@ -201,26 +144,17 @@ public class ChargingRecommenderAgent extends Agent {
         return 0;
     }
 
-
-
-
     private boolean beneficialTrip(TaxiState currentState, TaxiState resultState, SimulationTaxiTrip simulationTaxiTrip){
-
         double distance = simulationTaxiTrip.getDistance();
-
         double resultStateReward = resultState.getReward();
         double tripReward = TaxiRewardFunction.getTripReward(distance);
-
-        return resultStateReward + tripReward > 0.1*currentState.getReward();
+        return resultStateReward + tripReward > Utils.DISCOUNT_FACTOR_TRIP_CHOOSING*currentState.getReward();
     }
-
 
     private TaxiState getResultTripState(SimulationState currentState, SimulationTaxiTrip trip) {
         int tripConsumption = trip.getTripEnergyConsumption();
         int tripTime = new Long(trip.getTripLength()).intValue();
         DistanceSpeedPairTime toPickupPath = DistanceGraphUtils.getDistanceSpeedPairOfPath(DistanceGraphUtils.aStar(currentState.getNodeId(), trip.getFromNode()));
-
-
         return new TaxiState(getEnvironmentNode(trip.getToNode()).getNodeId(), currentState.getStateOfCharge() + tripConsumption +
                 EnergyConsumptionEstimator.getEnergyConsumption(toPickupPath.getDistance()),
                 currentState.getTimeStamp() + tripTime + toPickupPath.getTime());

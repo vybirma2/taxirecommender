@@ -26,18 +26,6 @@ public class StayingInLocationActionType extends TaxiActionType {
     }
 
     @Override
-    public List<MeasurableAction> allApplicableActions(TaxiState state) {
-        List<MeasurableAction> actions = new ArrayList<>();
-
-        if (this.applicableInState(state)) {
-            actions.add(new StayingInLocationAction(actionId, state.getNodeId(), state.getNodeId(), STAYING_INTERVAL));
-        }
-
-        return actions;
-    }
-
-
-    @Override
     boolean applicableInState(TaxiState state) {
         return shiftNotOver(state, STAYING_INTERVAL);
     }

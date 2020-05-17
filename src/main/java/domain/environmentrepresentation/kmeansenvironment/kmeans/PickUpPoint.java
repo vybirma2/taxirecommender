@@ -18,11 +18,9 @@ public abstract class PickUpPoint implements Serializable {
         return longitude;
     }
 
-
     public double getLatitude() {
         return latitude;
     }
-
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;

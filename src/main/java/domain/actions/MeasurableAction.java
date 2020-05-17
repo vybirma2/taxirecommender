@@ -9,11 +9,11 @@ public abstract class MeasurableAction implements Serializable {
 
     public static int ids;
 
-    private int id;
-    private int actionId;
-    private int fromNodeId;
-    private int toNodeId;
-    private int actionTime;
+    private final int id;
+    private final int actionId;
+    private final int fromNodeId;
+    private final int toNodeId;
+    private final int actionTime;
     private int timeToFinish;
 
 
@@ -26,16 +26,13 @@ public abstract class MeasurableAction implements Serializable {
         this.timeToFinish = actionTime;
     }
 
-
     public int getFromNodeId() {
         return fromNodeId;
     }
 
-
     public int getActionId() {
         return actionId;
     }
-
 
     public int getToNodeId() {
         return toNodeId;
@@ -56,18 +53,14 @@ public abstract class MeasurableAction implements Serializable {
     }
 
 
-
     public abstract int getRestConsumption();
     public abstract double getReward();
     public abstract void setRestConsumption(int restConsumption);
-
-
 
     @Override
     public int hashCode() {
         return Objects.hash(this.fromNodeId, this.toNodeId, this.actionId);
     }
-
 
     public boolean equals(Object o) {
         if (this == o) {
@@ -81,10 +74,6 @@ public abstract class MeasurableAction implements Serializable {
             return false;
         }
     }
-
-
-    abstract MeasurableAction copy();
-
 
     @Override
     public String toString() {

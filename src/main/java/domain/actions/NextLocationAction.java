@@ -39,12 +39,6 @@ public class NextLocationAction extends MeasurableAction {
         this.consumption = restConsumption;
     }
 
-
-    @Override
-    public MeasurableAction copy() {
-        return new NextLocationAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId());
-    }
-
     @Override
     public String toString() {
         return "NextLocationAction: " + super.toString();

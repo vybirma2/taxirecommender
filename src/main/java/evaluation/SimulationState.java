@@ -25,7 +25,6 @@ public class SimulationState {
         return stateOfCharge;
     }
 
-
     public void setNodeId(int nodeId) {
         this.nodeId = nodeId;
     }

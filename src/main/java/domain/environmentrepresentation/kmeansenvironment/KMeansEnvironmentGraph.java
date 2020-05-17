@@ -22,12 +22,14 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+/**
+ * K-Means environment graph implementation responsible for node and edge setting
+ * concerning the formal description from the thesis
+ */
 public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNode, KMeansEnvironmentEdge> {
 
     private Map<PickUpPointCentroid, List<TaxiTripPickupPlace>> clusters;
     private Map<Integer, List<TripToNode>> distanceSpeedTime;
-
 
     public KMeansEnvironmentGraph(Graph<RoadNode, RoadEdge> osmGraph) throws IOException, ClassNotFoundException {
         super(osmGraph);
@@ -70,7 +72,7 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
         ArrayList<RoadNode> deletedNodes = new ArrayList<>();
         HashSet<RoadNode> remainingNodes = new HashSet<>(osmGraph.getAllNodes());
         for (PickUpPointCentroid centroid : clusters.keySet()) {
-            RoadNode centroidNode = DistanceGraphUtils.chooseClosestRoadNode(remainingNodes, centroid.getLongitude(), centroid.getLatitude());
+            RoadNode centroidNode = DistanceGraphUtils.chooseRoadNode(remainingNodes, centroid.getLongitude(), centroid.getLatitude());
             while (nodes.containsKey(centroidNode.getId()) || ChargingStationReader.getChargingStation(centroidNode.getId()) != null){
                 deletedNodes.add(centroidNode);
                 remainingNodes.remove(centroidNode);
@@ -91,10 +93,6 @@ public class KMeansEnvironmentGraph extends EnvironmentGraph<KMeansEnvironmentNo
         } else {
             loadDistances(file);
         }
-    }
-
-    public double getDistanceBetweenNodes(int fromNodeId, int toNodeId){
-        return distanceSpeedTime.get(fromNodeId).stream().filter(t-> t.getToNodeId() == toNodeId).findFirst().get().getDistanceSpeedPairTime().getDistance();
     }
 
     public DistanceSpeedPairTime getDistanceSpeedTimeBetweenNodes(int fromNodeId, int toNodeId){

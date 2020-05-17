@@ -17,11 +17,9 @@ public class ChargingConnection implements Serializable {
         this.powerKW = powerKW;
     }
 
-
     public int getId() {
         return id;
     }
-
 
     public double getPowerKW() {
         return powerKW;

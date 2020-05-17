@@ -8,10 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+
+/**
+ * Experiment performing simlulation of NUM_OF_SHIFTS_IN_EXPERIMENTS shifts for both agents set in Utils class
+ */
 public class Experiment {
 
-    private Simulation simulation;
-
+    private final Simulation simulation;
     public int SHIFT_START_TIME;
     public int SHIFT_LENGTH;
     public int STARTING_STATE_OF_CHARGE;
@@ -60,7 +63,10 @@ public class Experiment {
         this.NUM_OF_CLUSTERS = NUM_OF_CLUSTERS;
     }
 
-
+    /**
+     * Performing experiment for both agents and saving statistics from each shift
+     * @throws IOException
+     */
     public void doExperiment() throws IOException {
         Utils.setUtilsParameters(SHIFT_START_TIME, SHIFT_LENGTH, STARTING_STATE_OF_CHARGE, DATA_SET_READER,
                 INPUT_GRAPH_FILE_NAME, INPUT_STATION_FILE_NAME, DATA_SET_NAME, ENVIRONMENT, NUM_OF_CLUSTERS);
@@ -73,14 +79,14 @@ public class Experiment {
             saveSimulationStatistics(simulation.getSimulationStatistics(), "charging");
             simulation.clearStatistics();
         }
-      /*  simulation.switchAgents("base");
+        simulation.switchAgents("base");
 
         for (int i = 0; i < Utils.NUM_OF_SHIFTS_IN_EXPERIMENTS; i++){
             simulation.startSimulation();
             simulation.clearShiftSimulationResults();
             saveSimulationStatistics(simulation.getSimulationStatistics(), "base");
             simulation.clearStatistics();
-        }*/
+        }
     }
 
     private void saveSimulationStatistics(SimulationStatistics simulationStatistics, String agent) throws IOException {
@@ -93,8 +99,6 @@ public class Experiment {
             e.printStackTrace();
         }
     }
-
-
 
     @Override
     public String toString() {

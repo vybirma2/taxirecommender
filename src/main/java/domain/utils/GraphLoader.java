@@ -9,7 +9,6 @@ import java.io.FileInputStream;
 
 public class GraphLoader {
 
-
     public static Graph<RoadNode, RoadEdge> loadGraph(String sourceFile) throws Exception {
         FSTObjectInput objectInput = new FSTObjectInput(new FileInputStream(sourceFile));
         return (Graph<RoadNode, RoadEdge>) objectInput.readObject(Graph.class);

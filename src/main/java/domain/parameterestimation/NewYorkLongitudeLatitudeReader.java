@@ -13,12 +13,16 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
+/**
+ * class using OpenCage tool to parse longitude latitude data from Adress for the purpose of new york
+ * taxi trip data set.
+ */
 public class NewYorkLongitudeLatitudeReader {
 
     private static JOpenCageGeocoder jOpenCageGeocoder = new JOpenCageGeocoder("9a25fc76f3e54b7e8034ce69f2e0d22e");
     private HashMap<Integer, RoadNode> zoneLatLongs = new HashMap<>();
     private String lookupFile = "data\\taxitrips\\newyork\\zone_lookup.csv";
-
 
     public HashMap<Integer, RoadNode> getZoneLatLongs() throws IOException, ClassNotFoundException {
         File file = new File("data/taxitrips/newyork/zone_lookup.fst");
@@ -33,13 +37,11 @@ public class NewYorkLongitudeLatitudeReader {
         return zoneLatLongs;
     }
 
-
     private void readSerializedZoneLatLongs(File file) throws IOException, ClassNotFoundException {
         FSTObjectInput in = new FSTObjectInput(new FileInputStream(file));
         zoneLatLongs = (HashMap<Integer, RoadNode>) in.readObject();
         in.close();
     }
-
 
     private void parseZoneLatLongsFromAndSerialize(File file){
         BufferedReader csvReader;
@@ -61,7 +63,6 @@ public class NewYorkLongitudeLatitudeReader {
             e.printStackTrace();
         }
     }
-
 
     private void addNewLatLongCoordinate(String [] address){
 

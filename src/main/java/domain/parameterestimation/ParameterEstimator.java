@@ -19,11 +19,9 @@ public class ParameterEstimator implements Serializable {
     private final HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripDistances;
     private final HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> taxiTripConsumptions;
 
-
     private final HashMap<Integer, HashMap<Integer, Double>> taxiTripLengthsComplete;
     private final HashMap<Integer, HashMap<Integer, Double>> taxiTripDistancesComplete;
     private final HashMap<Integer, HashMap<Integer, Double>> taxiTripConsumptionsComplete;
-
 
     private HashMap<Integer, HashMap<Integer, Double>> passengerPickUpProbability;
     private HashMap<Integer, Double> passengerPickUpProbabilityComplete;
@@ -31,7 +29,6 @@ public class ParameterEstimator implements Serializable {
     private HashMap<Integer, HashMap<Integer, Double>> passengerDestinationProbabilityComplete;
 
     private Set<Integer> timeIntervals;
-
 
     public ParameterEstimator(ArrayList<TaxiTrip> taxiTrips) {
         this.passengerPickUpEstimator = new PassengerPickUpEstimator(taxiTrips);
@@ -43,7 +40,6 @@ public class ParameterEstimator implements Serializable {
         this.taxiTripDistancesComplete = computeTaxiTripsDistancesComplete(taxiTrips);
         this.taxiTripConsumptionsComplete = computeTaxiTripsConsumptionsComplete(taxiTrips);
     }
-
     
     public void estimateParameters(){
         passengerPickUpProbability = passengerPickUpEstimator.estimatePickUpProbability();
@@ -53,23 +49,6 @@ public class ParameterEstimator implements Serializable {
         timeIntervals = passengerPickUpEstimator.getTimeIntervals();
     }
 
-
-    public PassengerPickUpEstimator getPassengerPickUpEstimator() {
-        return passengerPickUpEstimator;
-    }
-
-
-    /*public ArrayList<TaxiTrip> getTaxiTrips() {
-        return taxiTrips;
-    }*/
-
-
-    public HashMap<Integer, HashMap<Integer, Double>> getPassengerPickUpProbability() {
-        return passengerPickUpProbability;
-    }
-
-
-
     public double getPickUpProbabilityInNode(int nodeId, double timeStamp){
         Double result = passengerPickUpProbability.get(getIntervalStart(timeStamp)).get(nodeId);
         if (result != null){
@@ -78,60 +57,25 @@ public class ParameterEstimator implements Serializable {
         return 0;
     }
 
-
-    public double getPickUpProbabilityInNode(int nodeId){
-        Double result = passengerPickUpProbabilityComplete.get(nodeId);
-        if (result != null){
-            return result;
-        }
-        return 0;
-    }
-
-
     public HashMap<Integer, Double> getDestinationProbabilitiesInNode(int nodeId, double timeStamp){
         return passengerDestinationProbability.get(getIntervalStart(timeStamp)).get(nodeId);
     }
-
 
     public HashMap<Integer, Double> getDestinationProbabilitiesInNode(int nodeId){
         return passengerDestinationProbabilityComplete.get(nodeId);
     }
 
-
-    public Set<Integer> getTimeIntervals() {
-        return timeIntervals;
-    }
-
-
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> getTaxiTripLengths() {
         return taxiTripLengths;
     }
-
 
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> getTaxiTripConsumptions() {
         return taxiTripConsumptions;
     }
 
-
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> getTaxiTripDistances() {
         return taxiTripDistances;
     }
-
-
-    public HashMap<Integer, HashMap<Integer, Double>> getTaxiTripLengthsComplete() {
-        return taxiTripLengthsComplete;
-    }
-
-
-    public HashMap<Integer, HashMap<Integer, Double>> getTaxiTripDistancesComplete() {
-        return taxiTripDistancesComplete;
-    }
-
-
-    public HashMap<Integer, HashMap<Integer, Double>> getTaxiTripConsumptionsComplete() {
-        return taxiTripConsumptionsComplete;
-    }
-
 
     private HashMap<Integer, HashMap<Integer, Double>> computeTaxiTripsLengthsComplete(List<TaxiTrip> taxiTrips){
         HashMap<Integer, HashMap<Integer, Double>> result = new HashMap<>();
@@ -148,14 +92,13 @@ public class ParameterEstimator implements Serializable {
         return result;
     }
 
-
     private HashMap<Integer, HashMap<Integer, Double>> computeTaxiTripsDistancesComplete(List<TaxiTrip> taxiTrips){
         HashMap<Integer, HashMap<Integer, Double>> result = new HashMap<>();
         HashMap<Integer, HashMap<Integer, Integer>> nums = new HashMap<>();
 
         for (TaxiTrip taxiTrip : taxiTrips) {
             if (taxiTrip.getTripLength() != 0){
-                addTripParameterComplete(taxiTrip, result, nums, (double)taxiTrip.getDistance());
+                addTripParameterComplete(taxiTrip, result, nums, taxiTrip.getDistance());
             }
         }
 
@@ -163,7 +106,6 @@ public class ParameterEstimator implements Serializable {
 
         return result;
     }
-
 
     private HashMap<Integer, HashMap<Integer, Double>> computeTaxiTripsConsumptionsComplete(List<TaxiTrip> taxiTrips){
         HashMap<Integer, HashMap<Integer, Double>> result = new HashMap<>();
@@ -180,7 +122,6 @@ public class ParameterEstimator implements Serializable {
         return result;
     }
 
-
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> computeTaxiTripsLengths(List<TaxiTrip> taxiTrips){
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result = new HashMap<>();
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums = new HashMap<>();
@@ -196,7 +137,6 @@ public class ParameterEstimator implements Serializable {
         return result;
     }
 
-
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> computeTaxiTripsDistances(List<TaxiTrip> taxiTrips){
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result = new HashMap<>();
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums = new HashMap<>();
@@ -208,11 +148,8 @@ public class ParameterEstimator implements Serializable {
         }
 
         computeMean(result, nums);
-
         return result;
-
     }
-
 
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> computeTaxiTripsConsumptions(List<TaxiTrip> taxiTrips){
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result = new HashMap<>();
@@ -229,7 +166,6 @@ public class ParameterEstimator implements Serializable {
         return result;
     }
 
-
     private void addTripParameter(TaxiTrip taxiTrip, HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result,
                                   HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums, Double parameter){
 
@@ -241,7 +177,6 @@ public class ParameterEstimator implements Serializable {
             addNewIntervalTripParameter(intervalStart, taxiTrip, result, nums, parameter);
         }
     }
-
 
     private void addTripParameterComplete(TaxiTrip taxiTrip, HashMap<Integer, HashMap<Integer, Double>> result,
                                   HashMap<Integer, HashMap<Integer, Integer>> nums, Double parameter){
@@ -267,7 +202,6 @@ public class ParameterEstimator implements Serializable {
         }
     }
 
-
     private void addExistingIntervalTripParameter(int intervalStart, TaxiTrip taxiTrip,
                                                   HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result,
                                                   HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums, Double parameter){
@@ -278,7 +212,6 @@ public class ParameterEstimator implements Serializable {
             addNewPickUpNodeTripParameter(intervalStart, taxiTrip, result, nums, parameter);
         }
     }
-
 
     private void addNewIntervalTripParameter(int intervalStart, TaxiTrip taxiTrip,
                                              HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result,
@@ -299,7 +232,6 @@ public class ParameterEstimator implements Serializable {
         nums.put(intervalStart, tripParameterNums);
     }
 
-
     private void addExistingPickupNodeTripParameter(int intervalStart, TaxiTrip taxiTrip,
                                                     HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result,
                                                     HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums, Double parameter){
@@ -317,7 +249,6 @@ public class ParameterEstimator implements Serializable {
         }
     }
 
-
     private void addNewPickUpNodeTripParameter(int intervalStart, TaxiTrip taxiTrip,
                                                HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result,
                                                HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums, Double parameter){
@@ -331,7 +262,6 @@ public class ParameterEstimator implements Serializable {
         nums.get(intervalStart).put(taxiTrip.getFromEnvironmentNode(), toDestNums);
     }
 
-
     private void computeMean(HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>> result,
                              HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> nums){
 
@@ -343,7 +273,6 @@ public class ParameterEstimator implements Serializable {
             }
         }
     }
-
 
     private void computeMeanComplete(HashMap<Integer, HashMap<Integer, Double>> result,
                              HashMap<Integer, HashMap<Integer, Integer>> nums){

@@ -6,6 +6,10 @@ import domain.parameterestimation.PragueDataSetReader;
 
 import java.util.Comparator;
 
+
+/**
+ * Class containing all static parameters needed to be set to run evaluation, simulation...
+ */
 public class Utils {
 
     public static int SHIFT_START_TIME = 8*60;
@@ -19,7 +23,6 @@ public class Utils {
     public static int ONE_GRID_CELL_WIDTH = 2000;
     public static int ONE_GRID_CELL_HEIGHT = 2000;
     public static int NUM_OF_CLUSTERS = 125;
-
 
 
     public static void setUtilsParameters(int SHIFT_START_TIME, int SHIFT_LENGTH, int STARTING_STATE_OF_CHARGE, DataSetReader DATA_SET_READER,
@@ -52,12 +55,11 @@ public class Utils {
         Utils.NUM_OF_CLUSTERS = NUM_OF_CLUSTERS;
     }
 
-
     public static final double TAXI_FARE_FOR_KM = 30;
     public static final double TAXI_START_JOURNEY_FEE = 30;
     public static final int ELECTRIC_VEHICLE_DRIVING_RANGE = 300;
     public static double BATTERY_CAPACITY = 40;
-
+    public static double DISCOUNT_FACTOR_TRIP_CHOOSING = 0.5;
 
 
     public static final int STAYING_INTERVAL = 1;
@@ -75,7 +77,6 @@ public class Utils {
     public static final Comparator<ChargingConnection> chargingConnectionComparator = new ChargingConnectionComparator();
     public static ChargingStationStateOrder CHARGING_STATION_STATE_ORDER = null;
     public static final int NUM_OF_SHIFTS_IN_EXPERIMENTS = 1000;
-
 
 
     public static void setChargingStationStateOrder(ChargingStationStateOrder chargingStationStateOrder){

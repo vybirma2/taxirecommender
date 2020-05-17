@@ -23,6 +23,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+
+/**
+ * Visualizer class containing several features to visualize objects on map
+ * */
 public class MapVisualizer extends Application {
 
     private MapView mapView;
@@ -31,15 +35,9 @@ public class MapVisualizer extends Application {
     private static SimpleMarkerSymbol environmentNode = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000, 6.0f);
     private static SimpleMarkerSymbol chargingStation = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF00FF00, 6.0f);
     private static SimpleMarkerSymbol currentNode = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF800080, 15.0f);
-    private static SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF00FF00, 3);
-
-
     private static SimpleMarkerSymbol pickUpPointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF00FF00, 2.0f);
-
-
     private static SimpleMarkerSymbol hullPointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF800080, 8.0f);
-
-
+    private static SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF00FF00, 3);
 
     private static Graphic current = null;
     private static RoadNode currentRoadNode = null;
@@ -47,9 +45,9 @@ public class MapVisualizer extends Application {
 
     public static void main(String[] args) {
         environmentNode.setOutline(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFFFF0000, 8.0f));
-
         Application.launch();
     }
+
 
     @Override
     public void start(Stage stage) {
@@ -71,55 +69,43 @@ public class MapVisualizer extends Application {
         }
     }
 
-
     public static void initSimulation(Collection<? extends EnvironmentNode> nodes, Collection<ChargingStation> chargingStations){
         addEnvironmentNodesToMap(nodes);
         addChargingStationsToMap(chargingStations);
     }
-
 
     public static void setCurrentStateNode(RoadNode node){
         if (current != null){
             nodeGraphicsOverlay.getGraphics().remove(current);
             addBetweenStatesLine(currentRoadNode, node);
         }
-
         currentRoadNode = node;
         nodeGraphicsOverlay.getGraphics().add(createCurrentNodePoint(node));
     }
 
-
     public static void addPickUpPointsToMap(List<TaxiTripPickupPlace> allNodes){
-        //nodeGraphicsOverlay.getGraphics().removeAll(nodeGraphicsOverlay.getGraphics());
         for (TaxiTripPickupPlace node: allNodes) {
             addPickUpPointToMap(node);
         }
     }
 
-
     public static void addPickUpPointToMap(TaxiTripPickupPlace node){
         nodeGraphicsOverlay.getGraphics().add(createGraphicPickupPoint(node));
     }
 
-
     private static Graphic createGraphicPickupPoint(PickUpPoint node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
         Graphic pointGraphic = new Graphic(point, pickUpPointSymbol);
-
         return pointGraphic;
     }
-
 
     private static Graphic createCurrentNodePoint(RoadNode node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
         current = new Graphic(point, currentNode);
-
         return current;
     }
 
-
     public static void addHullPointsToMap(List<TaxiTripPickupPlace> allNodes, PickUpPointCentroid centroid){
-        //nodeGraphicsOverlay.getGraphics().removeAll(nodeGraphicsOverlay.getGraphics());
         if (allNodes != null){
             for (TaxiTripPickupPlace node: allNodes) {
                 addHullPointToMap(node);
@@ -128,14 +114,11 @@ public class MapVisualizer extends Application {
         }
     }
 
-
     public static void addHullPointToMap(TaxiTripPickupPlace node){
         nodeGraphicsOverlay.getGraphics().add(createGraphicHullPoint(node));
     }
 
-
     public static void addHullCentroidConnectionPointToMap(TaxiTripPickupPlace node, PickUpPointCentroid centroid){
-
         PointCollection points = new PointCollection( SpatialReferences.getWgs84());
         points.add(node.getLongitude(), node.getLatitude());
         points.add(centroid.getLongitude(), centroid.getLatitude());
@@ -144,24 +127,19 @@ public class MapVisualizer extends Application {
         nodeGraphicsOverlay.getGraphics().add(new Graphic(line, lineSymbol));
     }
 
-
     public static void addBetweenStatesLine(RoadNode fromNode, RoadNode toNode){
-
         PointCollection points = new PointCollection(SpatialReferences.getWgs84());
         points.add(fromNode.getLongitude(), fromNode.getLatitude());
         points.add(toNode.getLongitude(), toNode.getLatitude());
         Polyline line = new Polyline(points);
-
         nodeGraphicsOverlay.getGraphics().add(new Graphic(line, lineSymbol));
     }
 
     private static Graphic createGraphicHullPoint(PickUpPoint node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
         Graphic pointGraphic = new Graphic(point, hullPointSymbol);
-
         return pointGraphic;
     }
-
 
     public static void addCentroidsToMap(Set<PickUpPointCentroid> allNodes){
         nodeGraphicsOverlay.getGraphics().removeAll(nodeGraphicsOverlay.getGraphics());
@@ -169,7 +147,6 @@ public class MapVisualizer extends Application {
             addCentroidToMap(node);
         }
     }
-
 
     public static void addEnvironmentNodesToMap(Collection<? extends EnvironmentNode> allNodes){
         for (EnvironmentNode node: allNodes) {
@@ -189,7 +166,6 @@ public class MapVisualizer extends Application {
         }
     }
 
-
     public static void addCentroidToMap(PickUpPointCentroid node){
         nodeGraphicsOverlay.getGraphics().add(createGraphicCentroid(node));
     }
@@ -197,7 +173,6 @@ public class MapVisualizer extends Application {
     public static void addEnvironmentNodeToMap(EnvironmentNode node){
         nodeGraphicsOverlay.getGraphics().add(createGraphicEnvironmentNode(node));
     }
-
 
     public static void addRoadNodeToMap(RoadNode node){
         nodeGraphicsOverlay.getGraphics().add(createGraphicRoadNode(node));
@@ -207,28 +182,23 @@ public class MapVisualizer extends Application {
         nodeGraphicsOverlay.getGraphics().add(createGraphicEChargingStation(station));
     }
 
-
     private static Graphic createGraphicEnvironmentNode(EnvironmentNode node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
         Graphic pointGraphic = new Graphic(point, environmentNode);
-
         return pointGraphic;
     }
 
     private static Graphic createGraphicRoadNode(RoadNode node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
         Graphic pointGraphic = new Graphic(point, environmentNode);
-
         return pointGraphic;
     }
 
     private static Graphic createGraphicEChargingStation(ChargingStation station) {
         Point point = new Point(station.getLongitude(), station.getLatitude(), SpatialReferences.getWgs84());
         Graphic pointGraphic = new Graphic(point, chargingStation);
-
         return pointGraphic;
     }
-
 
     private static Graphic createGraphicCentroid(PickUpPoint node) {
         Point point = new Point(node.getLongitude(), node.getLatitude(), SpatialReferences.getWgs84());
@@ -237,27 +207,18 @@ public class MapVisualizer extends Application {
         return pointGraphic;
     }
 
-
-
     private void setMapView() {
-
         nodeGraphicsOverlay = new GraphicsOverlay();
-
-        // creating map of some type and starting ViewPoint defined by lon//lat and level of detail
         ArcGISMap map = new ArcGISMap(Basemap.Type.NAVIGATION_VECTOR, 48.464044, 12.634277, 9);
         mapView = new MapView();
         mapView.setMap(map);
-
         mapView.getGraphicsOverlays().add(nodeGraphicsOverlay);
     }
 
-
     @Override
     public void stop() {
-
         if (mapView != null) {
             mapView.dispose();
         }
     }
-
 }

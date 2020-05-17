@@ -26,14 +26,6 @@ public class StayingInLocationAction extends MeasurableAction {
 
     }
 
-
-    @Override
-    public MeasurableAction copy() {
-        return new StayingInLocationAction(this.getActionId(), this.getFromNodeId(), this.getToNodeId(),
-                this.getTimeToFinish());
-    }
-
-
     @Override
     public String toString() {
         return "StayingInLocationAction: " + super.toString();

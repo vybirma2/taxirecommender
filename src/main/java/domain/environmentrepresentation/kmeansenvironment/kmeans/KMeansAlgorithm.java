@@ -35,10 +35,8 @@ public class KMeansAlgorithm {
             reallocateCentroids(clusters);
             clusters = new HashMap<>();
         }
-
         return lastState;
     }
-
 
     private static void assignToCluster(Map<PickUpPointCentroid, List<TaxiTripPickupPlace>> clusters,
                                         TaxiTripPickupPlace pickupPlace,
@@ -52,14 +50,11 @@ public class KMeansAlgorithm {
         }
     }
 
-
     private static void reallocateCentroids(Map<PickUpPointCentroid, List<TaxiTripPickupPlace>> assignment){
         for (Map.Entry<PickUpPointCentroid, List<TaxiTripPickupPlace>> centroid : assignment.entrySet()){
             recomputeCentroid(centroid.getKey(), centroid.getValue());
         }
     }
-
-
 
     private static void recomputeCentroid(PickUpPointCentroid centroid, List<TaxiTripPickupPlace> pickupPlaces) {
         if (pickupPlaces == null || pickupPlaces.isEmpty()) {
@@ -81,11 +76,9 @@ public class KMeansAlgorithm {
         centroid.setLatitude(latitude);
     }
 
-
     private static PickUpPointCentroid findTheNearestCentroid(TaxiTripPickupPlace pickupPlace,
                                                               List<PickUpPointCentroid> centroids,
                                                               PickUpPlacesDistance distance){
-
         double minimumDistance = Double.MAX_VALUE;
         PickUpPointCentroid nearest = null;
 
@@ -97,7 +90,6 @@ public class KMeansAlgorithm {
                 nearest = centroid;
             }
         }
-
         return nearest;
     }
 
@@ -126,10 +118,8 @@ public class KMeansAlgorithm {
             PickUpPointCentroid newCentroid = createCentroid(maxDistancePickUpPlace.getLongitude(), maxDistancePickUpPlace.getLatitude());
             centroids.add(newCentroid);
         }
-
         return centroids;
     }
-
 
     private static PickUpPointCentroid createCentroid(double longitude, double latitude){
         return new PickUpPointCentroid(longitude, latitude);
